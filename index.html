@@ -7,36 +7,130 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
 <style>
-:root{ --bg:#EEF2F7;--card:#fff;--navy:#1A3A5C;--blue:#2563EB;--green:#16A34A;--red:#DC2626;--gray:#64748B;--border:#E2E8F0;--sub:#94A3B8;--txt:#1E293B; }
+:root{
+  --bg:#EEF2F7;--card:#fff;--navy:#1A3A5C;--blue:#2563EB;
+  --green:#16A34A;--gl:#DCFCE7;--gd:#14532D;
+  --red:#DC2626;--rl:#FEE2E2;
+  --gold:#D97706;--yl:#FEF3C7;
+  --gray:#64748B;--border:#E2E8F0;--sub:#94A3B8;
+  --txt:#1E293B;
+}
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 body{background:var(--bg);font-family:'Cairo',sans-serif;color:var(--txt);direction:rtl;min-height:100vh}
+
+/* NAV */
 nav{background:var(--navy);height:56px;display:flex;align-items:center;justify-content:space-between;padding:0 14px;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.25)}
-.n-brand{display:flex;align-items:center;gap:10px}.n-logo{width:34px;height:34px;background:var(--blue);border-radius:8px;display:grid;place-items:center;font-size:11px;font-weight:900;color:#fff}
-.n-title{color:#fff;font-size:14px;font-weight:800}.n-right{display:flex;gap:7px;align-items:center}
+.n-brand{display:flex;align-items:center;gap:10px}
+.n-logo{width:34px;height:34px;background:var(--blue);border-radius:8px;display:grid;place-items:center;font-size:11px;font-weight:900;color:#fff;flex-shrink:0}
+.n-title{color:#fff;font-size:14px;font-weight:800}
+.n-sub{color:rgba(255,255,255,.5);font-size:10px}
+.n-right{display:flex;gap:7px;align-items:center}
 .sync-badge{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);color:#fff;padding:4px 10px;border-radius:20px;font-size:10px;font-weight:700;display:flex;align-items:center;gap:5px}
-.sdot{width:7px;height:7px;border-radius:50%;background:#FCD34D;animation:blink 2s infinite}@keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
-.icbtn{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);color:#fff;width:34px;height:34px;border-radius:8px;cursor:pointer;display:grid;place-items:center}
-.tabs{background:#fff;border-bottom:2px solid var(--border);display:flex;overflow-x:auto;padding:0 8px;position:sticky;top:56px;z-index:90}
-.tab{padding:12px 14px;font-size:12px;font-weight:700;color:var(--gray);white-space:nowrap;cursor:pointer;border-bottom:2px solid transparent}
+.sdot{width:7px;height:7px;border-radius:50%;background:#4ADE80;animation:blink 2s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
+.icbtn{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);color:#fff;width:34px;height:34px;border-radius:8px;cursor:pointer;font-size:16px;display:grid;place-items:center;transition:.15s}
+.icbtn:active{background:rgba(255,255,255,.25)}
+
+/* TABS */
+.tabs{background:#fff;border-bottom:2px solid var(--border);display:flex;overflow-x:auto;scrollbar-width:none;padding:0 8px;position:sticky;top:56px;z-index:90;box-shadow:0 1px 3px rgba(0,0,0,.06)}
+.tabs::-webkit-scrollbar{display:none}
+.tab{padding:12px 14px;font-size:12px;font-weight:700;color:var(--gray);white-space:nowrap;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;transition:.18s;user-select:none}
 .tab.on{color:var(--blue);border-bottom-color:var(--blue)}
+
+/* LAYOUT */
 .main{padding:12px;max-width:1100px;margin:0 auto;padding-bottom:84px}
 .page{display:none}.page.on{display:block}
-.kpi-row{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;margin-bottom:15px}
-.kpi{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:13px;box-shadow:0 1px 3px rgba(0,0,0,.06)}
-.kv{font-size:21px;font-weight:900;color:var(--blue)}
-.card{background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:11px}
-.tw{overflow-x:auto}table{width:100%;border-collapse:collapse}
-th{font-size:10px;color:var(--gray);padding:8px;background:#F8FAFC;border-bottom:2px solid var(--border)}
-td{font-size:12px;padding:10px;border-bottom:1px solid rgba(226,232,240,.5);text-align:center}
+.sec{font-size:10px;font-weight:800;color:var(--sub);letter-spacing:1.2px;text-transform:uppercase;margin:16px 0 9px;display:flex;align-items:center;gap:8px}
+.sec::after{content:'';flex:1;height:1px;background:var(--border)}
+
+/* KPI ROW */
+.kpi-row{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;margin-bottom:4px}
+@media(min-width:560px){.kpi-row{grid-template-columns:repeat(4,1fr)}}
+.kpi{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:13px;position:relative;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.06)}
+.kpi::before{content:'';position:absolute;top:0;right:0;left:0;height:3px;background:var(--ac);border-radius:12px 12px 0 0}
+.ki{font-size:19px;margin-bottom:6px}
+.kl{font-size:10px;color:var(--gray);font-weight:700;margin-bottom:5px;line-height:1.3}
+.kv{font-size:21px;font-weight:900;color:var(--ac);line-height:1;margin-bottom:2px}
+.ks{font-size:10px;color:var(--sub)}
+
+/* CARD & TABLE */
+.card{background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:0 1px 3px rgba(0,0,0,.06);margin-bottom:11px;overflow:hidden}
+.card-hd{padding:11px 14px;border-bottom:1px solid var(--border);background:#F8FAFC;display:flex;justify-content:space-between;align-items:center}
+.card-tt{font-size:12px;font-weight:800;color:var(--navy)}
+.bdg{background:rgba(37,99,235,.09);color:var(--blue);padding:2px 9px;border-radius:20px;font-size:10px;font-weight:700;border:1px solid rgba(37,99,235,.15)}
+.tw{overflow-x:auto;-webkit-overflow-scrolling:touch}
+table{width:100%;border-collapse:collapse;direction:rtl}
+th{text-align:center;font-size:10px;font-weight:700;color:var(--gray);padding:8px 10px;background:#F8FAFC;border-bottom:2px solid var(--border);white-space:nowrap}
+th.lft{text-align:right}
+td{text-align:center;font-size:12px;padding:10px;border-bottom:1px solid rgba(226,232,240,.5);white-space:nowrap}
+td.lft{text-align:right}
+.rn{font-weight:800;color:var(--txt);font-size:12px}
+.rg{color:var(--sub);font-size:10px;margin-top:1px}
+.bl{color:var(--blue);font-weight:700}
+.gr{color:var(--green);font-weight:700}
+.re{color:var(--red);font-weight:700}
+.go{color:var(--gold);font-weight:700}
+.cy{color:#0EA5E9;font-weight:700}
+.nv{color:var(--navy);font-weight:800}
+.tot td{font-weight:800!important;background:rgba(26,58,92,.04);border-top:2px solid rgba(26,58,92,.1);font-size:12px}
+
+/* PROGRESS */
+.pw{display:flex;align-items:center;gap:5px;justify-content:center;min-width:85px}
+.pb{background:var(--border);border-radius:4px;height:6px;width:52px;overflow:hidden;flex-shrink:0}
+.pf{height:100%;border-radius:4px;transition:width .7s}
+.pn{font-size:11px;font-weight:700;min-width:34px;text-align:left}
+.tag{padding:2px 8px;border-radius:20px;font-size:9px;font-weight:800;display:inline-block}
+.tg{background:var(--gl);color:var(--gd)}
+.tr{background:var(--rl);color:var(--red)}
+
+/* REP CARDS */
+.rep-grid{display:grid;grid-template-columns:1fr;gap:10px}
+@media(min-width:640px){.rep-grid{grid-template-columns:repeat(2,1fr)}}
+@media(min-width:960px){.rep-grid{grid-template-columns:repeat(3,1fr)}}
+.rep-card{background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.07);position:relative}
+.rc-header{padding:13px 14px 10px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:flex-start}
+.rc-left{display:flex;align-items:center;gap:10px}
+.rc-avatar{width:40px;height:40px;border-radius:10px;display:grid;place-items:center;font-size:16px;font-weight:900;color:#fff;flex-shrink:0}
+.rc-name{font-size:13px;font-weight:800;color:var(--navy)}
+.rc-region{font-size:10px;color:var(--sub);margin-top:1px}
+.rc-pct{font-size:22px;font-weight:900}
+.rc-pct-sub{font-size:9px;color:var(--sub);text-align:left;margin-top:1px}
+.rc-prog{padding:10px 14px;border-bottom:1px solid var(--border)}
+.rc-prog-bar{background:var(--border);border-radius:5px;height:8px;overflow:hidden;margin-bottom:5px}
+.rc-prog-fill{height:100%;border-radius:5px;transition:width .8s}
+.rc-prog-labels{display:flex;justify-content:space-between;font-size:9px;color:var(--sub)}
+.rc-nums{display:grid;grid-template-columns:repeat(3,1fr);gap:0;padding:2px 0}
+.rc-num{padding:10px 12px;text-align:center;border-left:1px solid var(--border)}
+.rc-num:last-child{border-left:none}
+.rcn-lbl{font-size:9px;color:var(--sub);font-weight:700;margin-bottom:4px}
+.rcn-val{font-size:13px;font-weight:800}
+
+/* CHART & SETTINGS */
+.cc{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:13px;box-shadow:0 1px 3px rgba(0,0,0,.06);margin-bottom:11px}
+.ct{font-size:12px;font-weight:800;color:var(--navy);margin-bottom:11px}
+.sc{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:15px;box-shadow:0 1px 3px rgba(0,0,0,.06);margin-bottom:11px}
+.st{font-size:13px;font-weight:800;color:var(--navy);margin-bottom:13px}
 .fg{display:flex;flex-direction:column;gap:4px;margin-bottom:10px}
-.fg input{background:#F8FAFC;border:1px solid var(--border);border-radius:8px;padding:10px;width:100%}
-.btn{background:var(--blue);color:#fff;width:100%;border:none;padding:12px;border-radius:9px;font-weight:700;cursor:pointer}
+.fg label{font-size:10px;color:var(--gray);font-weight:700}
+.fg input{background:#F8FAFC;border:1px solid var(--border);border-radius:8px;color:var(--txt);padding:9px 12px;font-family:'Cairo',sans-serif;font-size:13px;width:100%}
+.btn{padding:10px 16px;border-radius:9px;font-family:'Cairo',sans-serif;font-size:13px;font-weight:700;cursor:pointer;border:none;transition:.15s}
+.btn-bl{background:var(--blue);color:#fff;width:100%;margin-top:6px;padding:11px}
+
+/* TOAST & FAB */
+.fab{position:fixed;bottom:20px;left:18px;width:52px;height:52px;border-radius:50%;background:var(--blue);color:#fff;border:none;font-size:23px;cursor:pointer;box-shadow:0 4px 16px rgba(37,99,235,.45);display:grid;place-items:center;z-index:90}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--navy);color:#fff;border-radius:10px;padding:10px 20px;font-size:12px;font-weight:700;z-index:300;transition:transform .3s;white-space:nowrap;pointer-events:none}
+.toast.on{transform:translateX(-50%) translateY(0)}
+.t-ok{background:var(--green)}
+footer{text-align:center;padding:14px;font-size:11px;color:var(--sub)}
 </style>
 </head>
 <body>
 
 <nav>
-  <div class="n-brand"><div class="n-logo">ISM</div><div class="n-title">ISM إسماعيلية</div></div>
+  <div class="n-brand">
+    <div class="n-logo">ISM</div>
+    <div><div class="n-title">ISM إسماعيلية</div><div class="n-sub" id="navDate"></div></div>
+  </div>
   <div class="n-right">
     <div class="sync-badge"><div class="sdot" id="sdot"></div><span id="stxt">جاري...</span></div>
     <div class="icbtn" onclick="loadData()">⟳</div>
@@ -44,93 +138,271 @@ td{font-size:12px;padding:10px;border-bottom:1px solid rgba(226,232,240,.5);text
 </nav>
 
 <div class="tabs">
-  <div class="tab on" onclick="ST('overview',this)">🏠 الرئيسية</div>
-  <div class="tab" onclick="ST('settings',this)">⚙️ الإعدادات</div>
+  <div class="tab on"  onclick="ST('overview',this)">🏠 نظرة عامة</div>
+  <div class="tab"     onclick="ST('reps',this)">👥 المناديب</div>
+  <div class="tab"     onclick="ST('daily',this)">📅 اليومي</div>
+  <div class="tab"     onclick="ST('ajal',this)">💳 الأجل</div>
+  <div class="tab"     onclick="ST('wefa',this)">📋 الويفا</div>
+  <div class="tab"     onclick="ST('settings',this)">⚙️ الإعدادات</div>
 </div>
 
 <div class="main">
-  <div class="page on" id="tab-overview">
-    <div class="kpi-row" id="ovKPIs"></div>
-    <div class="card">
-      <div class="tw"><table><thead><tr><th>المندوب</th><th>التارجت</th><th>المحقق</th><th>%</th></tr></thead><tbody id="ovTbl"></tbody></table></div>
-    </div>
-  </div>
 
-  <div class="page" id="tab-settings">
-    <div class="card" style="padding:15px">
-      <div class="fg"><label>رابط Apps Script الحالي:</label>
-      <input id="urlInput" value="https://script.google.com/macros/s/AKfycbw0lMxw62s85yNcgGQRMxa9BwIfLTDfk0jOGsV6O27-BYdxyp6JU8ZV1Z3gcxX-0tB9/exec"></div>
-      <button class="btn" onclick="saveSettings()">💾 تحديث الرابط وحفظ</button>
+<div class="page on" id="tab-overview">
+  <div class="kpi-row" id="ovKPIs"></div>
+  <div class="sec">الأداء العام</div>
+  <div class="cc"><div class="ct">📈 التراكمي الفعلي vs التارجت التراكمي</div><canvas id="cumulC" height="130"></canvas></div>
+  <div class="card">
+    <div class="card-hd"><div class="card-tt">مقارنة المناديب</div><span class="bdg" id="ovBadge"></span></div>
+    <div class="tw">
+      <table>
+        <thead><tr>
+          <th class="lft">المندوب</th><th>التارجت</th><th>المحقق</th><th>آخر يوم</th><th>الباقي</th><th>% الإنجاز</th>
+        </tr></thead>
+        <tbody id="ovTbl"></tbody>
+        <tfoot><tr class="tot" id="ovTot"></tr></tfoot>
+      </table>
     </div>
   </div>
 </div>
 
+<div class="page" id="tab-reps">
+  <div class="sec">بطاقات المناديب</div>
+  <div class="rep-grid" id="repCards"></div>
+</div>
+
+<div class="page" id="tab-daily">
+  <div class="sec">سجل الأيام</div>
+  <div class="card">
+    <div class="tw">
+      <table>
+        <thead id="dayHead"></thead>
+        <tbody id="dayTbl"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<div class="page" id="tab-ajal">
+  <div class="kpi-row" id="ajalKPIs"></div>
+  <div class="card">
+    <div class="tw">
+      <table>
+        <thead><tr><th class="lft">المندوب</th><th>الأجل</th><th>الأوفر ديو</th><th>الحالة</th></tr></thead>
+        <tbody id="ajalTbl"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<div class="page" id="tab-wefa">
+  <div class="kpi-row" id="wefaKPIs"></div>
+  <div class="card">
+    <div class="tw">
+      <table>
+        <thead><tr><th class="lft">المندوب</th><th>تارجت الويفا</th><th>المحقق</th><th>% الإنجاز</th></tr></thead>
+        <tbody id="wefaTbl"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<div class="page" id="tab-settings">
+  <div class="sc">
+    <div class="st">🔗 إعدادات الربط</div>
+    <div class="fg"><label>رابط Apps Script الجديد</label><input id="urlInput" value=""></div>
+    <button class="btn btn-bl" onclick="saveSettings()">💾 حفظ وتحديث</button>
+  </div>
+</div>
+
+</div>
+
+<div class="toast" id="toast"></div>
+<footer>Designed by <b>Ahmed Kilany</b></footer>
+
 <script>
-// --- الرابط اللي بعته ---
+// --- CONFIG & STATE ---
+// الرابط الجديد الذي قمت بوضعه بناءً على طلبك
 let SHEET_URL = 'https://script.google.com/macros/s/AKfycbw0lMxw62s85yNcgGQRMxa9BwIfLTDfk0jOGsV6O27-BYdxyp6JU8ZV1Z3gcxX-0tB9/exec';
 
-// استرجاع الرابط من الذاكرة لو موجود
-const savedUrl = localStorage.getItem('ism_url');
-if(savedUrl) {
-    SHEET_URL = savedUrl;
-    document.getElementById('urlInput').value = savedUrl;
-}
-
 const REPS = [
-  {"region": "الافرنجي", "rep": "طارق عبدالفتاح", "target": 885000},
-  {"region": "التل", "rep": "إسلام الضو", "target": 900000},
-  {"region": "التمليك", "rep": "أحمد حسن", "target": 725000},
-  {"region": "الشيخ زايد", "rep": "مروان عماد", "target": 1000000},
-  {"region": "العريشية", "rep": "سيد عادل", "target": 800000},
-  {"region": "القنطرة", "rep": "سامى محمد", "target": 935000},
-  {"region": "فايد", "rep": "عبدالرحمن عادل", "target": 990000}
+  {"region": "الافرنجي", "rep": "طارق عبدالفتاح", "target": 885000, "wefa11": 296000, "color": "#2563EB"},
+  {"region": "التل", "rep": "إسلام الضو", "target": 900000, "wefa11": 284900, "color": "#16A34A"},
+  {"region": "التمليك", "rep": "أحمد حسن", "target": 725000, "wefa11": 236800, "color": "#D97706"},
+  {"region": "الشيخ زايد", "rep": "مروان عماد", "target": 1000000, "wefa11": 303400, "color": "#7C3AED"},
+  {"region": "العريشية", "rep": "سيد عادل", "target": 800000, "wefa11": 251600, "color": "#DC2626"},
+  {"region": "القنطرة", "rep": "سامى محمد", "target": 935000, "wefa11": 307100, "color": "#0EA5E9"},
+  {"region": "فايد", "rep": "عبدالرحمن عادل", "target": 990000, "wefa11": 299700, "color": "#059669"}
 ];
+const REGIONS = REPS.map(r=>r.region);
+let SALES = [];
+let AJAL = [];
+let TTGT = 6235000;
+let WDAYS = 26;
 
+// --- HELPERS ---
+const fN = n => Math.round(+n||0).toLocaleString('ar-EG');
+const fP = (a,b) => b===0? '0%' : ((a/b)*100).toFixed(1)+'%';
+const sOf = r => SALES.reduce((s,d)=>s+(+d[r]||0),0);
+const tOf = r => SALES.length ? (+SALES[SALES.length-1][r]||0) : 0;
+
+// --- CORE FUNCTIONS ---
 async function loadData(){
   setSS('load');
   try {
     const r = await fetch(SHEET_URL + '?action=get');
-    if (!r.ok) throw new Error('404'); // لو الرابط ميت
     const j = await r.json();
     if(j.status === 'ok'){
-      render(j.sales || []);
+      SALES = j.sales || [];
+      AJAL = j.ajal || [];
+      renderAll();
       setSS('ok');
     }
-  } catch(e) { 
-    setSS('er'); 
-    alert("عذراً: الرابط الحالي غير صحيح (404). تأكد من 'نشر' السكريبت في جوجل واختيار Anyone.");
+  } catch(e) {
+    setSS('er');
+    console.error(e);
   }
 }
 
-function render(sales){
-  const sOf = r => sales.reduce((s,d)=>s+(+d[r]||0),0);
-  const tAch = REPS.reduce((s,r)=>s+sOf(r.region),0);
-  
-  document.getElementById('ovKPIs').innerHTML = `<div class="kpi"><div class="kv">${tAch.toLocaleString('ar-EG')}</div><div>إجمالي المحقق</div></div>`;
+function renderAll(){
+  updateDate();
+  renderOv();
+  renderReps();
+  renderDaily();
+  renderAjal();
+  renderWefa();
+  renderCharts();
+}
+
+function updateDate(){
+  const d = new Date();
+  document.getElementById('navDate').textContent = d.toLocaleDateString('ar-EG', {weekday:'long', year:'numeric', month:'long', day:'numeric'});
+}
+
+function renderOv(){
+  const tAch = REGIONS.reduce((s,r)=>s+sOf(r),0);
+  const tTod = REGIONS.reduce((s,r)=>s+tOf(r),0);
+  const el = SALES.length;
+
+  document.getElementById('ovKPIs').innerHTML = `
+    <div class="kpi" style="--ac:#2563EB"><div class="ki">🎯</div><div class="kl">التارجت</div><div class="kv">${fN(TTGT)}</div></div>
+    <div class="kpi" style="--ac:#16A34A"><div class="ki">📦</div><div class="kl">المحقق</div><div class="kv">${fN(tAch)}</div><div class="ks">${fP(tAch,TTGT)}</div></div>
+    <div class="kpi" style="--ac:#0EA5E9"><div class="ki">📅</div><div class="kl">آخر يوم</div><div class="kv">${fN(tTod)}</div></div>
+    <div class="kpi" style="--ac:#D97706"><div class="ki">⏳</div><div class="kl">أيام عمل</div><div class="kv">${el} / ${WDAYS}</div></div>
+  `;
+
   document.getElementById('ovTbl').innerHTML = REPS.map(r=>{
-    const a = sOf(r.region);
-    return `<tr><td>${r.rep}</td><td>${r.target.toLocaleString()}</td><td>${a.toLocaleString()}</td><td>${((a/r.target)*100).toFixed(1)}%</td></tr>`;
+    const a = sOf(r.region), t = r.target;
+    return `<tr>
+      <td class="lft"><div class="rn">${r.rep}</div><div class="rg">${r.region}</div></td>
+      <td class="bl">${fN(t)}</td><td class="gr">${fN(a)}</td><td>${fN(tOf(r.region))}</td>
+      <td class="go">${fN(t-a)}</td><td>${fP(a,t)}</td>
+    </tr>`;
   }).join('');
 }
 
-function ST(n, e){
+function renderReps(){
+  const el = SALES.length, tpct = el/WDAYS;
+  document.getElementById('repCards').innerHTML = REPS.map(r=>{
+    const a = sOf(r.region), p = a/r.target, ok = p >= tpct;
+    const aj = AJAL.find(x=>x.region===r.region) || {ajal:0, overdue:0};
+    return `<div class="rep-card">
+      <div class="rc-header">
+        <div class="rc-left">
+          <div class="rc-avatar" style="background:${r.color}">${r.rep[0]}</div>
+          <div><div class="rc-name">${r.rep}</div><div class="rc-region">${r.region}</div></div>
+        </div>
+        <div class="rc-pct" style="color:${ok?'#16A34A':'#DC2626'}">${fP(a,r.target)}</div>
+      </div>
+      <div class="rc-nums">
+        <div class="rc-num"><div class="rcn-lbl">المحقق</div><div class="rcn-val">${fN(a)}</div></div>
+        <div class="rc-num"><div class="rcn-lbl">آخر يوم</div><div class="rcn-val">${fN(tOf(r.region))}</div></div>
+        <div class="rc-num"><div class="rcn-lbl">الأجل</div><div class="rcn-val">${fN(aj.ajal)}</div></div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function renderDaily(){
+  if(!SALES.length) return;
+  const keys = Object.keys(SALES[0]);
+  document.getElementById('dayHead').innerHTML = `<tr>${keys.map(k=>`<th>${k}</th>`).join('')}</tr>`;
+  document.getElementById('dayTbl').innerHTML = SALES.slice().reverse().map(row => `
+    <tr>${keys.map(k=>`<td>${isNaN(row[k])? row[k] : fN(row[k])}</td>`).join('')}</tr>
+  `).join('');
+}
+
+function renderAjal(){
+  document.getElementById('ajalTbl').innerHTML = AJAL.map(r=>`
+    <tr>
+      <td class="lft">${r.rep}</td><td class="bl">${fN(r.ajal)}</td>
+      <td class="re">${fN(r.overdue)}</td>
+      <td>${r.overdue > 1000 ? '<span class="tag tr">تحصيل</span>' : '<span class="tag tg">ممتاز</span>'}</td>
+    </tr>
+  `).join('');
+}
+
+function renderWefa(){
+  document.getElementById('wefaTbl').innerHTML = REPS.map(r=>{
+    const a = sOf(r.region);
+    return `<tr><td class="lft">${r.rep}</td><td class="bl">${fN(r.wefa11)}</td><td class="gr">${fN(a)}</td><td>${fP(a,r.wefa11)}</td></tr>`;
+  }).join('');
+}
+
+let chart;
+function renderCharts(){
+  const ctx = document.getElementById('cumulC');
+  if(chart) chart.destroy();
+  let sum = 0;
+  const data = SALES.map(d=>{ sum += REGIONS.reduce((s,r)=>s+(+d[r]||0),0); return sum; });
+  const targets = SALES.map((_,i)=> (TTGT/WDAYS)*(i+1));
+
+  chart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: SALES.map(d=>d.date.split('-').slice(1).join('/')),
+      datasets: [
+        {label:'الفعلي', data, borderColor:'#2563EB', fill:true, backgroundColor:'rgba(37,99,235,0.1)'},
+        {label:'التارجت', data:targets, borderColor:'#DC2626', borderDash:[5,5]}
+      ]
+    },
+    options: { responsive: true, plugins: { legend: { display: false } } }
+  });
+}
+
+function ST(name, el){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('on'));
   document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));
-  document.getElementById('tab-'+n).classList.add('on'); e.classList.add('on');
+  document.getElementById('tab-'+name).classList.add('on');
+  el.classList.add('on');
 }
 
 function setSS(s){
   const d=document.getElementById('sdot'), t=document.getElementById('stxt');
   if(s==='ok'){ d.style.background='#4ADE80'; t.textContent='متصل'; }
   else if(s==='load'){ d.style.background='#FCD34D'; t.textContent='جاري...'; }
-  else { d.style.background='#F87171'; t.textContent='خطأ 404'; }
+  else { d.style.background='#F87171'; t.textContent='خطأ'; }
 }
 
 function saveSettings(){
   const val = document.getElementById('urlInput').value;
-  if(val) { localStorage.setItem('ism_url', val); location.reload(); }
+  if(val) {
+    SHEET_URL = val;
+    localStorage.setItem('ism_url', val);
+    loadData();
+    const ts = document.getElementById('toast');
+    ts.textContent = "تم تحديث الرابط بنجاح";
+    ts.className = "toast t-ok on";
+    setTimeout(()=>ts.classList.remove('on'), 2000);
+  }
 }
 
+// Init
+const savedUrl = localStorage.getItem('ism_url');
+if(savedUrl) {
+    SHEET_URL = savedUrl;
+    document.getElementById('urlInput').value = savedUrl;
+}
 loadData();
 </script>
 </body>
