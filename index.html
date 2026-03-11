@@ -7,67 +7,36 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
 <style>
-:root{
-  --bg:#EEF2F7;--card:#fff;--navy:#1A3A5C;--blue:#2563EB;
-  --green:#16A34A;--gl:#DCFCE7;--gd:#14532D;
-  --red:#DC2626;--rl:#FEE2E2;
-  --gold:#D97706;--yl:#FEF3C7;
-  --gray:#64748B;--border:#E2E8F0;--sub:#94A3B8;
-  --txt:#1E293B;
-}
+:root{ --bg:#EEF2F7;--card:#fff;--navy:#1A3A5C;--blue:#2563EB;--green:#16A34A;--red:#DC2626;--gray:#64748B;--border:#E2E8F0;--sub:#94A3B8;--txt:#1E293B; }
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 body{background:var(--bg);font-family:'Cairo',sans-serif;color:var(--txt);direction:rtl;min-height:100vh}
 nav{background:var(--navy);height:56px;display:flex;align-items:center;justify-content:space-between;padding:0 14px;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.25)}
-.n-brand{display:flex;align-items:center;gap:10px}
-.n-logo{width:34px;height:34px;background:var(--blue);border-radius:8px;display:grid;place-items:center;font-size:11px;font-weight:900;color:#fff;flex-shrink:0}
-.n-title{color:#fff;font-size:14px;font-weight:800}
-.n-sub{color:rgba(255,255,255,.5);font-size:10px}
-.n-right{display:flex;gap:7px;align-items:center}
+.n-brand{display:flex;align-items:center;gap:10px}.n-logo{width:34px;height:34px;background:var(--blue);border-radius:8px;display:grid;place-items:center;font-size:11px;font-weight:900;color:#fff}
+.n-title{color:#fff;font-size:14px;font-weight:800}.n-right{display:flex;gap:7px;align-items:center}
 .sync-badge{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);color:#fff;padding:4px 10px;border-radius:20px;font-size:10px;font-weight:700;display:flex;align-items:center;gap:5px}
-.sdot{width:7px;height:7px;border-radius:50%;background:#4ADE80;animation:blink 2s infinite}
-@keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
-.icbtn{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);color:#fff;width:34px;height:34px;border-radius:8px;cursor:pointer;font-size:16px;display:grid;place-items:center;transition:.15s}
-.tabs{background:#fff;border-bottom:2px solid var(--border);display:flex;overflow-x:auto;scrollbar-width:none;padding:0 8px;position:sticky;top:56px;z-index:90;box-shadow:0 1px 3px rgba(0,0,0,.06)}
-.tab{padding:12px 14px;font-size:12px;font-weight:700;color:var(--gray);white-space:nowrap;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;transition:.18s}
+.sdot{width:7px;height:7px;border-radius:50%;background:#FCD34D;animation:blink 2s infinite}@keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
+.icbtn{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);color:#fff;width:34px;height:34px;border-radius:8px;cursor:pointer;display:grid;place-items:center}
+.tabs{background:#fff;border-bottom:2px solid var(--border);display:flex;overflow-x:auto;padding:0 8px;position:sticky;top:56px;z-index:90}
+.tab{padding:12px 14px;font-size:12px;font-weight:700;color:var(--gray);white-space:nowrap;cursor:pointer;border-bottom:2px solid transparent}
 .tab.on{color:var(--blue);border-bottom-color:var(--blue)}
 .main{padding:12px;max-width:1100px;margin:0 auto;padding-bottom:84px}
 .page{display:none}.page.on{display:block}
-.sec{font-size:10px;font-weight:800;color:var(--sub);letter-spacing:1.2px;text-transform:uppercase;margin:16px 0 9px;display:flex;align-items:center;gap:8px}
-.sec::after{content:'';flex:1;height:1px;background:var(--border)}
-.kpi-row{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;margin-bottom:4px}
-@media(min-width:560px){.kpi-row{grid-template-columns:repeat(4,1fr)}}
-.kpi{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:13px;position:relative;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.06)}
-.kpi::before{content:'';position:absolute;top:0;right:0;left:0;height:3px;background:var(--ac);border-radius:12px 12px 0 0}
-.ki{font-size:19px;margin-bottom:6px}
-.kl{font-size:10px;color:var(--gray);font-weight:700;margin-bottom:5px}
-.kv{font-size:21px;font-weight:900;color:var(--ac);line-height:1;margin-bottom:2px}
-.card{background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:0 1px 3px rgba(0,0,0,.06);margin-bottom:11px;overflow:hidden}
-.card-hd{padding:11px 14px;border-bottom:1px solid var(--border);background:#F8FAFC;display:flex;justify-content:space-between;align-items:center}
-.card-tt{font-size:12px;font-weight:800;color:var(--navy)}
-.tw{overflow-x:auto;-webkit-overflow-scrolling:touch}
-table{width:100%;border-collapse:collapse;direction:rtl}
-th{text-align:center;font-size:10px;font-weight:700;color:var(--gray);padding:8px 10px;background:#F8FAFC;border-bottom:2px solid var(--border);white-space:nowrap}
-td{text-align:center;font-size:12px;padding:10px;border-bottom:1px solid rgba(226,232,240,.5);white-space:nowrap}
-.rep-grid{display:grid;grid-template-columns:1fr;gap:10px}
-@media(min-width:640px){.rep-grid{grid-template-columns:repeat(2,1fr)}}
-.rep-card{background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.07)}
-.rc-header{padding:13px 14px 10px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between}
-.rc-name{font-size:13px;font-weight:800;color:var(--navy)}
-.rc-pct{font-size:22px;font-weight:900}
-.rc-nums{display:grid;grid-template-columns:repeat(3,1fr);gap:0}
-.rc-num{padding:10px 12px;text-align:center;border-left:1px solid var(--border)}
-.sc{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:15px;margin-bottom:11px}
+.kpi-row{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;margin-bottom:15px}
+.kpi{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:13px;box-shadow:0 1px 3px rgba(0,0,0,.06)}
+.kv{font-size:21px;font-weight:900;color:var(--blue)}
+.card{background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:11px}
+.tw{overflow-x:auto}table{width:100%;border-collapse:collapse}
+th{font-size:10px;color:var(--gray);padding:8px;background:#F8FAFC;border-bottom:2px solid var(--border)}
+td{font-size:12px;padding:10px;border-bottom:1px solid rgba(226,232,240,.5);text-align:center}
 .fg{display:flex;flex-direction:column;gap:4px;margin-bottom:10px}
-.fg label{font-size:10px;color:var(--gray);font-weight:700}
-.fg input{background:#F8FAFC;border:1px solid var(--border);border-radius:8px;padding:9px 12px;font-size:13px;width:100%}
-.btn-bl{background:var(--blue);color:#fff;width:100%;border:none;padding:11px;border-radius:9px;font-weight:700;cursor:pointer}
-footer{text-align:center;padding:14px;font-size:11px;color:var(--sub)}
+.fg input{background:#F8FAFC;border:1px solid var(--border);border-radius:8px;padding:10px;width:100%}
+.btn{background:var(--blue);color:#fff;width:100%;border:none;padding:12px;border-radius:9px;font-weight:700;cursor:pointer}
 </style>
 </head>
 <body>
 
 <nav>
-  <div class="n-brand"><div class="n-logo">ISM</div><div><div class="n-title">ISM إسماعيلية</div><div class="n-sub" id="navDate"></div></div></div>
+  <div class="n-brand"><div class="n-logo">ISM</div><div class="n-title">ISM إسماعيلية</div></div>
   <div class="n-right">
     <div class="sync-badge"><div class="sdot" id="sdot"></div><span id="stxt">جاري...</span></div>
     <div class="icbtn" onclick="loadData()">⟳</div>
@@ -75,10 +44,7 @@ footer{text-align:center;padding:14px;font-size:11px;color:var(--sub)}
 </nav>
 
 <div class="tabs">
-  <div class="tab on" onclick="ST('overview',this)">🏠 نظرة عامة</div>
-  <div class="tab" onclick="ST('reps',this)">👥 المناديب</div>
-  <div class="tab" onclick="ST('daily',this)">📅 اليومي</div>
-  <div class="tab" onclick="ST('ajal',this)">💳 الأجل</div>
+  <div class="tab on" onclick="ST('overview',this)">🏠 الرئيسية</div>
   <div class="tab" onclick="ST('settings',this)">⚙️ الإعدادات</div>
 </div>
 
@@ -86,66 +52,64 @@ footer{text-align:center;padding:14px;font-size:11px;color:var(--sub)}
   <div class="page on" id="tab-overview">
     <div class="kpi-row" id="ovKPIs"></div>
     <div class="card">
-      <div class="card-hd"><div class="card-tt">مقارنة المناديب</div></div>
-      <div class="tw"><table><thead><tr><th>المندوب</th><th>التارجت</th><th>المحقق</th><th>الباقي</th><th>% الإنجاز</th></tr></thead><tbody id="ovTbl"></tbody></table></div>
+      <div class="tw"><table><thead><tr><th>المندوب</th><th>التارجت</th><th>المحقق</th><th>%</th></tr></thead><tbody id="ovTbl"></tbody></table></div>
     </div>
   </div>
-  <div class="page" id="tab-reps"><div class="rep-grid" id="repCards"></div></div>
-  <div class="page" id="tab-daily"><div class="card"><div class="tw"><table><thead id="dayHead"></thead><tbody id="dayTbl"></tbody></table></div></div></div>
-  <div class="page" id="tab-ajal"><div class="card"><div class="tw"><table><thead><tr><th>المندوب</th><th>الأجل</th><th>الأوفر ديو</th></tr></thead><tbody id="ajalTbl"></tbody></table></div></div></div>
+
   <div class="page" id="tab-settings">
-    <div class="sc">
-      <div class="fg"><label>رابط Apps Script</label><input id="urlInput" value="https://script.google.com/macros/s/AKfycbw0lMxw62s85yNcgGQRMxa9BwIfLTDfk0jOGsV6O27-BYdxyp6JU8ZV1Z3gcxX-0tB9/exec"></div>
-      <button class="btn-bl" onclick="saveSettings()">💾 حفظ وتحديث</button>
+    <div class="card" style="padding:15px">
+      <div class="fg"><label>رابط Apps Script الحالي:</label>
+      <input id="urlInput" value="https://script.google.com/macros/s/AKfycbw0lMxw62s85yNcgGQRMxa9BwIfLTDfk0jOGsV6O27-BYdxyp6JU8ZV1Z3gcxX-0tB9/exec"></div>
+      <button class="btn" onclick="saveSettings()">💾 تحديث الرابط وحفظ</button>
     </div>
   </div>
 </div>
 
-<footer>Designed by <b>Ahmed Kilany</b></footer>
-
 <script>
-// --- الرابط الجديد بتاعك ---
+// --- الرابط اللي بعته ---
 let SHEET_URL = 'https://script.google.com/macros/s/AKfycbw0lMxw62s85yNcgGQRMxa9BwIfLTDfk0jOGsV6O27-BYdxyp6JU8ZV1Z3gcxX-0tB9/exec';
 
-const REPS = [
-  {"region": "الافرنجي", "rep": "طارق عبدالفتاح", "target": 885000, "color": "#2563EB"},
-  {"region": "التل", "rep": "إسلام الضو", "target": 900000, "color": "#16A34A"},
-  {"region": "التمليك", "rep": "أحمد حسن", "target": 725000, "color": "#D97706"},
-  {"region": "الشيخ زايد", "rep": "مروان عماد", "target": 1000000, "color": "#7C3AED"},
-  {"region": "العريشية", "rep": "سيد عادل", "target": 800000, "color": "#DC2626"},
-  {"region": "القنطرة", "rep": "سامى محمد", "target": 935000, "color": "#0EA5E9"},
-  {"region": "فايد", "rep": "عبدالرحمن عادل", "target": 990000, "color": "#059669"}
-];
-const REGIONS = REPS.map(r=>r.region);
-let SALES = [], AJAL = [], TTGT = 6235000, WDAYS = 26;
+// استرجاع الرابط من الذاكرة لو موجود
+const savedUrl = localStorage.getItem('ism_url');
+if(savedUrl) {
+    SHEET_URL = savedUrl;
+    document.getElementById('urlInput').value = savedUrl;
+}
 
-const fN = n => Math.round(+n||0).toLocaleString('ar-EG');
-const fP = (a,b) => b===0? '0%' : ((a/b)*100).toFixed(1)+'%';
-const sOf = r => SALES.reduce((s,d)=>s+(+d[r]||0),0);
+const REPS = [
+  {"region": "الافرنجي", "rep": "طارق عبدالفتاح", "target": 885000},
+  {"region": "التل", "rep": "إسلام الضو", "target": 900000},
+  {"region": "التمليك", "rep": "أحمد حسن", "target": 725000},
+  {"region": "الشيخ زايد", "rep": "مروان عماد", "target": 1000000},
+  {"region": "العريشية", "rep": "سيد عادل", "target": 800000},
+  {"region": "القنطرة", "rep": "سامى محمد", "target": 935000},
+  {"region": "فايد", "rep": "عبدالرحمن عادل", "target": 990000}
+];
 
 async function loadData(){
   setSS('load');
   try {
     const r = await fetch(SHEET_URL + '?action=get');
+    if (!r.ok) throw new Error('404'); // لو الرابط ميت
     const j = await r.json();
     if(j.status === 'ok'){
-      SALES = j.sales || []; AJAL = j.ajal || [];
-      renderAll(); setSS('ok');
+      render(j.sales || []);
+      setSS('ok');
     }
-  } catch(e) { setSS('er'); console.error(e); }
+  } catch(e) { 
+    setSS('er'); 
+    alert("عذراً: الرابط الحالي غير صحيح (404). تأكد من 'نشر' السكريبت في جوجل واختيار Anyone.");
+  }
 }
 
-function renderAll(){
-  const tAch = REGIONS.reduce((s,r)=>s+sOf(r),0);
-  document.getElementById('navDate').textContent = new Date().toLocaleDateString('ar-EG');
-  document.getElementById('ovKPIs').innerHTML = `<div class="kpi" style="--ac:#2563EB"><div class="ki">🎯</div><div class="kl">التارجت</div><div class="kv">${fN(TTGT)}</div></div><div class="kpi" style="--ac:#16A34A"><div class="ki">📦</div><div class="kl">المحقق</div><div class="kv">${fN(tAch)}</div></div>`;
+function render(sales){
+  const sOf = r => sales.reduce((s,d)=>s+(+d[r]||0),0);
+  const tAch = REPS.reduce((s,r)=>s+sOf(r.region),0);
+  
+  document.getElementById('ovKPIs').innerHTML = `<div class="kpi"><div class="kv">${tAch.toLocaleString('ar-EG')}</div><div>إجمالي المحقق</div></div>`;
   document.getElementById('ovTbl').innerHTML = REPS.map(r=>{
     const a = sOf(r.region);
-    return `<tr><td>${r.rep}</td><td>${fN(r.target)}</td><td>${fN(a)}</td><td>${fN(r.target-a)}</td><td>${fP(a,r.target)}</td></tr>`;
-  }).join('');
-  document.getElementById('repCards').innerHTML = REPS.map(r=>{
-    const a = sOf(r.region);
-    return `<div class="rep-card"><div class="rc-header"><div class="rc-name">${r.rep}</div><div class="rc-pct">${fP(a,r.target)}</div></div><div class="rc-nums"><div class="rc-num">${fN(a)}</div><div class="rc-num">${r.region}</div></div></div>`;
+    return `<tr><td>${r.rep}</td><td>${r.target.toLocaleString()}</td><td>${a.toLocaleString()}</td><td>${((a/r.target)*100).toFixed(1)}%</td></tr>`;
   }).join('');
 }
 
@@ -159,12 +123,12 @@ function setSS(s){
   const d=document.getElementById('sdot'), t=document.getElementById('stxt');
   if(s==='ok'){ d.style.background='#4ADE80'; t.textContent='متصل'; }
   else if(s==='load'){ d.style.background='#FCD34D'; t.textContent='جاري...'; }
-  else { d.style.background='#F87171'; t.textContent='خطأ'; }
+  else { d.style.background='#F87171'; t.textContent='خطأ 404'; }
 }
 
 function saveSettings(){
   const val = document.getElementById('urlInput').value;
-  if(val) { SHEET_URL = val; localStorage.setItem('ism_url', val); loadData(); }
+  if(val) { localStorage.setItem('ism_url', val); location.reload(); }
 }
 
 loadData();
