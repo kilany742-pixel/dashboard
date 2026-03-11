@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>بزنس بارتنرز — داشبورد متصل</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#0d1117; --surface:#161b27; --card:#1c2333; --border:#21293d;
+  --cyan:#00c8ff; --green:#00e5a0; --gold:#fbbf24; --red:#f43f5e;
+  --purple:#a78bfa; --orange:#fb923c; --blue:#60a5fa;
+  --txt:#e2e8f0; --txt2:#8892a4; --txt3:#4a5568;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--bg);font-family:'Cairo',sans-serif;color:var(--txt);direction:rtl;}
+
+/* NAV */
+nav{background:var(--surface);border-bottom:1px solid var(--border);padding:0 24px;height:56px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;}
+.nav-brand{display:flex;align-items:center;gap:10px;}
+.live-dot{width:9px;height:9px;border-radius:50%;background:var(--green);box-shadow:0 0 10px var(--green);animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+.nav-brand h1{font-size:15px;font-weight:800;}
+.nav-brand span{font-size:11px;color:var(--txt2);}
+.nav-right{display:flex;align-items:center;gap:10px;}
+.date-pill{background:rgba(0,200,255,.1);border:1px solid rgba(0,200,255,.2);color:var(--cyan);padding:4px 14px;border-radius:20px;font-size:11px;font-weight:700;}
+.sync-status{font-size:11px;color:var(--txt2);display:flex;align-items:center;gap:5px;}
+.sync-ok{color:var(--green);}
+.sync-err{color:var(--red);}
+btn{all:unset;cursor:pointer;}
+.btn{padding:6px 16px;border-radius:8px;font-family:'Cairo',sans-serif;font-size:12px;font-weight:700;cursor:pointer;border:none;transition:all .2s;}
+.btn-cyan{background:var(--cyan);color:var(--bg);}
+.btn-cyan:hover{opacity:.85;}
+.btn-green{background:rgba(0,229,160,.12);border:1px solid rgba(0,229,160,.3);color:var(--green);}
+.btn-green:hover{background:rgba(0,229,160,.2);}
+.btn-ghost{background:var(--border);color:var(--txt2);}
+
+/* SETUP BANNER */
+.setup-banner{background:linear-gradient(135deg,rgba(0,200,255,.08),rgba(0,229,160,.05));border:1px solid rgba(0,200,255,.2);border-radius:12px;padding:20px 24px;margin:20px 24px;display:flex;align-items:flex-start;gap:16px;}
+.setup-banner.hidden{display:none;}
+.setup-icon{font-size:28px;flex-shrink:0;}
+.setup-content h3{font-size:14px;font-weight:800;color:var(--cyan);margin-bottom:6px;}
+.setup-steps{font-size:12px;color:var(--txt2);line-height:2;}
+.setup-steps code{background:var(--card);color:var(--gold);padding:1px 7px;border-radius:4px;font-family:monospace;font-size:11px;}
+.setup-input-row{display:flex;gap:8px;margin-top:12px;}
+.setup-input{background:var(--card);border:1px solid var(--border);border-radius:8px;color:var(--txt);padding:8px 14px;font-family:'Cairo',sans-serif;font-size:12px;flex:1;min-width:300px;}
+.setup-input:focus{outline:none;border-color:var(--cyan);}
+
+/* MAIN */
+.main{padding:20px 24px;max-width:1600px;margin:0 auto;}
+.sec-label{font-size:11px;font-weight:700;color:var(--txt2);letter-spacing:1.5px;margin-bottom:12px;display:flex;align-items:center;gap:8px;}
+.sec-label::after{content:'';flex:1;height:1px;background:var(--border);}
+
+/* KPI GRID */
+.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:24px;}
+.kpi-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px 18px;position:relative;overflow:hidden;transition:transform .2s;animation:fadeUp .5s ease both;}
+.kpi-card:hover{transform:translateY(-2px);}
+.kpi-card::before{content:'';position:absolute;top:0;right:0;left:0;height:3px;background:var(--acc);border-radius:12px 12px 0 0;}
+.kpi-card::after{content:'';position:absolute;top:-50px;left:-50px;width:130px;height:130px;border-radius:50%;background:radial-gradient(circle,var(--acc) 0%,transparent 70%);opacity:.05;}
+.kpi-lbl{font-size:10px;color:var(--txt2);font-weight:700;margin-bottom:8px;}
+.kpi-val{font-size:24px;font-weight:900;color:var(--acc);line-height:1;margin-bottom:4px;}
+.kpi-sub{font-size:10px;color:var(--txt3);}
+
+/* CHARTS */
+.charts-row{display:grid;grid-template-columns:2fr 1.1fr;gap:14px;margin-bottom:24px;}
+.chart-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:18px;}
+.chart-ttl{font-size:12px;font-weight:700;margin-bottom:14px;}
+
+/* TABLE */
+.tbl-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:18px;margin-bottom:24px;overflow-x:auto;}
+.tbl-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;}
+.tbl-ttl{font-size:13px;font-weight:700;}
+.badge{background:rgba(0,200,255,.1);color:var(--cyan);padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;}
+table{width:100%;border-collapse:collapse;direction:rtl;}
+thead th{text-align:center;font-size:10px;font-weight:700;color:var(--txt2);padding:9px 12px;border-bottom:1px solid var(--border);white-space:nowrap;}
+tbody tr{transition:background .15s;}
+tbody tr:hover{background:rgba(255,255,255,.025);}
+tbody td{text-align:center;font-size:12px;padding:10px 12px;border-bottom:1px solid rgba(33,41,61,.5);white-space:nowrap;}
+.rep-nm{font-weight:700;color:var(--txt);text-align:right;}
+.rep-rg{color:var(--txt2);font-size:10px;text-align:right;}
+.rank-b{width:24px;height:24px;border-radius:6px;display:inline-flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;}
+.r1{background:rgba(251,191,36,.15);color:var(--gold);}
+.r2{background:rgba(148,163,184,.1);color:#94a3b8;}
+.r3{background:rgba(205,127,50,.1);color:#cd7f32;}
+.rn{background:var(--border);color:var(--txt3);}
+.pct-wrap{display:flex;align-items:center;gap:6px;justify-content:center;}
+.pct-bar{background:var(--border);border-radius:4px;height:5px;width:60px;overflow:hidden;}
+.pct-fill{height:100%;border-radius:4px;background:var(--green);transition:width .6s;}
+.pct-txt{font-size:10px;color:var(--txt2);min-width:32px;}
+.tag{padding:2px 8px;border-radius:20px;font-size:9px;font-weight:700;display:inline-block;}
+.t-best{background:rgba(0,229,160,.12);color:var(--green);}
+.t-good{background:rgba(0,200,255,.1);color:var(--cyan);}
+.t-low{background:rgba(244,63,94,.1);color:var(--red);}
+.tot-row td{font-weight:800;color:var(--cyan)!important;background:rgba(0,200,255,.04);border-top:1px solid rgba(0,200,255,.2);}
+
+/* HONOR */
+.honor-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:24px;}
+.honor-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:13px 15px;animation:fadeUp .7s ease both;}
+.h-lbl{font-size:9px;color:var(--txt2);font-weight:700;letter-spacing:.5px;margin-bottom:4px;}
+.h-nm{font-size:14px;font-weight:800;margin-bottom:2px;}
+.h-val{font-size:11px;color:var(--txt2);}
+
+/* LOADING */
+.loading{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:60px;gap:14px;color:var(--txt2);}
+.spinner{width:36px;height:36px;border:3px solid var(--border);border-top-color:var(--cyan);border-radius:50%;animation:spin .8s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* MODAL */
+.modal-ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:200;align-items:center;justify-content:center;backdrop-filter:blur(4px);}
+.modal-ov.open{display:flex;}
+.modal{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:26px;width:520px;max-width:95vw;max-height:90vh;overflow-y:auto;direction:rtl;}
+.modal h2{font-size:15px;font-weight:800;color:var(--cyan);margin-bottom:18px;}
+.fg{display:flex;flex-direction:column;gap:5px;margin-bottom:12px;}
+.fg label{font-size:10px;color:var(--txt2);font-weight:700;}
+.fg input,.fg select{background:var(--card);border:1px solid var(--border);border-radius:8px;color:var(--txt);padding:8px 12px;font-family:'Cairo',sans-serif;font-size:13px;direction:rtl;width:100%;}
+.fg input:focus,.fg select:focus{outline:none;border-color:var(--cyan);}
+.fg select option{background:var(--card);}
+.fgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.modal-btns{display:flex;gap:8px;margin-top:16px;justify-content:flex-end;}
+
+/* TOAST */
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--card);border:1px solid var(--border);border-radius:10px;padding:12px 22px;font-size:13px;font-weight:600;z-index:300;transition:transform .35s ease;pointer-events:none;}
+.toast.show{transform:translateX(-50%) translateY(0);}
+.toast.success{border-color:rgba(0,229,160,.4);color:var(--green);}
+.toast.error{border-color:rgba(244,63,94,.4);color:var(--red);}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:900px){.kpi-grid{grid-template-columns:repeat(2,1fr)}.charts-row{grid-template-columns:1fr}.honor-grid{grid-template-columns:repeat(2,1fr)}}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-brand">
+    <div class="live-dot"></div>
+    <div><h1>بزنس بارتنرز</h1><span>إسماعيلية — لوحة متابعة متصلة بـ Google Sheets</span></div>
+  </div>
+  <div class="nav-right">
+    <div class="sync-status" id="syncStatus"><span>●</span> <span id="syncTxt">غير متصل</span></div>
+    <span class="date-pill" id="datePill">—</span>
+    <button class="btn btn-green" onclick="openModal()">+ إدخال يوم</button>
+    <button class="btn btn-cyan" onclick="loadFromSheet()">⟳ تحديث</button>
+  </div>
+</nav>
+
+<!-- SETUP BANNER -->
+<div class="setup-banner" id="setupBanner">
+  <div class="setup-icon">🔗</div>
+  <div class="setup-content">
+    <h3>ربط الداشبورد بـ Google Sheets — 3 خطوات بس</h3>
+    <div class="setup-steps">
+      <b>1.</b> افتح <a href="https://sheets.new" target="_blank" style="color:var(--cyan)">sheets.new</a> وأنشئ Sheet جديد  →  سمّيه <code>BizPartners</code><br>
+      <b>2.</b> من القائمة: <code>Extensions → Apps Script</code> — الصق الكود الموجود في ملف <code>apps_script.txt</code> واضغط Deploy → New Deployment → Web App → Anyone<br>
+      <b>3.</b> انسخ الـ <code>Deployment URL</code> والصقه هنا:
+    </div>
+    <div class="setup-input-row">
+      <input class="setup-input" id="sheetUrl" placeholder="https://script.google.com/macros/s/YOUR_ID/exec" />
+      <button class="btn btn-cyan" onclick="connectSheet()">ربط</button>
+      <button class="btn btn-ghost" onclick="useDemoData()">تجربة بدون ربط</button>
+    </div>
+  </div>
+</div>
+
+<div class="main" id="mainContent" style="display:none">
+  <div class="sec-label">📊 مؤشرات الأداء اليومي</div>
+  <div class="kpi-grid" id="kpiGrid"></div>
+
+  <div class="sec-label">📈 التحليل البياني</div>
+  <div class="charts-row">
+    <div class="chart-card"><div class="chart-ttl">المبيعات vs التحصيل — آخر الأيام</div><canvas id="lineChart" height="110"></canvas></div>
+    <div class="chart-card"><div class="chart-ttl">توزيع الإجمالي بين المناديب</div><canvas id="donutChart" height="180"></canvas></div>
+  </div>
+
+  <div class="sec-label">👥 أداء المناديب — اليوم الأخير</div>
+  <div class="tbl-card">
+    <div class="tbl-head"><div class="tbl-ttl">مقارنة تفصيلية</div><span class="badge" id="todayBadge"></span></div>
+    <table>
+      <thead><tr><th>#</th><th style="text-align:right">المندوب</th><th>المبيعات</th><th>الآجل</th><th>التحصيل</th><th>PayMob</th><th>النقدية</th><th>فواتير</th><th>الإجمالي</th><th>نسبة التحصيل</th><th>تقييم</th></tr></thead>
+      <tbody id="repTbl"></tbody>
+      <tfoot><tr class="tot-row" id="totRow"></tr></tfoot>
+    </table>
+  </div>
+
+  <div class="sec-label">🏅 لوحة الشرف</div>
+  <div class="honor-grid" id="honorGrid"></div>
+
+  <div class="sec-label">📅 التراكمي — إجمالي الفترة</div>
+  <div class="tbl-card">
+    <div class="tbl-head"><div class="tbl-ttl">إجمالي كل مندوب</div><span class="badge" id="cumBadge"></span></div>
+    <table>
+      <thead><tr><th style="text-align:right">المندوب</th><th>المبيعات</th><th>الآجل</th><th>التحصيل</th><th>PayMob</th><th>النقدية</th><th>فواتير</th><th>نسبة التحصيل</th></tr></thead>
+      <tbody id="cumTbl"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- INPUT MODAL -->
+<div class="modal-ov" id="modalOv">
+  <div class="modal">
+    <h2>➕ إدخال بيانات يوم جديد</h2>
+    <div class="fg" style="grid-column:1/-1"><label>التاريخ</label><input type="date" id="i_date"></div>
+    <div class="fgrid">
+      <div class="fg"><label>المندوب</label><select id="i_rep"><option>طارق عبدالفتاح</option><option>اسلام الضو</option><option>احمد حسن</option><option>مروان عماد</option><option>احمد عماد</option><option>سامى محمد</option><option>عبدة عادل</option></select></div>
+      <div class="fg"><label>المنطقة</label><select id="i_reg"><option>الافرنجي</option><option>التل</option><option>التمليك</option><option>الشيخ زايد</option><option>العريشيه</option><option>القنطره</option><option>فايد</option></select></div>
+      <div class="fg"><label>المبيعات</label><input type="number" id="i_sales" placeholder="0"></div>
+      <div class="fg"><label>الآجل</label><input type="number" id="i_ajal" placeholder="0"></div>
+      <div class="fg"><label>التحصيل</label><input type="number" id="i_tah" placeholder="0"></div>
+      <div class="fg"><label>العمولة</label><input type="number" id="i_om" placeholder="0"></div>
+      <div class="fg"><label>PayMob</label><input type="number" id="i_pm" placeholder="0"></div>
+      <div class="fg"><label>النقدية</label><input type="number" id="i_cash" placeholder="0"></div>
+      <div class="fg"><label>عدد الفواتير</label><input type="number" id="i_inv" placeholder="0"></div>
+    </div>
+    <div class="modal-btns">
+      <button class="btn btn-ghost" onclick="closeModal()">إلغاء</button>
+      <button class="btn btn-cyan" onclick="saveEntry()">💾 حفظ وإرسال</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ══════ CONFIG ══════
+const REPS    = ["طارق عبدالفتاح","اسلام الضو","احمد حسن","مروان عماد","احمد عماد","سامى محمد","عبدة عادل"];
+const REGIONS = ["الافرنجي","التل","التمليك","الشيخ زايد","العريشيه","القنطره","فايد"];
+const COLORS  = ['#00c8ff','#00e5a0','#fbbf24','#a78bfa','#f43f5e','#fb923c','#60a5fa'];
+
+let SHEET_URL = localStorage.getItem('biz_sheet_url') || '';
+let DATA = [];
+let lineC = null, donutC = null;
+
+const fmtN = n => (+n||0).toLocaleString('ar-EG',{maximumFractionDigits:0});
+const fmtK = n => n>=1000?(n/1000).toFixed(1)+'ك':String(Math.round(n));
+
+// ══════ CONNECT ══════
+function connectSheet() {
+  const url = document.getElementById('sheetUrl').value.trim();
+  if(!url.includes('script.google.com')) { showToast('URL غلط — لازم يبدأ بـ script.google.com','error'); return; }
+  SHEET_URL = url;
+  localStorage.setItem('biz_sheet_url', url);
+  loadFromSheet();
+}
+
+function useDemoData() {
+  SHEET_URL = 'DEMO';
+  DATA = getDemoData();
+  hideBanner(); showDashboard(); renderAll();
+  showToast('تشغيل بيانات تجريبية ✓','success');
+}
+
+function hideBanner() { document.getElementById('setupBanner').classList.add('hidden'); }
+function showDashboard() { document.getElementById('mainContent').style.display='block'; }
+
+// ══════ LOAD FROM GOOGLE SHEETS ══════
+async function loadFromSheet() {
+  if(SHEET_URL === 'DEMO') { DATA = getDemoData(); renderAll(); return; }
+  if(!SHEET_URL) return;
+
+  setSyncStatus('loading');
+  try {
+    const res = await fetch(SHEET_URL + '?action=get', {method:'GET', mode:'cors'});
+    const json = await res.json();
+    if(json.status === 'ok') {
+      DATA = json.data.map(r=>({
+        date:r[0], rep:r[1], region:r[2],
+        sales:+r[3]||0, ajal:+r[4]||0, tahseel:+r[5]||0,
+        omola:+r[6]||0, paymob:+r[7]||0, cash:+r[8]||0, inv:+r[9]||0
+      }));
+      hideBanner(); showDashboard(); renderAll();
+      setSyncStatus('ok');
+      showToast('✓ تم التحديث من Google Sheets','success');
+    } else { throw new Error(json.message); }
+  } catch(e) {
+    setSyncStatus('err');
+    showToast('خطأ في الاتصال: ' + e.message,'error');
+  }
+}
+
+// ══════ SAVE TO GOOGLE SHEETS ══════
+async function saveEntry() {
+  const entry = {
+    date: document.getElementById('i_date').value,
+    rep:  document.getElementById('i_rep').value,
+    region: document.getElementById('i_reg').value,
+    sales:  +document.getElementById('i_sales').value||0,
+    ajal:   +document.getElementById('i_ajal').value||0,
+    tahseel:+document.getElementById('i_tah').value||0,
+    omola:  +document.getElementById('i_om').value||0,
+    paymob: +document.getElementById('i_pm').value||0,
+    cash:   +document.getElementById('i_cash').value||0,
+    inv:    +document.getElementById('i_inv').value||0,
+  };
+  if(!entry.date){ showToast('اختار التاريخ','error'); return; }
+
+  // Always add to local data
+  DATA.push(entry);
+  renderAll();
+  closeModal();
+
+  // If connected to sheet → send
+  if(SHEET_URL && SHEET_URL !== 'DEMO') {
+    try {
+      showToast('⏳ جاري الحفظ في Google Sheets...','success');
+      const row = [entry.date,entry.rep,entry.region,entry.sales,entry.ajal,entry.tahseel,entry.omola,entry.paymob,entry.cash,entry.inv];
+      await fetch(SHEET_URL + '?action=add', {
+        method:'POST', mode:'no-cors',
+        headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({row})
+      });
+      showToast('✓ تم الحفظ في Google Sheets','success');
+    } catch(e) {
+      showToast('حُفظ محلياً — لم يُرسل للشيت','error');
+    }
+  } else {
+    showToast('✓ تم الحفظ محلياً','success');
+  }
+}
+
+// ══════ RENDER ══════
+function renderAll() {
+  const latest = [...new Set(DATA.map(d=>d.date))].sort().slice(-1)[0];
+  const todayRows = DATA.filter(d=>d.date===latest);
+  document.getElementById('datePill').textContent = latest||'—';
+  document.getElementById('todayBadge').textContent = latest||'—';
+  renderKPIs(todayRows);
+  renderTable(todayRows);
+  renderHonor(todayRows);
+  renderCum();
+  renderCharts(todayRows);
+}
+
+function renderKPIs(rows) {
+  const s = k => rows.reduce((a,r)=>a+(r[k]||0),0);
+  const tot = s('sales')+s('ajal')+s('tahseel')+s('omola')+s('paymob')+s('cash');
+  const kpis = [
+    {icon:'💰',lbl:'المبيعات اليومية', val:s('sales'),   acc:'var(--cyan)'},
+    {icon:'📋',lbl:'الآجل اليومي',    val:s('ajal'),    acc:'var(--purple)'},
+    {icon:'💵',lbl:'التحصيل اليومي',  val:s('tahseel'), acc:'var(--green)'},
+    {icon:'💼',lbl:'العمولات',        val:s('omola'),   acc:'var(--gold)'},
+    {icon:'📱',lbl:'PayMob',          val:s('paymob'),  acc:'var(--orange)'},
+    {icon:'💴',lbl:'النقدية',         val:s('cash'),    acc:'#94a3b8'},
+    {icon:'🧾',lbl:'عدد الفواتير',    val:s('inv'),     acc:'var(--blue)'},
+    {icon:'📈',lbl:'الإجمالي الكلي',  val:tot,          acc:'var(--green)'},
+  ];
+  document.getElementById('kpiGrid').innerHTML = kpis.map(k=>`
+    <div class="kpi-card" style="--acc:${k.acc}">
+      <div style="font-size:20px;margin-bottom:8px">${k.icon}</div>
+      <div class="kpi-lbl">${k.lbl}</div>
+      <div class="kpi-val">${fmtN(k.val)}</div>
+      <div class="kpi-sub">ج.م</div>
+    </div>`).join('');
+}
+
+function renderTable(rows) {
+  const sorted = [...rows].sort((a,b)=>(b.sales+b.tahseel)-(a.sales+a.tahseel));
+  const maxTot = Math.max(...rows.map(r=>r.sales+r.ajal+r.tahseel+r.omola+r.paymob+r.cash));
+  document.getElementById('repTbl').innerHTML = sorted.map((r,i)=>{
+    const tot = r.sales+r.ajal+r.tahseel+r.omola+r.paymob+r.cash;
+    const pct = r.sales>0?r.tahseel/r.sales*100:0;
+    const rk = ['r1','r2','r3'][i]||'rn';
+    const tag = i===0?'<span class="tag t-best">🥇 الأفضل</span>':tot>=maxTot*.7?'<span class="tag t-good">✅ جيد</span>':'<span class="tag t-low">⚠️ أقل</span>';
+    return `<tr>
+      <td><span class="rank-b ${rk}">${i+1}</span></td>
+      <td><div class="rep-nm">${r.rep}</div><div class="rep-rg">${r.region}</div></td>
+      <td style="color:var(--cyan);font-weight:600">${fmtN(r.sales)}</td>
+      <td style="color:var(--purple);font-weight:600">${fmtN(r.ajal)}</td>
+      <td style="color:var(--green);font-weight:600">${fmtN(r.tahseel)}</td>
+      <td style="color:var(--orange);font-weight:600">${fmtN(r.paymob)}</td>
+      <td style="color:#94a3b8;font-weight:600">${fmtN(r.cash)}</td>
+      <td style="color:var(--blue)">${r.inv}</td>
+      <td style="color:var(--txt);font-weight:800;font-size:14px">${fmtN(tot)}</td>
+      <td><div class="pct-wrap"><div class="pct-bar"><div class="pct-fill" style="width:${Math.min(100,pct)}%"></div></div><span class="pct-txt">${pct.toFixed(0)}%</span></div></td>
+      <td>${tag}</td>
+    </tr>`;
+  }).join('');
+  const s=k=>rows.reduce((a,r)=>a+(r[k]||0),0);
+  const totAll=s('sales')+s('ajal')+s('tahseel')+s('omola')+s('paymob')+s('cash');
+  document.getElementById('totRow').innerHTML=`<td colspan="2" style="text-align:right;font-weight:800">الإجمالي</td><td>${fmtN(s('sales'))}</td><td>${fmtN(s('ajal'))}</td><td>${fmtN(s('tahseel'))}</td><td>${fmtN(s('paymob'))}</td><td>${fmtN(s('cash'))}</td><td>${s('inv')}</td><td style="font-size:15px">${fmtN(totAll)}</td><td>—</td><td>—</td>`;
+}
+
+function renderHonor(rows) {
+  if(!rows.length) return;
+  const best  = k => rows.reduce((b,r)=>r[k]>b[k]?r:b, rows[0]);
+  const worst = k => rows.filter(r=>r[k]>0).reduce((w,r)=>r[k]<w[k]?r:w, rows.find(r=>r[k]>0)||rows[0]);
+  const cards = [
+    {icon:'🥇',lbl:'الأعلى مبيعات',  r:best('sales'),    k:'sales',   acc:'var(--green)'},
+    {icon:'🥇',lbl:'الأعلى تحصيل',   r:best('tahseel'),  k:'tahseel', acc:'var(--cyan)'},
+    {icon:'🥇',lbl:'الأعلى آجل',      r:best('ajal'),     k:'ajal',    acc:'var(--purple)'},
+    {icon:'🥇',lbl:'الأعلى PayMob',   r:best('paymob'),   k:'paymob',  acc:'var(--orange)'},
+    {icon:'🔴',lbl:'الأقل مبيعات',   r:worst('sales'),   k:'sales',   acc:'var(--red)'},
+    {icon:'🔴',lbl:'الأقل تحصيل',    r:worst('tahseel'), k:'tahseel', acc:'var(--red)'},
+    {icon:'🔴',lbl:'الأقل آجل',       r:worst('ajal'),    k:'ajal',    acc:'var(--red)'},
+    {icon:'🔴',lbl:'الأقل فواتير',   r:worst('inv'),     k:'inv',     acc:'var(--red)'},
+  ];
+  document.getElementById('honorGrid').innerHTML = cards.map(c=>`
+    <div class="honor-card" style="border-top:2px solid ${c.acc}">
+      <div class="h-lbl">${c.icon} ${c.lbl}</div>
+      <div class="h-nm" style="color:${c.acc}">${c.r?.rep||'—'}</div>
+      <div class="h-val">${c.r?fmtN(c.r[c.k])+' ج.م':'—'}</div>
+    </div>`).join('');
+}
+
+function renderCum() {
+  const cum = REPS.map((rep,i)=>{
+    const rows=DATA.filter(d=>d.rep===rep);
+    return {rep,region:REGIONS[i],
+      sales:rows.reduce((s,r)=>s+r.sales,0),ajal:rows.reduce((s,r)=>s+r.ajal,0),
+      tahseel:rows.reduce((s,r)=>s+r.tahseel,0),paymob:rows.reduce((s,r)=>s+r.paymob,0),
+      cash:rows.reduce((s,r)=>s+r.cash,0),inv:rows.reduce((s,r)=>s+r.inv,0)};
+  }).sort((a,b)=>b.sales-a.sales);
+  document.getElementById('cumBadge').textContent = [...new Set(DATA.map(d=>d.date))].length+' يوم';
+  document.getElementById('cumTbl').innerHTML = cum.map(r=>{
+    const pct=r.sales>0?r.tahseel/r.sales*100:0;
+    const pc=pct>60?'var(--green)':pct>30?'var(--gold)':'var(--red)';
+    return `<tr>
+      <td><div class="rep-nm">${r.rep}</div><div class="rep-rg">${r.region}</div></td>
+      <td style="color:var(--cyan);font-weight:600">${fmtN(r.sales)}</td>
+      <td style="color:var(--purple);font-weight:600">${fmtN(r.ajal)}</td>
+      <td style="color:var(--green);font-weight:600">${fmtN(r.tahseel)}</td>
+      <td style="color:var(--orange);font-weight:600">${fmtN(r.paymob)}</td>
+      <td style="color:#94a3b8;font-weight:600">${fmtN(r.cash)}</td>
+      <td style="color:var(--blue)">${r.inv}</td>
+      <td><div class="pct-wrap"><div class="pct-bar" style="width:80px"><div class="pct-fill" style="width:${Math.min(100,pct)}%;background:${pc}"></div></div><span class="pct-txt">${pct.toFixed(0)}%</span></div></td>
+    </tr>`;
+  }).join('');
+}
+
+function renderCharts(todayRows) {
+  const dates = [...new Set(DATA.map(d=>d.date))].sort().slice(-6);
+  const dayTotals = dates.map(dt=>{
+    const rs=DATA.filter(d=>d.date===dt);
+    return {date:dt.slice(5),sales:rs.reduce((s,r)=>s+r.sales,0),tahseel:rs.reduce((s,r)=>s+r.tahseel,0),paymob:rs.reduce((s,r)=>s+r.paymob,0)};
+  });
+  if(lineC) lineC.destroy();
+  lineC = new Chart(document.getElementById('lineChart'),{
+    type:'line',
+    data:{labels:dayTotals.map(d=>d.date),datasets:[
+      {label:'المبيعات',data:dayTotals.map(d=>d.sales),borderColor:'#00c8ff',backgroundColor:'rgba(0,200,255,.07)',tension:.4,fill:true,pointRadius:4,pointBackgroundColor:'#00c8ff'},
+      {label:'التحصيل',data:dayTotals.map(d=>d.tahseel),borderColor:'#00e5a0',backgroundColor:'rgba(0,229,160,.06)',tension:.4,fill:true,pointRadius:4,pointBackgroundColor:'#00e5a0'},
+      {label:'PayMob', data:dayTotals.map(d=>d.paymob),borderColor:'#fb923c',backgroundColor:'rgba(251,146,60,.05)',tension:.4,fill:true,pointRadius:3,pointBackgroundColor:'#fb923c'},
+    ]},
+    options:{responsive:true,maintainAspectRatio:true,
+      plugins:{legend:{labels:{color:'#8892a4',font:{family:'Cairo',size:10}}}},
+      scales:{x:{ticks:{color:'#8892a4',font:{family:'Cairo'}},grid:{color:'#21293d'}},
+              y:{ticks:{color:'#8892a4',font:{family:'Cairo'},callback:v=>fmtK(v)},grid:{color:'#21293d'}}}}
+  });
+  const tots = todayRows.map(r=>r.sales+r.tahseel);
+  if(donutC) donutC.destroy();
+  donutC = new Chart(document.getElementById('donutChart'),{
+    type:'doughnut',
+    data:{labels:todayRows.map(r=>r.rep),datasets:[{data:tots,backgroundColor:COLORS,borderWidth:2,borderColor:'#161b27'}]},
+    options:{responsive:true,maintainAspectRatio:true,cutout:'65%',
+      plugins:{legend:{position:'bottom',labels:{color:'#8892a4',font:{family:'Cairo',size:10},padding:6}}}}
+  });
+}
+
+// ══════ UI HELPERS ══════
+function setSyncStatus(s) {
+  const dot=document.querySelector('#syncStatus span');
+  const txt=document.getElementById('syncTxt');
+  if(s==='ok')     {dot.style.color='var(--green)';txt.textContent='متصل ✓';}
+  else if(s==='err'){dot.style.color='var(--red)';txt.textContent='خطأ في الاتصال';}
+  else             {dot.style.color='var(--gold)';txt.textContent='جاري التحديث...';}
+}
+function openModal() {document.getElementById('i_date').value=new Date().toISOString().slice(0,10);document.getElementById('modalOv').classList.add('open');}
+function closeModal(){document.getElementById('modalOv').classList.remove('open');}
+let toastTimer;
+function showToast(msg,type='success'){
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.className='toast '+type+' show';
+  clearTimeout(toastTimer); toastTimer=setTimeout(()=>t.classList.remove('show'),3200);
+}
+
+// ══════ DEMO DATA ══════
+function getDemoData() {
+  return [
+    {date:"2026-02-22",rep:"طارق عبدالفتاح",region:"الافرنجي", sales:7503,ajal:2226,tahseel:2636,omola:1000,paymob:1180,cash:5385,inv:6},
+    {date:"2026-02-22",rep:"اسلام الضو",    region:"التل",      sales:11200,ajal:2000,tahseel:1000,omola:1554,paymob:8420,cash:0,inv:11},
+    {date:"2026-02-22",rep:"احمد حسن",      region:"التمليك",   sales:10884,ajal:10231,tahseel:14585,omola:0,paymob:3505,cash:11090,inv:4},
+    {date:"2026-02-22",rep:"مروان عماد",    region:"الشيخ زايد",sales:7238,ajal:2409,tahseel:11250,omola:0,paymob:0,cash:15795,inv:6},
+    {date:"2026-02-22",rep:"احمد عماد",     region:"العريشيه",  sales:15275,ajal:9600,tahseel:18503,omola:2409,paymob:20700,cash:0,inv:3},
+    {date:"2026-02-22",rep:"سامى محمد",     region:"القنطره",   sales:13802,ajal:4010,tahseel:2650,omola:2900,paymob:2955,cash:6525,inv:10},
+    {date:"2026-02-22",rep:"عبدة عادل",     region:"فايد",      sales:6634,ajal:4090,tahseel:6334,omola:695,paymob:2800,cash:5045,inv:5},
+    {date:"2026-02-25",rep:"طارق عبدالفتاح",region:"الافرنجي", sales:19945,ajal:5000,tahseel:1750,omola:0,paymob:0,cash:16150,inv:6},
+    {date:"2026-02-25",rep:"اسلام الضو",    region:"التل",      sales:14259,ajal:1940,tahseel:10333,omola:1085,paymob:20850,cash:300,inv:11},
+    {date:"2026-02-25",rep:"احمد حسن",      region:"التمليك",   sales:15711,ajal:10962,tahseel:4678,omola:0,paymob:3625,cash:5430,inv:10},
+    {date:"2026-02-25",rep:"مروان عماد",    region:"الشيخ زايد",sales:10768,ajal:5571,tahseel:13780,omola:0,paymob:3660,cash:15160,inv:11},
+    {date:"2026-02-25",rep:"احمد عماد",     region:"العريشيه",  sales:15354,ajal:15321,tahseel:2680,omola:0,paymob:27383,cash:0,inv:5},
+    {date:"2026-02-25",rep:"سامى محمد",     region:"القنطره",   sales:15004,ajal:13190,tahseel:1000,omola:1000,paymob:0,cash:1655,inv:4},
+    {date:"2026-02-25",rep:"عبدة عادل",     region:"فايد",      sales:10472,ajal:2888,tahseel:6090,omola:326,paymob:550,cash:12640,inv:4},
+    {date:"2026-03-10",rep:"طارق عبدالفتاح",region:"الافرنجي", sales:6578,ajal:0,tahseel:7380,omola:0,paymob:2000,cash:0,inv:5},
+    {date:"2026-03-10",rep:"اسلام الضو",    region:"التل",      sales:12289,ajal:8290,tahseel:330,omola:0,paymob:3235,cash:8290,inv:4},
+    {date:"2026-03-10",rep:"احمد حسن",      region:"التمليك",   sales:6392,ajal:6105,tahseel:3595,omola:0,paymob:1000,cash:6105,inv:3},
+    {date:"2026-03-10",rep:"مروان عماد",    region:"الشيخ زايد",sales:19810,ajal:3658,tahseel:1000,omola:600,paymob:850,cash:3658,inv:5},
+    {date:"2026-03-10",rep:"احمد عماد",     region:"العريشيه",  sales:11910,ajal:10274,tahseel:12275,omola:0,paymob:12275,cash:10274,inv:1},
+    {date:"2026-03-10",rep:"سامى محمد",     region:"القنطره",   sales:9081,ajal:5100,tahseel:10950,omola:0,paymob:1311,cash:5100,inv:6},
+    {date:"2026-03-10",rep:"عبدة عادل",     region:"فايد",      sales:13477,ajal:11703,tahseel:0,omola:0,paymob:0,cash:11703,inv:3},
+  ];
+}
+
+// init
+if(SHEET_URL && SHEET_URL !== 'DEMO') {
+  document.getElementById('sheetUrl').value = SHEET_URL;
+  loadFromSheet();
+}
+</script>
+</body>
+</html>
