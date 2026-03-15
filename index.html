@@ -1,0 +1,922 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<title>ISM إسماعيلية</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F1F5F9;--card:#fff;--navy:#1A3A5C;--blue:#2563EB;
+  --green:#16A34A;--gl:#DCFCE7;--gd:#14532D;
+  --red:#DC2626;--rl:#FEE2E2;--gold:#D97706;--yl:#FEF3C7;
+  --gray:#64748B;--border:#E2E8F0;--sub:#94A3B8;--txt:#1E293B;
+  --shadow:0 1px 3px rgba(0,0,0,.08),0 1px 2px rgba(0,0,0,.04);
+  --shadow-md:0 4px 16px rgba(0,0,0,.1);
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{background:var(--bg);font-family:'Cairo',sans-serif;color:var(--txt);direction:rtl;min-height:100vh}
+
+/* NAV */
+nav{background:var(--navy);height:58px;display:flex;align-items:center;justify-content:space-between;padding:0 16px;position:sticky;top:0;z-index:100;box-shadow:0 2px 12px rgba(0,0,0,.3)}
+.n-logo{width:36px;height:36px;background:var(--blue);border-radius:9px;display:grid;place-items:center;font-size:12px;font-weight:900;color:#fff;flex-shrink:0}
+.n-title{color:#fff;font-size:15px;font-weight:800;line-height:1.2}
+.n-sub{color:rgba(255,255,255,.5);font-size:10px}
+.sync-badge{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);color:#fff;padding:4px 11px;border-radius:20px;font-size:10px;font-weight:700;display:flex;align-items:center;gap:5px;cursor:pointer}
+.sdot{width:7px;height:7px;border-radius:50%;background:#4ADE80;animation:blink 2s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
+.icbtn{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);color:#fff;width:34px;height:34px;border-radius:8px;cursor:pointer;font-size:16px;display:grid;place-items:center}
+
+/* TABS */
+.tabs{background:#fff;border-bottom:2px solid var(--border);display:flex;overflow-x:auto;scrollbar-width:none;padding:0 8px;position:sticky;top:58px;z-index:90;box-shadow:0 1px 4px rgba(0,0,0,.05)}
+.tabs::-webkit-scrollbar{display:none}
+.tab{padding:13px 15px;font-size:12px;font-weight:700;color:var(--gray);white-space:nowrap;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;transition:.18s;user-select:none}
+.tab.on{color:var(--blue);border-bottom-color:var(--blue)}
+
+/* LAYOUT */
+.main{padding:14px;max-width:1200px;margin:0 auto;padding-bottom:90px}
+.page{display:none}.page.on{display:block}
+.sec{font-size:10px;font-weight:800;color:var(--sub);letter-spacing:1.2px;text-transform:uppercase;margin:18px 0 10px;display:flex;align-items:center;gap:8px}
+.sec::after{content:'';flex:1;height:1px;background:var(--border)}
+
+/* KPI GRID */
+.kg{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:4px}
+@media(min-width:560px){.kg{grid-template-columns:repeat(4,1fr)}}
+.kpi{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:15px 13px;position:relative;overflow:hidden;box-shadow:var(--shadow)}
+.kpi::before{content:'';position:absolute;top:0;right:0;left:0;height:3px;background:var(--ac);border-radius:14px 14px 0 0}
+.kpi-ic{font-size:20px;margin-bottom:7px}
+.kpi-lbl{font-size:10px;color:var(--gray);font-weight:700;margin-bottom:5px;line-height:1.4}
+.kpi-val{font-size:22px;font-weight:900;color:var(--ac);line-height:1;margin-bottom:3px}
+.kpi-sub{font-size:10px;color:var(--sub)}
+
+/* OVERVIEW SPECIAL — نسب دائرية */
+.ov-rings{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:14px}
+@media(min-width:600px){.ov-rings{grid-template-columns:repeat(4,1fr)}}
+.ring-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px;box-shadow:var(--shadow);display:flex;flex-direction:column;align-items:center;gap:8px}
+.ring-title{font-size:10px;font-weight:800;color:var(--gray);text-align:center}
+.ring-wrap{position:relative;width:80px;height:80px}
+.ring-wrap canvas{position:absolute;top:0;right:0}
+.ring-center{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column}
+.ring-pct{font-size:16px;font-weight:900}
+.ring-sub{font-size:8px;color:var(--sub);text-align:center}
+
+/* CARD */
+.card{background:var(--card);border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow);margin-bottom:12px;overflow:hidden}
+.card-hd{padding:12px 14px;border-bottom:1px solid var(--border);background:#FAFBFD;display:flex;justify-content:space-between;align-items:center}
+.card-tt{font-size:12px;font-weight:800;color:var(--navy)}
+.bdg{background:rgba(37,99,235,.09);color:var(--blue);padding:2px 9px;border-radius:20px;font-size:10px;font-weight:700;border:1px solid rgba(37,99,235,.15)}
+
+/* TABLE */
+.tw{overflow-x:auto;-webkit-overflow-scrolling:touch}
+table{width:100%;border-collapse:collapse;direction:rtl}
+th{text-align:center;font-size:10px;font-weight:700;color:var(--gray);padding:9px 10px;background:#FAFBFD;border-bottom:2px solid var(--border);white-space:nowrap}
+th.lft{text-align:right}
+tbody tr{transition:background .15s}
+tbody tr:hover{background:rgba(37,99,235,.025)}
+td{text-align:center;font-size:12px;padding:10px;border-bottom:1px solid rgba(226,232,240,.5);white-space:nowrap}
+td.lft{text-align:right}
+.rn{font-weight:800;font-size:12px}.rg{color:var(--sub);font-size:10px;margin-top:1px}
+.bl{color:var(--blue);font-weight:700}.gr{color:var(--green);font-weight:700}
+.re{color:var(--red);font-weight:700}.go{color:var(--gold);font-weight:700}
+.cy{color:#0EA5E9;font-weight:700}.nv{color:var(--navy);font-weight:800}
+.tot td{font-weight:800!important;background:rgba(26,58,92,.04);border-top:2px solid rgba(26,58,92,.12)}
+.tag{padding:2px 8px;border-radius:20px;font-size:9px;font-weight:800;display:inline-block}
+.tg{background:var(--gl);color:var(--gd)}.tr{background:var(--rl);color:var(--red)}.ty{background:var(--yl);color:var(--gold)}
+
+/* PROGRESS */
+.pw{display:flex;align-items:center;gap:5px;justify-content:center;min-width:90px}
+.pb{background:var(--border);border-radius:4px;height:7px;width:55px;overflow:hidden;flex-shrink:0}
+.pf{height:100%;border-radius:4px;transition:width .7s}
+.pn{font-size:11px;font-weight:700;min-width:34px;text-align:left}
+
+/* REP CARDS */
+.rep-grid{display:grid;grid-template-columns:1fr;gap:10px}
+@media(min-width:640px){.rep-grid{grid-template-columns:repeat(2,1fr)}}
+@media(min-width:960px){.rep-grid{grid-template-columns:repeat(3,1fr)}}
+.rep-card{background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden;box-shadow:var(--shadow)}
+.rc-hd{padding:13px 14px 10px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:flex-start}
+.rc-av{width:42px;height:42px;border-radius:11px;display:grid;place-items:center;font-size:13px;font-weight:900;color:#fff;flex-shrink:0}
+.rc-nm{font-size:13px;font-weight:800;color:var(--navy)}.rc-rg{font-size:10px;color:var(--sub);margin-top:1px}
+.rc-pct{font-size:23px;font-weight:900;line-height:1}.rc-pct-s{font-size:9px;color:var(--sub);text-align:left;margin-top:1px}
+.rc-prog{padding:10px 14px;border-bottom:1px solid var(--border)}
+.rc-bar{background:var(--border);border-radius:5px;height:9px;overflow:hidden;margin-bottom:5px}
+.rc-fill{height:100%;border-radius:5px;transition:width .8s}
+.rc-lbl{display:flex;justify-content:space-between;font-size:9px;color:var(--sub)}
+.rc-nums{display:grid;grid-template-columns:repeat(3,1fr)}
+.rc-num{padding:10px 12px;text-align:center;border-left:1px solid var(--border)}
+.rc-num:last-child{border-left:none}
+.rcn-l{font-size:9px;color:var(--sub);font-weight:700;margin-bottom:4px}
+.rcn-v{font-size:13px;font-weight:800}
+.rc-bot{display:grid;grid-template-columns:1fr 1fr;border-top:1px solid var(--border)}
+.rc-bi{padding:9px 12px;text-align:center;border-left:1px solid var(--border)}
+.rc-bi:last-child{border-left:none}
+.rbi-l{font-size:9px;color:var(--sub);font-weight:700;margin-bottom:3px}
+.rbi-v{font-size:12px;font-weight:800}
+
+/* CHARTS */
+.cc{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px;box-shadow:var(--shadow);margin-bottom:12px}
+.ct{font-size:12px;font-weight:800;color:var(--navy);margin-bottom:12px}
+.ch2{display:grid;grid-template-columns:1fr;gap:12px}
+@media(min-width:660px){.ch2{grid-template-columns:1.6fr 1fr}}
+
+/* WEFA SUMMARY */
+.wefa-sum{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:15px;margin-bottom:12px;box-shadow:var(--shadow)}
+.wefa-name{font-size:18px;font-weight:900;color:var(--navy);margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.wefa-stats{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:12px}
+@media(min-width:500px){.wefa-stats{grid-template-columns:repeat(4,1fr)}}
+.ws{text-align:center;padding:10px;background:#F8FAFC;border-radius:10px;border:1px solid var(--border)}
+.wsl{font-size:9px;color:var(--sub);font-weight:700;margin-bottom:4px}
+.wsv{font-size:16px;font-weight:900}
+.wefa-prog{background:var(--border);border-radius:6px;height:10px;overflow:hidden;margin-bottom:6px}
+.wefa-fill{height:100%;border-radius:6px;transition:width 1s}
+.wefa-prog-lbl{display:flex;justify-content:space-between;font-size:10px;color:var(--sub)}
+
+/* ANALYSIS CARDS */
+.analysis-grid{display:grid;grid-template-columns:1fr;gap:10px;margin-bottom:14px}
+@media(min-width:600px){.analysis-grid{grid-template-columns:repeat(2,1fr)}}
+.an-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px;box-shadow:var(--shadow)}
+.an-title{font-size:11px;font-weight:800;color:var(--navy);margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.an-item{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid rgba(226,232,240,.5);font-size:11px}
+.an-item:last-child{border-bottom:none}
+.an-lbl{color:var(--gray);font-weight:600}
+.an-val{font-weight:800}
+
+/* SETTINGS */
+.sc{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px;box-shadow:var(--shadow);margin-bottom:12px}
+.st{font-size:13px;font-weight:800;color:var(--navy);margin-bottom:14px}
+.fg{display:flex;flex-direction:column;gap:4px;margin-bottom:11px}
+.fg label{font-size:10px;color:var(--gray);font-weight:700}
+.fg input{background:#F8FAFC;border:1px solid var(--border);border-radius:9px;color:var(--txt);padding:10px 13px;font-family:'Cairo',sans-serif;font-size:13px;width:100%}
+.fg input:focus{outline:none;border-color:var(--blue);background:#fff;box-shadow:0 0 0 3px rgba(37,99,235,.08)}
+.btn{padding:11px 16px;border-radius:9px;font-family:'Cairo',sans-serif;font-size:13px;font-weight:700;cursor:pointer;border:none;transition:.15s}
+.btn-bl{background:var(--blue);color:#fff;width:100%;margin-top:6px}
+.btn-bl:active{opacity:.85}
+.conn-info{background:#F8FAFC;border-radius:9px;padding:12px 14px;font-size:11px;color:var(--gray);line-height:2.4}
+.conn-info b{color:var(--txt)}
+
+/* MODAL */
+.mov{display:none;position:fixed;inset:0;background:rgba(15,23,42,.55);z-index:200;align-items:flex-end;justify-content:center;backdrop-filter:blur(3px)}
+@media(min-width:580px){.mov{align-items:center}}
+.mov.on{display:flex}
+.modal{background:#fff;border-radius:20px 20px 0 0;padding:18px 15px 30px;width:100%;max-width:480px;max-height:92vh;overflow-y:auto;direction:rtl}
+@media(min-width:580px){.modal{border-radius:14px}}
+.dh{width:38px;height:4px;background:var(--border);border-radius:2px;margin:0 auto 14px}
+.mt{font-size:14px;font-weight:800;color:var(--navy);margin-bottom:14px}
+.fg2{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.mbtns{display:flex;gap:8px;margin-top:12px}
+.mbtns .btn{flex:1;padding:11px}
+.btn-gh{background:var(--border);color:var(--gray)}
+
+/* FAB */
+.fab{position:fixed;bottom:70px;left:18px;width:52px;height:52px;border-radius:50%;background:var(--blue);color:#fff;border:none;font-size:23px;cursor:pointer;box-shadow:0 4px 18px rgba(37,99,235,.45);display:grid;place-items:center;z-index:90;transition:.2s}
+.fab:active{transform:scale(.9)}
+
+/* TICKER */
+.ticker-wrap{position:fixed;bottom:0;left:0;right:0;background:var(--navy);height:34px;overflow:hidden;z-index:95;border-top:1px solid rgba(255,255,255,.1)}
+.ticker-inner{display:flex;align-items:center;height:100%}
+.ticker-label{background:var(--blue);color:#fff;padding:0 14px;height:100%;display:flex;align-items:center;font-size:11px;font-weight:800;white-space:nowrap;flex-shrink:0}
+.ticker-track{overflow:hidden;flex:1;position:relative}
+.ticker-text{display:inline-block;white-space:nowrap;color:#fff;font-size:11px;font-weight:600;animation:ticker 25s linear infinite;padding-right:60px}
+@keyframes ticker{0%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
+
+/* TOAST */
+.toast{position:fixed;bottom:46px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--navy);color:#fff;border-radius:10px;padding:10px 22px;font-size:12px;font-weight:700;z-index:300;transition:transform .3s cubic-bezier(.34,1.56,.64,1);white-space:nowrap;box-shadow:var(--shadow-md);pointer-events:none}
+.toast.on{transform:translateX(-50%) translateY(0)}
+.t-ok{background:var(--green)}.t-er{background:var(--red)}
+
+
+@keyframes fu{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.kpi,.ring-card,.rep-card,.an-card{animation:fu .35s ease both}
+</style>
+</head>
+<body>
+
+<!-- LOCK -->
+<nav>
+  <div style="display:flex;align-items:center;gap:10px">
+    <div class="n-logo">ISM</div>
+    <div><div class="n-title">ISM إسماعيلية</div><div class="n-sub" id="navDate"></div></div>
+  </div>
+  <div style="display:flex;gap:7px;align-items:center">
+    <div class="sync-badge" onclick="loadData()"><div class="sdot" id="sdot"></div><span id="stxt">جاري...</span></div>
+    <div class="icbtn" onclick="loadData()">⟳</div>
+  </div>
+</nav>
+
+<div class="tabs">
+  <div class="tab on"  onclick="ST('ov',this)">🏠 نظرة عامة</div>
+  <div class="tab"     onclick="ST('reps',this)">👥 المناديب</div>
+  <div class="tab"     onclick="ST('daily',this)">📅 اليومي</div>
+  <div class="tab"     onclick="ST('wefa',this)">📋 الويفا</div>
+  <div class="tab"     onclick="ST('ajal',this)">💳 الأجل</div>
+  <div class="tab"     onclick="ST('wh',this)">📦 المخزن</div>
+  <div class="tab"     onclick="ST('pur',this)">🛒 المشتريات</div>
+  <div class="tab"     onclick="ST('cfg',this)">⚙️</div>
+</div>
+
+<div class="main">
+
+<!-- ══ OVERVIEW ══ -->
+<div class="page on" id="tab-ov">
+  <!-- نسب دائرية -->
+  <div class="sec">النسب الإجمالية</div>
+  <div class="ov-rings" id="ovRings"></div>
+
+  <!-- KPIs -->
+  <div class="kg" id="ovKPIs"></div>
+
+  <!-- تحليل يومي تلقائي -->
+  <div class="sec">التحليل اليومي التلقائي</div>
+  <div class="analysis-grid" id="analysis"></div>
+
+  <!-- charts -->
+  <div class="sec">التراكمي مقابل التارجت</div>
+  <div class="ch2">
+    <div class="cc"><div class="ct">📈 التراكمي الفعلي vs التارجت الشهري</div><canvas id="cumulC" height="130"></canvas></div>
+    <div class="cc"><div class="ct">🥧 توزيع آخر يوم</div><canvas id="donutC" height="180"></canvas></div>
+  </div>
+
+  <!-- جدول ملخص -->
+  <div class="sec">ملخص المناديب</div>
+  <div class="card">
+    <div class="card-hd"><div class="card-tt">المبيعات مقابل التارجت الشهري</div><span class="bdg" id="ovBadge"></span></div>
+    <div class="tw"><table>
+      <thead><tr>
+        <th class="lft">المندوب</th>
+        <th>التارجت</th><th>المحقق</th><th>آخر يوم</th>
+        <th>الباقي</th><th>% الإنجاز</th><th>الحالة</th>
+      </tr></thead>
+      <tbody id="ovTbl"></tbody>
+      <tfoot><tr class="tot" id="ovTot"></tr></tfoot>
+    </table></div>
+  </div>
+</div>
+
+<!-- ══ REPS ══ -->
+<div class="page" id="tab-reps">
+  <div class="sec">كل مندوب — أرقامه كاملة</div>
+  <div class="rep-grid" id="repCards"></div>
+</div>
+
+<!-- ══ DAILY ══ -->
+<div class="page" id="tab-daily">
+  <div class="kg" id="dayKPIs"></div>
+  <div class="sec">سجل المبيعات اليومية</div>
+  <div class="card">
+    <div class="card-hd"><div class="card-tt">تفاصيل كل يوم</div><span class="bdg" id="dayBdg"></span></div>
+    <div class="tw"><table>
+      <thead><tr>
+        <th>التاريخ</th>
+        <th>الافرنجي<br><small style="font-weight:400;color:#94A3B8">طارق</small></th>
+        <th>التل<br><small style="font-weight:400;color:#94A3B8">إسلام</small></th>
+        <th>التمليك<br><small style="font-weight:400;color:#94A3B8">أحمد</small></th>
+        <th>الشيخ زايد<br><small style="font-weight:400;color:#94A3B8">مروان</small></th>
+        <th>العريشية<br><small style="font-weight:400;color:#94A3B8">سيد</small></th>
+        <th>القنطرة<br><small style="font-weight:400;color:#94A3B8">سامى</small></th>
+        <th>فايد<br><small style="font-weight:400;color:#94A3B8">عبدالرحمن</small></th>
+        <th>إجمالي اليوم</th><th>تراكمي</th>
+      </tr></thead>
+      <tbody id="dayTbl"></tbody>
+      <tfoot><tr class="tot" id="dayTot"></tr></tfoot>
+    </table></div>
+  </div>
+</div>
+
+<!-- ══ WEFA ══ -->
+<div class="page" id="tab-wefa">
+  <div class="wefa-sum" id="wefaSum"></div>
+  <div class="sec">أداء المناديب في الويفا</div>
+  <div class="card">
+    <div class="card-hd"><div class="card-tt" id="wefaCardTt">الويفا</div><span class="bdg" id="wefaBdg"></span></div>
+    <div class="tw"><table>
+      <thead><tr>
+        <th class="lft">المندوب</th>
+        <th>تارجت الويفا</th><th>المحقق</th><th>الباقي</th>
+        <th>% الإنجاز</th><th>مطلوب يومياً</th><th>الحالة</th>
+      </tr></thead>
+      <tbody id="wefaTbl"></tbody>
+      <tfoot><tr class="tot" id="wefaTot"></tr></tfoot>
+    </table></div>
+  </div>
+  <div class="sec">سجل أيام الويفا اليومي</div>
+  <div class="card">
+    <div class="card-hd"><div class="card-tt">تفاصيل كل يوم</div><span class="bdg" id="wefaDayBdg"></span></div>
+    <div class="tw"><table>
+      <thead><tr>
+        <th>التاريخ</th>
+        <th>الافرنجي</th><th>التل</th><th>التمليك</th>
+        <th>الشيخ زايد</th><th>العريشية</th><th>القنطرة</th><th>فايد</th>
+        <th>إجمالي اليوم</th><th>تراكمي</th><th>تارجت تراكمي</th><th>الفرق</th>
+      </tr></thead>
+      <tbody id="wefaDayTbl"></tbody>
+      <tfoot><tr class="tot" id="wefaDayTot"></tr></tfoot>
+    </table></div>
+  </div>
+  <div class="cc"><div class="ct" id="wefaChartTt">📈 تراكمي الويفا vs التارجت</div><canvas id="wefaC" height="130"></canvas></div>
+</div>
+
+<!-- ══ AJAL ══ -->
+<div class="page" id="tab-ajal">
+  <div class="kg" id="ajalKPIs"></div>
+  <div class="sec">تفاصيل الأجل والأوفر ديو</div>
+  <div class="card">
+    <div class="card-hd"><div class="card-tt">الأجل لكل منطقة</div><span class="bdg">7 مناطق</span></div>
+    <div class="tw"><table>
+      <thead><tr>
+        <th class="lft">المندوب</th>
+        <th>إجمالي الأجل</th><th>الأوفر ديو</th><th>One Due</th>
+        <th>% الأوفر ديو</th><th>الحالة</th>
+      </tr></thead>
+      <tbody id="ajalTbl"></tbody>
+      <tfoot><tr class="tot" id="ajalTot"></tr></tfoot>
+    </table></div>
+  </div>
+  <div class="cc"><div class="ct">📊 الأجل الكلي مقابل الأوفر ديو</div><canvas id="ajalC" height="160"></canvas></div>
+</div>
+
+<!-- ══ WAREHOUSE ══ -->
+<div class="page" id="tab-wh">
+  <div class="kg" id="whKPIs"></div>
+  <div class="sec">رصيد المخازن</div>
+  <div class="card">
+    <div class="card-hd"><div class="card-tt">رصيد كل مخزن</div><span class="bdg" id="whBdg"></span></div>
+    <div class="tw"><table>
+      <thead><tr>
+        <th>#</th><th class="lft">المخزن</th><th>الرصيد (ج.م)</th><th>% من الإجمالي</th>
+      </tr></thead>
+      <tbody id="whTbl"></tbody>
+      <tfoot><tr class="tot" id="whTot"></tr></tfoot>
+    </table></div>
+  </div>
+  <div class="cc"><div class="ct">📊 توزيع رصيد المخازن</div><canvas id="whC" height="180"></canvas></div>
+</div>
+
+<!-- ══ PURCHASES ══ -->
+<div class="page" id="tab-pur">
+  <div class="kg" id="purKPIs"></div>
+  <div class="sec">المشتريات الشهرية — فرع إسماعيلية</div>
+  <div class="card">
+    <div class="card-hd"><div class="card-tt" id="purCardTt">المشتريات</div><span class="bdg" id="purBdg"></span></div>
+    <div class="tw"><table>
+      <thead><tr>
+        <th class="lft">الشهر</th><th>التارجت (ج.م)</th>
+        <th>المحقق (ج.م)</th><th>% الإنجاز</th><th>الباقي (ج.م)</th>
+      </tr></thead>
+      <tbody id="purTbl"></tbody>
+      <tfoot><tr class="tot" id="purTot"></tr></tfoot>
+    </table></div>
+  </div>
+</div>
+
+<!-- ══ SETTINGS ══ -->
+<div class="page" id="tab-cfg">
+  <div class="sc">
+    <div class="st">🔗 ربط Google Sheets</div>
+    <div class="fg"><label>رابط Apps Script (المبيعات والأجل)</label>
+      <input id="urlInp" placeholder="https://script.google.com/macros/s/.../exec">
+    </div>
+    <button class="btn btn-bl" onclick="connectSheet()">🔗 ربط الآن</button>
+  </div>
+  <div class="sc">
+    <div class="st">⚙️ إعدادات الشهر</div>
+    <div class="fg"><label>التارجت الشهري الكلي (ج.م)</label><input type="number" id="cfgTgt" value="5885000"></div>
+    <div class="fg"><label>أيام العمل</label><input type="number" id="cfgDays" value="26"></div>
+    <button class="btn btn-bl" onclick="saveCfg()">💾 حفظ</button>
+  </div>
+  <div class="sc">
+    <div class="st">📡 حالة الاتصال</div>
+    <div class="conn-info" id="connInfo"></div>
+  </div>
+</div>
+
+</div><!-- /main -->
+
+<button class="fab" onclick="openMov()">＋</button>
+
+<!-- MODAL -->
+<div class="mov" id="mov">
+  <div class="modal">
+    <div class="dh"></div>
+    <div class="mt">➕ إضافة مبيعات يوم جديد</div>
+    <div class="fg"><label>التاريخ</label><input type="date" id="md"></div>
+    <div class="fg2">
+      <div class="fg"><label>الافرنجي — طارق</label><input type="number" id="m0" placeholder="0"></div>
+      <div class="fg"><label>التل — إسلام</label><input type="number" id="m1" placeholder="0"></div>
+      <div class="fg"><label>التمليك — أحمد</label><input type="number" id="m2" placeholder="0"></div>
+      <div class="fg"><label>الشيخ زايد — مروان</label><input type="number" id="m3" placeholder="0"></div>
+      <div class="fg"><label>العريشية — سيد</label><input type="number" id="m4" placeholder="0"></div>
+      <div class="fg"><label>القنطرة — سامى</label><input type="number" id="m5" placeholder="0"></div>
+    </div>
+    <div class="fg"><label>فايد — عبدالرحمن</label><input type="number" id="m6" placeholder="0"></div>
+    <div class="mbtns">
+      <button class="btn btn-gh" onclick="closeMov()">إلغاء</button>
+      <button class="btn btn-bl" style="width:auto" onclick="saveDay()">💾 حفظ</button>
+    </div>
+  </div>
+</div>
+
+<!-- TICKER -->
+<div class="ticker-wrap">
+  <div class="ticker-inner">
+    <div class="ticker-label">📢 إعلان</div>
+    <div class="ticker-track"><div class="ticker-text" id="tickerTxt">شركة بيزنس بارتنرز — فرع إسماعيلية &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp; By Ahmed Kilany</div></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const REPS    = [{"region": "الافرنجي", "rep": "طارق عبدالفتاح", "target": 880000, "wefa": 630000, "color": "#2563EB"}, {"region": "التل", "rep": "إسلام الضو", "target": 847000, "wefa": 606375, "color": "#16A34A"}, {"region": "التمليك", "rep": "أحمد حسن", "target": 704000, "wefa": 504000, "color": "#D97706"}, {"region": "الشيخ زايد", "rep": "مروان عماد", "target": 902000, "wefa": 645750, "color": "#7C3AED"}, {"region": "العريشية", "rep": "سيد عادل", "target": 748000, "wefa": 535500, "color": "#DC2626"}, {"region": "القنطرة", "rep": "سامى محمد", "target": 913000, "wefa": 653625, "color": "#0EA5E9"}, {"region": "فايد", "rep": "عبدالرحمن عادل", "target": 891000, "wefa": 637875, "color": "#059669"}];
+const REGIONS = REPS.map(r=>r.region);
+const COLORS  = REPS.map(r=>r.color);
+let SALES     = [{"date": "2026-03-01", "الافرنجي": 20636.670000000002, "التل": 5531, "التمليك": 12207.5, "الشيخ زايد": 19314.58, "العريشية": 12987.74, "القنطرة": 18025.989999999998, "فايد": 20029.760000000002}, {"date": "2026-03-02", "الافرنجي": 25117.309999999998, "التل": 15497.61, "التمليك": 10023.05, "الشيخ زايد": 133609.50999999998, "العريشية": 10951.25, "القنطرة": 7174.21, "فايد": 19903.03}, {"date": "2026-03-03", "الافرنجي": 31299.640000000003, "التل": 11513.75, "التمليك": 13872.329999999998, "الشيخ زايد": 115942.57, "العريشية": 13262.74, "القنطرة": 18346.94, "فايد": 22174.5}, {"date": "2026-03-04", "الافرنجي": 21816.7, "التل": 17213.36, "التمليك": 17106.77, "الشيخ زايد": 11552.16, "العريشية": 3381.25, "القنطرة": 30582.47, "فايد": 14913.91}, {"date": "2026-03-05", "الافرنجي": 18757.15, "التل": 11671.02, "التمليك": 15042.609999999999, "الشيخ زايد": 27756.690000000002, "العريشية": 26036.260000000002, "القنطرة": 26930.679999999997, "فايد": 20271.65}, {"date": "2026-03-07", "الافرنجي": 38637.56, "التل": 30256.25, "التمليك": 17479.64, "الشيخ زايد": 22333.92, "العريشية": 21880.899999999998, "القنطرة": 36288.24, "فايد": 9473.189999999999}, {"date": "2026-03-08", "الافرنجي": 16101.25, "التل": 10885.92, "التمليك": 14766.619999999999, "الشيخ زايد": 22099.26, "العريشية": 10289.66, "القنطرة": 21956.629999999997, "فايد": 13436.01}, {"date": "2026-03-09", "الافرنجي": 24304.269999999997, "التل": 17051.13, "التمليك": 6540.26, "الشيخ زايد": 28187.889999999996, "العريشية": 24136.41, "القنطرة": 31034.46, "فايد": 14361.97}, {"date": "2026-03-10", "الافرنجي": 21887.28, "التل": 21792.539999999997, "التمليك": 9259, "الشيخ زايد": 23827.170000000002, "العريشية": 23129.75, "القنطرة": 27727.62, "فايد": 28439.36}, {"date": "2026-03-11", "الافرنجي": 28463.960000000003, "التل": 31154.52, "التمليك": 18390.800000000003, "الشيخ زايد": 22854.820000000003, "العريشية": 28461.78, "القنطرة": 20417.239999999998, "فايد": 38482.59}, {"date": "2026-03-12", "الافرنجي": 44760, "التل": 29135, "التمليك": 26840, "الشيخ زايد": 20897, "العريشية": 29761, "القنطرة": 47963, "فايد": 19315}];
+let WEFA_DATA = [{"date": "2026-03-01", "الافرنجي": 20636.670000000002, "التل": 5531, "التمليك": 12207.5, "الشيخ زايد": 19314.58, "العريشية": 12987.74, "القنطرة": 18025.989999999998, "فايد": 20029.760000000002}, {"date": "2026-03-02", "الافرنجي": 25117.309999999998, "التل": 15497.61, "التمليك": 10023.05, "الشيخ زايد": 133609.50999999998, "العريشية": 10951.25, "القنطرة": 7174.21, "فايد": 19903.03}, {"date": "2026-03-03", "الافرنجي": 31299.640000000003, "التل": 11513.75, "التمليك": 13872.329999999998, "الشيخ زايد": 115942.57, "العريشية": 13262.74, "القنطرة": 18346.94, "فايد": 22174.5}, {"date": "2026-03-04", "الافرنجي": 21816.7, "التل": 17213.36, "التمليك": 17106.77, "الشيخ زايد": 11552.16, "العريشية": 3381.25, "القنطرة": 30582.47, "فايد": 14913.91}, {"date": "2026-03-05", "الافرنجي": 18757.15, "التل": 11671.02, "التمليك": 15042.609999999999, "الشيخ زايد": 27756.690000000002, "العريشية": 26036.260000000002, "القنطرة": 26930.679999999997, "فايد": 20271.65}, {"date": "2026-03-07", "الافرنجي": 38637.56, "التل": 30256.25, "التمليك": 17479.64, "الشيخ زايد": 22333.92, "العريشية": 21880.899999999998, "القنطرة": 36288.24, "فايد": 9473.189999999999}, {"date": "2026-03-08", "الافرنجي": 16101.25, "التل": 10885.92, "التمليك": 14766.619999999999, "الشيخ زايد": 22099.26, "العريشية": 10289.66, "القنطرة": 21956.629999999997, "فايد": 13436.01}, {"date": "2026-03-09", "الافرنجي": 24304.269999999997, "التل": 17051.13, "التمليك": 6540.26, "الشيخ زايد": 28187.889999999996, "العريشية": 24136.41, "القنطرة": 31034.46, "فايد": 14361.97}, {"date": "2026-03-10", "الافرنجي": 21887.28, "التل": 21792.539999999997, "التمليك": 9259, "الشيخ زايد": 23827.170000000002, "العريشية": 23129.75, "القنطرة": 27727.62, "فايد": 28439.36}, {"date": "2026-03-11", "الافرنجي": 28463.960000000003, "التل": 31154.52, "التمليك": 18390.800000000003, "الشيخ زايد": 22854.820000000003, "العريشية": 28461.78, "القنطرة": 20417.239999999998, "فايد": 38482.59}, {"date": "2026-03-12", "الافرنجي": 44760, "التل": 29135, "التمليك": 26840, "الشيخ زايد": 20897, "العريشية": 29761, "القنطرة": 47963, "فايد": 19315}];
+let AJAL      = [{"region": "الافرنجي", "rep": "طارق عبدالفتاح", "ajal": 44232, "overdue": 13416}, {"region": "التل", "rep": "إسلام الضو", "ajal": 47010, "overdue": 26543}, {"region": "التمليك", "rep": "أحمد حسن", "ajal": 70180, "overdue": 23179}, {"region": "الشيخ زايد", "rep": "مروان عماد", "ajal": 181501, "overdue": 52866}, {"region": "العريشية", "rep": "سيد عادل", "ajal": 91443, "overdue": 46465}, {"region": "القنطرة", "rep": "سامى محمد", "ajal": 29580, "overdue": 0}, {"region": "فايد", "rep": "عبدالرحمن عادل", "ajal": 99136, "overdue": 58033}];
+let WAREHOUSE = [];
+let PURCHASES = {};
+let WEFA_CFG  = {name:'ويفا 11 يوم', totalTgt:4213125, days:11, elapsed:11};
+let SHEET_URL = 'https://script.google.com/macros/s/AKfycbzaKzCSB94J1sIdMCu2CRigeCWLZ8gZ2xYj8kvPPOuyuaA_lJWkMYzQ3mDOZ6Vdiywu/exec';
+let TTGT  = 5885000;
+let WDAYS = 26;
+
+const fN  = n  => Math.round(+n||0).toLocaleString('ar-EG');
+const f1  = n  => ((+n||0)*100).toFixed(1)+'%';
+const sOf = r  => SALES.reduce((s,d)=>s+(+d[r]||0),0);
+const tOf = r  => {const l=SALES[SALES.length-1];return l?(+l[r]||0):0;};
+const wOf = r  => WEFA_DATA.reduce((s,d)=>s+(+d[r]||0),0);
+const sumA= (a,k)=>a.reduce((s,r)=>s+(+r[k]||0),0);
+
+// ── TABS ──
+function ST(name,el){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('on'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));
+  document.getElementById('tab-'+name).classList.add('on');
+  el.classList.add('on');
+  const fn={ajal:renderAjal,wefa:renderWefa,wh:renderWH,pur:renderPur,cfg:renderCfg};
+  if(fn[name]) fn[name]();
+}
+
+// ── LOAD ──
+async function loadData(silent){
+  if(!silent) setSS('load');
+  try{
+    const r = await fetch(SHEET_URL+'?action=get', {cache:'no-store'});
+    const j = await r.json();
+    if(j && j.status==='ok'){
+      if(j.sales&&j.sales.data&&j.sales.data.length)  SALES=j.sales.data;
+      if(j.ajal&&j.ajal.length)         AJAL=patchAjal(j.ajal);
+      if(j.wefa&&j.wefa.data&&j.wefa.data.length)   WEFA_DATA=j.wefa.data;
+      if(j.wefa&&j.wefa.name)           WEFA_CFG.name=j.wefa.name;
+      if(j.wefa&&j.wefa.totalTgt)       WEFA_CFG.totalTgt=j.wefa.totalTgt;
+      if(j.wefa&&j.wefa.days)           WEFA_CFG.days=j.wefa.days;
+      if(j.warehouse&&j.warehouse.length) WAREHOUSE=j.warehouse;
+      if(j.purchases)                   PURCHASES=j.purchases;
+      if(j.ads&&j.ads.length)           updateTicker(j.ads);
+      setSS('ok');
+      if(!silent) toast('✓ تم التحديث','t-ok');
+    } else { setSS('er'); }
+  }catch(e){ setSS('er'); if(!silent) toast('خطأ في الاتصال','t-er'); }
+  renderAll();
+}
+
+function patchAjal(arr){
+  const map={'الافرانج':'الافرنجي','العرايشية':'العريشية','العرايشيه':'العريشية'};
+  return arr.map(r=>({...r,region:map[r.region?.trim()]||r.region?.trim()}));
+}
+
+function updateTicker(ads){
+  const texts=ads.filter(a=>a&&a.trim()!=='');
+  if(texts.length) document.getElementById('tickerTxt').textContent=texts.join('   |   ');
+}
+
+function renderAll(){updateDate();renderOv();renderReps();renderDaily();}
+
+function updateDate(){
+  const d=new Date(),days=['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت'];
+  document.getElementById('navDate').textContent=days[d.getDay()]+' '+d.toLocaleDateString('ar-EG');
+}
+
+// ── OVERVIEW ──
+function renderOv(){
+  const tAch=REGIONS.reduce((s,r)=>s+sOf(r),0);
+  const tTod=REGIONS.reduce((s,r)=>s+tOf(r),0);
+  const el=SALES.length,lft=Math.max(0,WDAYS-el);
+  const pct=tAch/TTGT,tpct=el/WDAYS;
+  const dreq=lft>0?(TTGT-tAch)/lft:0;
+  const wAch=REGIONS.reduce((s,r)=>s+wOf(r),0);
+  const wPct=wAch/WEFA_CFG.totalTgt;
+  const wLft=Math.max(0,WEFA_CFG.days-WEFA_DATA.length);
+
+  // ── نسب دائرية ──
+  const rings=[
+    {title:'المبيعات الشهرية',    pct,  color:pct>=tpct?'#16A34A':'#DC2626', sub:fN(tAch)+' ج.م'},
+    {title:WEFA_CFG.name||'الويفا',pct:wPct,color:wPct>=0.5?'#16A34A':'#DC2626',sub:fN(wAch)+' ج.م'},
+    {title:'التايم جن',           pct:tpct,color:'#7C3AED',sub:el+' يوم من '+WDAYS},
+    {title:'الأيام المنقضية',     pct:el/WDAYS,color:'#0EA5E9',sub:lft+' يوم باقي'},
+  ];
+  document.getElementById('ovRings').innerHTML=rings.map((r,i)=>{
+    const p=Math.min(100,r.pct*100);
+    return `<div class="ring-card">
+      <div class="ring-title">${r.title}</div>
+      <div class="ring-wrap">
+        <canvas id="ring${i}" width="80" height="80"></canvas>
+        <div class="ring-center">
+          <div class="ring-pct" style="color:${r.color}">${(r.pct*100).toFixed(0)}%</div>
+        </div>
+      </div>
+      <div class="ring-sub" style="color:${r.color};font-weight:700;font-size:10px">${r.sub}</div>
+    </div>`;
+  }).join('');
+  // رسم الحلقات
+  rings.forEach((r,i)=>{
+    const p=Math.min(100,r.pct*100);
+    const ctx=document.getElementById('ring'+i)?.getContext('2d');
+    if(!ctx) return;
+    new Chart(ctx,{type:'doughnut',
+      data:{datasets:[{data:[p,100-p],backgroundColor:[r.color,'#E2E8F0'],borderWidth:0}]},
+      options:{cutout:'72%',plugins:{legend:{display:false},tooltip:{enabled:false}},animation:{duration:800}}
+    });
+  });
+
+  // ── KPIs ──
+  const ld=SALES.length?SALES[SALES.length-1].date:'—';
+  document.getElementById('ovKPIs').innerHTML=[
+    {i:'🎯',l:'التارجت الشهري',    v:fN(TTGT),  s:'ج.م',                          ac:'#2563EB'},
+    {i:'📦',l:'المحقق حتى الآن',  v:fN(tAch),  s:f1(pct)+' من التارجت',           ac:pct>=tpct?'#16A34A':'#DC2626'},
+    {i:'📅',l:'مبيعات آخر يوم',   v:fN(tTod),  s:'بتاريخ '+ld,                    ac:'#0EA5E9'},
+    {i:'⏳',l:'المطلوب يومياً',    v:fN(dreq),  s:el+' يوم مضى — '+lft+' باقي',   ac:'#D97706'},
+  ].map(k=>`<div class="kpi" style="--ac:${k.ac}"><div class="kpi-ic">${k.i}</div><div class="kpi-lbl">${k.l}</div><div class="kpi-val">${k.v}</div><div class="kpi-sub">${k.s}</div></div>`).join('');
+  document.getElementById('ovBadge').textContent=el+' يوم من '+WDAYS;
+
+  // ── تحليل يومي تلقائي ──
+  const sorted=[...REPS].map(r=>({...r,ach:sOf(r.region),today:tOf(r.region)}))
+                         .sort((a,b)=>b.today-a.today);
+  const best=sorted[0],worst=sorted[sorted.length-1];
+  const aboveTgt=REPS.filter(r=>sOf(r.region)/r.target>=tpct);
+  const belowTgt=REPS.filter(r=>sOf(r.region)/r.target<tpct);
+  document.getElementById('analysis').innerHTML=[
+    {title:'🏆 أفضل مندوب اليوم', items:[
+      {l:'الاسم',   v:best.rep,                           c:best.color},
+      {l:'المنطقة', v:best.region,                        c:'#64748B'},
+      {l:'مبيعات اليوم', v:fN(best.today)+' ج.م',        c:'#16A34A'},
+      {l:'إجمالي الشهر', v:fN(best.ach)+' ج.م',          c:best.color},
+    ]},
+    {title:'⚠️ يحتاج متابعة', items:[
+      {l:'الاسم',        v:worst.rep,                     c:worst.color},
+      {l:'المبيعات اليوم',v:fN(worst.today)+' ج.م',      c:'#DC2626'},
+      {l:'الباقي للتارجت',v:fN(Math.max(0,worst.target-worst.ach))+' ج.م', c:'#D97706'},
+      {l:'نسبة الإنجاز', v:f1(worst.ach/worst.target),   c:'#DC2626'},
+    ]},
+    {title:'✅ فوق التارجت التراكمي', items:aboveTgt.map(r=>({
+      l:r.region, v:f1(sOf(r.region)/r.target), c:'#16A34A'
+    }))},
+    {title:'📉 تحت التارجت التراكمي', items:belowTgt.map(r=>({
+      l:r.region, v:f1(sOf(r.region)/r.target), c:'#DC2626'
+    }))},
+  ].map(an=>`<div class="an-card">
+    <div class="an-title">${an.title}</div>
+    ${an.items.map(it=>`<div class="an-item"><span class="an-lbl">${it.l}</span><span class="an-val" style="color:${it.c}">${it.v}</span></div>`).join('')}
+  </div>`).join('');
+
+  // جدول
+  document.getElementById('ovTbl').innerHTML=REPS.map(r=>{
+    const a=sOf(r.region),td=tOf(r.region),rem=Math.max(0,r.target-a);
+    const p=a/r.target,ok=p>=tpct,pc=Math.min(100,p*100);
+    return `<tr>
+      <td class="lft"><div class="rn" style="color:${r.color}">${r.rep}</div><div class="rg">${r.region}</div></td>
+      <td class="bl">${fN(r.target)}</td><td class="gr">${fN(a)}</td><td class="cy">${fN(td)}</td>
+      <td class="go">${fN(rem)}</td>
+      <td><div class="pw"><div class="pb"><div class="pf" style="width:${pc}%;background:${ok?'#16A34A':'#DC2626'}"></div></div><span class="pn" style="color:${ok?'#16A34A':'#DC2626'}">${(p*100).toFixed(1)}%</span></div></td>
+      <td>${ok?'<span class="tag tg">✅ فوق</span>':'<span class="tag tr">⚠️ تحت</span>'}</td>
+    </tr>`;
+  }).join('');
+  const tT=REPS.reduce((s,r)=>s+r.target,0),tA2=REGIONS.reduce((s,r)=>s+sOf(r),0),tTd=REGIONS.reduce((s,r)=>s+tOf(r),0);
+  document.getElementById('ovTot').innerHTML=`<td class="lft" style="font-weight:800">الإجمالي — 7 مناديب</td><td class="bl">${fN(tT)}</td><td class="gr">${fN(tA2)}</td><td class="cy">${fN(tTd)}</td><td class="go">${fN(Math.max(0,tT-tA2))}</td><td><b style="color:${tA2/tT>=el/WDAYS?'#16A34A':'#DC2626'}">${(tA2/tT*100).toFixed(1)}%</b></td><td>—</td>`;
+
+  renderCharts();
+}
+
+// ── REPS ──
+function renderReps(){
+  const el=SALES.length,tpct=el/WDAYS;
+  document.getElementById('repCards').innerHTML=REPS.map(r=>{
+    const ach=sOf(r.region),today=tOf(r.region),rem=Math.max(0,r.target-ach);
+    const pct=ach/r.target,ok=pct>=tpct,pc=Math.min(100,pct*100);
+    const aD=AJAL.find(a=>a.region===r.region)||{ajal:0,overdue:0};
+    const wAch=wOf(r.region),wRem=Math.max(0,r.wefa-wAch),wPct=wAch/r.wefa;
+    const ini=r.rep.trim().split(/\s+/);const initials=ini.length>=2?ini[0][0]+ini[1][0]:ini[0].slice(0,2);
+    return `<div class="rep-card">
+      <div class="rc-hd">
+        <div style="display:flex;align-items:center;gap:10px">
+          <div class="rc-av" style="background:${r.color}">${initials}</div>
+          <div><div class="rc-nm">${r.rep}</div><div class="rc-rg">📍 ${r.region}</div></div>
+        </div>
+        <div style="text-align:left">
+          <div class="rc-pct" style="color:${ok?'#16A34A':'#DC2626'}">${(pct*100).toFixed(1)}%</div>
+          <div class="rc-pct-s">${ok?'✅ فوق التارجت':'⚠️ تحت التارجت'}</div>
+        </div>
+      </div>
+      <div class="rc-prog">
+        <div class="rc-bar"><div class="rc-fill" style="width:${pc}%;background:${ok?'#16A34A':'#DC2626'}"></div></div>
+        <div class="rc-lbl">
+          <span>محقق: <b style="color:${r.color}">${fN(ach)} ج.م</b></span>
+          <span>تارجت: <b>${fN(r.target)} ج.م</b></span>
+        </div>
+      </div>
+      <div class="rc-nums">
+        <div class="rc-num"><div class="rcn-l">📅 آخر يوم</div><div class="rcn-v" style="color:#0EA5E9">${fN(today)}</div></div>
+        <div class="rc-num"><div class="rcn-l">📉 الباقي</div><div class="rcn-v" style="color:#D97706">${fN(rem)}</div></div>
+        <div class="rc-num"><div class="rcn-l">📋 ${WEFA_CFG.name||'الويفا'}</div><div class="rcn-v" style="color:#7C3AED">${fN(wAch)}<small style="font-size:9px;color:#94A3B8">/${fN(r.wefa)}</small></div></div>
+      </div>
+      <div class="rc-bot">
+        <div class="rc-bi"><div class="rbi-l">💰 الأجل</div><div class="rbi-v" style="color:#2563EB">${fN(aD.ajal)}</div></div>
+        <div class="rc-bi"><div class="rbi-l">⚠️ الأوفر ديو</div><div class="rbi-v" style="color:${aD.overdue>0?'#DC2626':'#16A34A'}">${fN(aD.overdue)}</div></div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ── DAILY ──
+function renderDaily(){
+  const tAch=REGIONS.reduce((s,r)=>s+sOf(r),0);
+  const tTod=REGIONS.reduce((s,r)=>s+tOf(r),0);
+  const el=SALES.length,lft=Math.max(0,WDAYS-el);
+  const dreq=lft>0?(TTGT-tAch)/lft:0;
+  document.getElementById('dayKPIs').innerHTML=[
+    {i:'📅',l:'مبيعات آخر يوم', v:fN(tTod), s:SALES.length?SALES[SALES.length-1].date:'—', ac:'#0EA5E9'},
+    {i:'📊',l:'التراكمي الكلي', v:fN(tAch), s:f1(tAch/TTGT)+' من التارجت', ac:'#2563EB'},
+    {i:'📆',l:'أيام مسجّلة',   v:el+' يوم', s:'من '+WDAYS+' يوم عمل', ac:'#7C3AED'},
+    {i:'⏳',l:'المطلوب يومياً', v:fN(dreq), s:'للوصول للتارجت', ac:'#D97706'},
+  ].map(k=>`<div class="kpi" style="--ac:${k.ac}"><div class="kpi-ic">${k.i}</div><div class="kpi-lbl">${k.l}</div><div class="kpi-val">${k.v}</div><div class="kpi-sub">${k.s}</div></div>`).join('');
+  document.getElementById('dayBdg').textContent=el+' يوم مسجّل';
+
+  let c=0; const cumuls={};
+  SALES.forEach(d=>{c+=REGIONS.reduce((s,r)=>s+(+d[r]||0),0);cumuls[d.date]=c;});
+  document.getElementById('dayTbl').innerHTML=SALES.slice().reverse().map(d=>{
+    const tot=REGIONS.reduce((s,r)=>s+(+d[r]||0),0);
+    return `<tr>
+      <td style="color:var(--gray);font-weight:600;font-size:11px">${d.date.slice(5)}</td>
+      ${REGIONS.map(r=>`<td class="bl" style="font-size:11px">${fN(+d[r]||0)}</td>`).join('')}
+      <td class="nv">${fN(tot)}</td><td class="gr">${fN(cumuls[d.date])}</td>
+    </tr>`;
+  }).join('');
+  const tots=REGIONS.map(r=>sOf(r)),grand=tots.reduce((s,v)=>s+v,0);
+  document.getElementById('dayTot').innerHTML=`<td style="font-weight:800">الإجمالي</td>${tots.map(v=>`<td class="bl">${fN(v)}</td>`).join('')}<td class="nv">${fN(grand)}</td><td class="gr">${fN(grand)}</td>`;
+}
+
+// ── WEFA ──
+function renderWefa(){
+  const name=WEFA_CFG.name||'الويفا';
+  const totalTgt=WEFA_CFG.totalTgt;
+  const days=WEFA_CFG.days;
+  const elapsed=WEFA_DATA.length;
+  const tAch=REGIONS.reduce((s,r)=>s+wOf(r),0);
+  const pct=tAch/totalTgt;
+  const tpct=elapsed/days;
+  const lft=Math.max(0,days-elapsed);
+  const dreq=lft>0?(totalTgt-tAch)/lft:0;
+
+  document.getElementById('wefaCardTt').textContent=name+' — التارجت vs المحقق';
+  document.getElementById('wefaChartTt').textContent='📈 تراكمي '+name+' vs التارجت';
+  document.getElementById('wefaBdg').textContent=elapsed+' يوم من '+days;
+  document.getElementById('wefaDayBdg').textContent=elapsed+' يوم مسجّل';
+
+  document.getElementById('wefaSum').innerHTML=`
+    <div class="wefa-name">📋 <span>${name}</span></div>
+    <div class="wefa-stats">
+      <div class="ws"><div class="wsl">🎯 التارجت الكلي</div><div class="wsv" style="color:#2563EB">${fN(totalTgt)}</div></div>
+      <div class="ws"><div class="wsl">📦 المحقق</div><div class="wsv" style="color:${pct>=tpct?'#16A34A':'#DC2626'}">${fN(tAch)}</div></div>
+      <div class="ws"><div class="wsl">⏳ المطلوب يومياً</div><div class="wsv" style="color:#D97706">${fN(dreq)}</div></div>
+      <div class="ws"><div class="wsl">⏱️ التايم جن</div><div class="wsv" style="color:#7C3AED">${(tpct*100).toFixed(0)}%</div></div>
+    </div>
+    <div class="wefa-prog"><div class="wefa-fill" style="width:${Math.min(100,pct*100)}%;background:${pct>=tpct?'#16A34A':'#DC2626'}"></div></div>
+    <div class="wefa-prog-lbl"><span>الإنجاز: ${f1(pct)}</span><span>الباقي: ${fN(Math.max(0,totalTgt-tAch))} ج.م</span></div>`;
+
+  document.getElementById('wefaTbl').innerHTML=REPS.map(r=>{
+    const a=wOf(r.region),t=r.wefa,rem=Math.max(0,t-a);
+    const p=a/t,ok=p>=tpct,pc=Math.min(100,p*100);
+    const dr=lft>0?(t-a)/lft:0;
+    return `<tr>
+      <td class="lft"><div class="rn" style="color:${r.color}">${r.rep}</div><div class="rg">${r.region}</div></td>
+      <td class="bl">${fN(t)}</td><td class="gr">${fN(a)}</td><td class="go">${fN(rem)}</td>
+      <td><div class="pw"><div class="pb"><div class="pf" style="width:${pc}%;background:${ok?'#16A34A':'#DC2626'}"></div></div><span class="pn" style="color:${ok?'#16A34A':'#DC2626'}">${(p*100).toFixed(1)}%</span></div></td>
+      <td style="color:#D97706;font-weight:700">${fN(Math.max(0,dr))}</td>
+      <td>${ok?'<span class="tag tg">✅ فوق</span>':'<span class="tag tr">⚠️ تحت</span>'}</td>
+    </tr>`;
+  }).join('');
+  const tT=REPS.reduce((s,r)=>s+r.wefa,0),tA=REGIONS.reduce((s,r)=>s+wOf(r),0);
+  const tDr=lft>0?(tT-tA)/lft:0;
+  document.getElementById('wefaTot').innerHTML=`<td class="lft" style="font-weight:800">الإجمالي</td><td class="bl">${fN(tT)}</td><td class="gr">${fN(tA)}</td><td class="go">${fN(Math.max(0,tT-tA))}</td><td><b style="color:${pct>=tpct?'#16A34A':'#DC2626'}">${f1(pct)}</b></td><td style="color:#D97706;font-weight:700">${fN(Math.max(0,tDr))}</td><td>—</td>`;
+
+  let wc=0;
+  document.getElementById('wefaDayTbl').innerHTML=WEFA_DATA.map((d,i)=>{
+    const tot=REGIONS.reduce((s,r)=>s+(+d[r]||0),0);
+    wc+=tot;
+    const tgtC=Math.round(totalTgt/days*(i+1));
+    const diff=wc-tgtC;
+    return `<tr>
+      <td style="color:var(--gray);font-weight:600;font-size:11px">${d.date}</td>
+      ${REGIONS.map(r=>`<td class="bl" style="font-size:11px">${fN(+d[r]||0)}</td>`).join('')}
+      <td class="nv">${fN(tot)}</td><td class="gr">${fN(wc)}</td>
+      <td style="color:var(--gray)">${fN(tgtC)}</td>
+      <td style="color:${diff>=0?'#16A34A':'#DC2626'};font-weight:700">${diff>=0?'+':''}${fN(diff)}</td>
+    </tr>`;
+  }).join('');
+  const gT=REGIONS.reduce((s,r)=>s+wOf(r),0);
+  document.getElementById('wefaDayTot').innerHTML=`<td style="font-weight:800">الإجمالي</td>${REGIONS.map(r=>`<td class="bl">${fN(wOf(r))}</td>`).join('')}<td class="nv">${fN(gT)}</td><td class="gr">${fN(gT)}</td><td style="color:var(--gray)">${fN(totalTgt)}</td><td style="color:${gT>=totalTgt?'#16A34A':'#DC2626'};font-weight:700">${gT>=totalTgt?'+':''}${fN(gT-totalTgt)}</td>`;
+
+  renderWefaChart();
+}
+
+// ── AJAL ──
+function renderAjal(){
+  const tA=sumA(AJAL,'ajal'),tO=sumA(AJAL,'overdue'),tD=tA-tO,op=tO/tA;
+  document.getElementById('ajalKPIs').innerHTML=[
+    {i:'💰',l:'إجمالي الأجل',           v:fN(tA), s:'ج.م', ac:'#2563EB'},
+    {i:'⚠️', l:'الأوفر ديو',             v:fN(tO), s:f1(op)+' من الأجل', ac:'#DC2626'},
+    {i:'✅', l:'One Due — تحت التحصيل', v:fN(tD), s:'ج.م', ac:'#16A34A'},
+    {i:'📊', l:'مستوى الخطر',           v:f1(op), s:op>0.4?'⚠️ مرتفع':'✅ مقبول', ac:op>0.4?'#DC2626':'#16A34A'},
+  ].map(k=>`<div class="kpi" style="--ac:${k.ac}"><div class="kpi-ic">${k.i}</div><div class="kpi-lbl">${k.l}</div><div class="kpi-val">${k.v}</div><div class="kpi-sub">${k.s}</div></div>`).join('');
+  document.getElementById('ajalTbl').innerHTML=[...AJAL].sort((a,b)=>b.overdue-a.overdue).map(r=>{
+    const od=r.ajal-r.overdue,p=r.ajal>0?r.overdue/r.ajal:0,pc=Math.min(100,p*100);
+    return `<tr>
+      <td class="lft"><div class="rn">${r.rep}</div><div class="rg">${r.region}</div></td>
+      <td class="bl">${fN(r.ajal)}</td><td class="re">${fN(r.overdue)}</td><td class="gr">${fN(od)}</td>
+      <td><div class="pw"><div class="pb"><div class="pf" style="width:${pc}%;background:${p>0.5?'#DC2626':'#D97706'}"></div></div><span class="pn" style="color:${p>0.5?'#DC2626':'#D97706'}">${(p*100).toFixed(1)}%</span></div></td>
+      <td>${p>0.5?'<span class="tag tr">خطر</span>':p>0.2?'<span class="tag ty">متوسط</span>':'<span class="tag tg">جيد</span>'}</td>
+    </tr>`;
+  }).join('');
+  document.getElementById('ajalTot').innerHTML=`<td class="lft" style="font-weight:800">الإجمالي</td><td class="bl">${fN(tA)}</td><td class="re">${fN(tO)}</td><td class="gr">${fN(tD)}</td><td><b style="color:${op>0.4?'#DC2626':'#16A34A'}">${f1(op)}</b></td><td>—</td>`;
+  renderAjalChart();
+}
+
+// ── WAREHOUSE ──
+function renderWH(){
+  const wh = WAREHOUSE.length ? WAREHOUSE : [
+    {name:'مخزن الافرنجي',59505},{name:'مخزن التل',85526},{name:'مخزن التمليك',64542},
+    {name:'مخزن الشيخ زايد',85453},{name:'مخزن العريشية',33223},{name:'مخزن القنطرة',76204},
+    {name:'مخزن فايد',113918},{name:'مخزن 141',0},
+  ];
+  const total=wh.reduce((s,w)=>s+w.balance,0)+2445283;
+  document.getElementById('whKPIs').innerHTML=[
+    {i:'📦',l:'إجمالي رصيد المخازن', v:fN(total),  s:'ج.م', ac:'#2563EB'},
+    {i:'🏭',l:'المخزن الرئيسي',      v:fN(2445283),s:'ج.م', ac:'#D97706'},
+    {i:'🏪',l:'مخازن المناطق',       v:fN(wh.reduce((s,w)=>s+w.balance,0)), s:'ج.م', ac:'#16A34A'},
+    {i:'📊',l:'عدد المخازن',         v:wh.length+' مخزن', s:'+ المخزن الرئيسي', ac:'#7C3AED'},
+  ].map(k=>`<div class="kpi" style="--ac:${k.ac}"><div class="kpi-ic">${k.i}</div><div class="kpi-lbl">${k.l}</div><div class="kpi-val">${k.v}</div><div class="kpi-sub">${k.s}</div></div>`).join('');
+  document.getElementById('whBdg').textContent=wh.length+' مخزن';
+  document.getElementById('whTbl').innerHTML=wh.map((w,i)=>{
+    const pct=w.balance/total;
+    return `<tr>
+      <td>${i+1}</td>
+      <td class="lft" style="font-weight:700;color:var(--navy)">${w.name}</td>
+      <td class="gr">${fN(w.balance)}</td>
+      <td><div class="pw"><div class="pb"><div class="pf" style="width:${Math.min(100,pct*100)}%;background:#16A34A"></div></div><span class="pn">${(pct*100).toFixed(1)}%</span></div></td>
+    </tr>`;
+  }).join('');
+  document.getElementById('whTot').innerHTML=`<td>—</td><td class="lft" style="font-weight:800">الإجمالي الكلي</td><td class="nv">${fN(total)}</td><td>100%</td>`;
+  renderWHChart(wh);
+}
+
+// ── PURCHASES ──
+function renderPur(){
+  const pur=PURCHASES;
+  const tgt=pur.target||4500000,ach=pur.achieved||1700000,month=pur.month||'مارس 2026';
+  const pct=ach/tgt,rem=Math.max(0,tgt-ach);
+  document.getElementById('purKPIs').innerHTML=[
+    {i:'🎯',l:'تارجت المشتريات',  v:fN(tgt), s:'ج.م — '+month,           ac:'#2563EB'},
+    {i:'📦',l:'المحقق',           v:fN(ach), s:f1(pct)+' من التارجت',     ac:pct>=0.5?'#16A34A':'#DC2626'},
+    {i:'📉',l:'الباقي',           v:fN(rem), s:'ج.م',                     ac:'#D97706'},
+    {i:'📊',l:'نسبة الإنجاز',     v:f1(pct), s:pct>=0.5?'✅ جيد':'⚠️ تحت 50%', ac:pct>=0.5?'#16A34A':'#DC2626'},
+  ].map(k=>`<div class="kpi" style="--ac:${k.ac}"><div class="kpi-ic">${k.i}</div><div class="kpi-lbl">${k.l}</div><div class="kpi-val">${k.v}</div><div class="kpi-sub">${k.s}</div></div>`).join('');
+  document.getElementById('purCardTt').textContent='المشتريات الشهرية — '+month;
+  document.getElementById('purBdg').textContent=month;
+  document.getElementById('purTbl').innerHTML=`<tr>
+    <td class="lft" style="font-weight:800;color:var(--gold)">${month}</td>
+    <td class="bl">${fN(tgt)}</td><td class="gr">${fN(ach)}</td>
+    <td><div class="pw"><div class="pb"><div class="pf" style="width:${Math.min(100,pct*100)}%;background:${pct>=0.5?'#16A34A':'#DC2626'}"></div></div><span class="pn" style="color:${pct>=0.5?'#16A34A':'#DC2626'}">${(pct*100).toFixed(1)}%</span></div></td>
+    <td class="go">${fN(rem)}</td>
+  </tr>`;
+  document.getElementById('purTot').innerHTML=`<td class="lft" style="font-weight:800">الإجمالي</td><td class="bl">${fN(tgt)}</td><td class="gr">${fN(ach)}</td><td><b style="color:${pct>=0.5?'#16A34A':'#DC2626'}">${f1(pct)}</b></td><td class="go">${fN(rem)}</td>`;
+}
+
+// ── SETTINGS ──
+function renderCfg(){
+  document.getElementById('connInfo').innerHTML=`
+    <div>الحالة: <b style="color:${SHEET_URL?'#16A34A':'#DC2626'}">${SHEET_URL?'متصل ✓':'غير متصل'}</b></div>
+    <div>أيام مبيعات مسجّلة: <b>${SALES.length} يوم</b></div>
+    <div>إجمالي المحقق: <b>${fN(REGIONS.reduce((s,r)=>s+sOf(r),0))} ج.م</b></div>
+    <div>اسم الويفا الحالية: <b>${WEFA_CFG.name||'—'}</b></div>
+    <div>آخر تحديث: <b>${new Date().toLocaleTimeString('ar-EG')}</b></div>`;
+  document.getElementById('urlInp').value=SHEET_URL;
+}
+
+// ── CHARTS ──
+const CH={};
+const dc=id=>{if(CH[id]){CH[id].destroy();delete CH[id];}};
+const CO={responsive:true,plugins:{legend:{labels:{color:'#64748B',font:{family:'Cairo',size:10}}}},
+  scales:{x:{ticks:{color:'#94A3B8',font:{family:'Cairo',size:9}},grid:{color:'#F1F5F9'}},
+          y:{ticks:{color:'#94A3B8',font:{family:'Cairo',size:9},callback:v=>fN(v)},grid:{color:'#F1F5F9'}}}};
+
+function renderCharts(){
+  dc('cumul'); let c=0;
+  const cd=SALES.map(d=>{c+=REGIONS.reduce((s,r)=>s+(+d[r]||0),0);return Math.round(c);});
+  const tl=SALES.map((_,i)=>Math.round(TTGT/WDAYS*(i+1)));
+  CH['cumul']=new Chart(document.getElementById('cumulC'),{type:'line',
+    data:{labels:SALES.map(d=>d.date.slice(5)),datasets:[
+      {label:'التراكمي المحقق',data:cd,borderColor:'#2563EB',backgroundColor:'rgba(37,99,235,.08)',tension:.4,fill:true,pointRadius:4,pointBackgroundColor:'#2563EB',borderWidth:2},
+      {label:'التارجت التراكمي',data:tl,borderColor:'#DC2626',backgroundColor:'transparent',tension:0,pointRadius:0,borderDash:[5,4],borderWidth:2},
+    ]},options:CO});
+  dc('donut');
+  const ld=SALES[SALES.length-1]||{};
+  CH['donut']=new Chart(document.getElementById('donutC'),{type:'doughnut',
+    data:{labels:REPS.map(r=>r.region),datasets:[{data:REPS.map(r=>Math.round(+ld[r.region]||0)),backgroundColor:COLORS,borderWidth:2,borderColor:'#fff'}]},
+    options:{responsive:true,cutout:'60%',plugins:{legend:{position:'bottom',labels:{color:'#64748B',font:{family:'Cairo',size:9},padding:5}}}}});
+}
+
+function renderWefaChart(){
+  dc('wefa'); let c=0;
+  const cd=WEFA_DATA.map(d=>{c+=REGIONS.reduce((s,r)=>s+(+d[r]||0),0);return Math.round(c);});
+  const tl=WEFA_DATA.map((_,i)=>Math.round(WEFA_CFG.totalTgt/WEFA_CFG.days*(i+1)));
+  CH['wefa']=new Chart(document.getElementById('wefaC'),{type:'line',
+    data:{labels:WEFA_DATA.map(d=>d.date.slice(5)),datasets:[
+      {label:'التراكمي المحقق',data:cd,borderColor:'#16A34A',backgroundColor:'rgba(22,163,74,.08)',tension:.4,fill:true,pointRadius:4,pointBackgroundColor:'#16A34A',borderWidth:2},
+      {label:'تارجت الويفا',data:tl,borderColor:'#DC2626',backgroundColor:'transparent',tension:0,pointRadius:0,borderDash:[5,4],borderWidth:2},
+    ]},options:CO});
+}
+
+function renderAjalChart(){
+  dc('ajal');
+  CH['ajal']=new Chart(document.getElementById('ajalC'),{type:'bar',
+    data:{labels:AJAL.map(r=>r.region),datasets:[
+      {label:'الأجل الكلي',data:AJAL.map(r=>r.ajal),backgroundColor:'rgba(37,99,235,.15)',borderColor:'#2563EB',borderWidth:2,borderRadius:5},
+      {label:'الأوفر ديو', data:AJAL.map(r=>r.overdue),backgroundColor:'rgba(220,38,38,.18)',borderColor:'#DC2626',borderWidth:2,borderRadius:5},
+    ]},options:{...CO,scales:{x:{ticks:{color:'#94A3B8',font:{family:'Cairo',size:9}},grid:{display:false}},
+      y:{ticks:{color:'#94A3B8',font:{family:'Cairo',size:9},callback:v=>fN(v)},grid:{color:'#F1F5F9'}}}}});
+}
+
+function renderWHChart(wh){
+  dc('wh');
+  CH['wh']=new Chart(document.getElementById('whC'),{type:'doughnut',
+    data:{labels:wh.map(w=>w.name),datasets:[{data:wh.map(w=>w.balance),backgroundColor:COLORS,borderWidth:2,borderColor:'#fff'}]},
+    options:{responsive:true,cutout:'50%',plugins:{legend:{position:'bottom',labels:{color:'#64748B',font:{family:'Cairo',size:9},padding:5}}}}});
+}
+
+// ── MODAL ──
+function openMov(){document.getElementById('md').value=new Date().toISOString().slice(0,10);for(let i=0;i<7;i++)document.getElementById('m'+i).value='';document.getElementById('mov').classList.add('on');}
+function closeMov(){document.getElementById('mov').classList.remove('on');}
+function saveDay(){
+  const date=document.getElementById('md').value;
+  if(!date){toast('اختار التاريخ','t-er');return;}
+  const entry={date};
+  REGIONS.forEach((r,i)=>entry[r]=+document.getElementById('m'+i).value||0);
+  const idx=SALES.findIndex(d=>d.date===date);
+  if(idx>=0) SALES[idx]=entry; else SALES.push(entry);
+  SALES.sort((a,b)=>a.date>b.date?1:-1);
+  closeMov();renderAll();toast('✓ تم حفظ اليوم','t-ok');
+  if(SHEET_URL) fetch(SHEET_URL+'?action=addSales',{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify({row:entry})}).catch(()=>{});
+}
+
+function connectSheet(){
+  const url=document.getElementById('urlInp').value.trim();
+  if(!url.includes('script.google.com')){toast('URL غلط','t-er');return;}
+  SHEET_URL=url;localStorage.setItem('ism_url',url);
+  loadData();toast('✓ تم الربط','t-ok');
+}
+function saveCfg(){
+  TTGT=+document.getElementById('cfgTgt').value||5885000;
+  WDAYS=+document.getElementById('cfgDays').value||26;
+  renderAll();toast('✓ تم الحفظ','t-ok');
+}
+
+function setSS(s){
+  const d=document.getElementById('sdot'),t=document.getElementById('stxt');
+  const m={ok:['#4ADE80','متصل ✓'],er:['#F87171','خطأ'],load:['#FCD34D','جاري...']};
+  const[c,tx]=m[s]||m.ok;d.style.background=c;t.textContent=tx;
+}
+let _t;
+function toast(msg,cls='t-ok'){
+  const el=document.getElementById('toast');
+  el.textContent=msg;el.className='toast '+cls+' on';
+  clearTimeout(_t);_t=setTimeout(()=>el.classList.remove('on'),2800);
+}
+
+// ── PASSWORD ──
+    inp.addEventListener('input',   function(){ 
+      var err=document.getElementById('pwErr'); 
+      if(err) err.textContent=''; 
+    });
+    inp.focus();
+  }
+});
+
+// ── AUTO REFRESH ──
+setInterval(()=>loadData(true),60000);
+
+// ── INIT ──
+updateDate();
+loadData();
+</script>
+</body>
+</html>
