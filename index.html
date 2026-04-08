@@ -57,10 +57,19 @@ body{font-family:'Cairo',sans-serif;background:var(--bg);color:#111827;direction
 .tcard{background:#fff;border-radius:var(--r);box-shadow:var(--shadow);overflow:hidden;margin-bottom:8px}
 .tcard-hd{background:var(--blue);color:#fff;padding:8px 12px;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:space-between}
 .tcard-hd .badge-sm{font-size:10px;background:rgba(255,255,255,.2);padding:2px 8px;border-radius:10px}
-.tw{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.tw{overflow-x:auto;-webkit-overflow-scrolling:touch;position:relative;}
 table{width:100%;border-collapse:collapse;font-size:11px;min-width:340px}
-thead tr{background:#1e3a5f;color:#fff;position:sticky;top:0}
+thead tr{background:#1e3a5f;color:#fff;position:sticky;top:0;z-index:15;}
 th{padding:7px 10px;text-align:right;font-weight:700;font-size:10px;white-space:nowrap;border-left:1px solid rgba(255,255,255,.1)}
+
+/* STICKY FIRST COLUMN */
+th:first-child, td:first-child { position: sticky; right: 0; z-index: 10; border-left: 2px solid var(--border) !important; }
+thead th:first-child { z-index: 20; background: #1e3a5f; border-left-color: rgba(255,255,255,.2) !important; }
+tbody td:first-child { background: #fff; }
+tbody tr:nth-child(even) td:first-child { background: var(--row-even); }
+tbody tr:hover td:first-child { background: #e8f0fe; }
+tfoot td:first-child { background: #1e3a5f !important; z-index: 11; border-left-color: rgba(255,255,255,.2) !important; }
+
 tbody tr:nth-child(even){background:var(--row-even)}
 tbody tr:hover{background:#e8f0fe}
 td{padding:6px 10px;border-bottom:1px solid var(--border);white-space:nowrap;border-left:1px solid #f0f0f0}
@@ -77,40 +86,29 @@ td.neutral{color:#374151}
 .pb-fill{height:100%;border-radius:3px}
 .pb-lbl{font-size:10px;font-weight:700;min-width:32px;text-align:left}
 
-/* ── CHART (small, below tables) ── */
+/* ── CHART ── */
 .chart-wrap{background:#fff;border-radius:var(--r);box-shadow:var(--shadow);padding:12px;margin-bottom:8px}
 .chart-ttl{font-size:12px;font-weight:700;margin-bottom:8px;color:#1e3a5f}
-.ch-small{height:160px}
 .ch-med{height:200px}
 
-/* ── SUMMARY CARD ── */
-.sum-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.sum-card{background:#fff;border-radius:var(--r);padding:10px;box-shadow:var(--shadow)}
-.sum-card .s-lbl{font-size:10px;color:var(--gray);font-weight:600}
-.sum-card .s-val{font-size:15px;font-weight:900;color:#1e3a5f;margin:2px 0}
-.sum-card .s-sub{font-size:9px;color:var(--gray)}
-
 /* ── RESPONSIVE ── */
+@media(max-width:639px){
+  table{font-size:10.5px;}
+  th{padding:6px 6px;font-size:9px;}
+  td{padding:5px 6px;}
+  .pb-wrap{min-width:60px;}
+  .pb{min-width:30px;}
+}
 @media(min-width:640px){
   html{font-size:14px}
-  .kpi-row.four{grid-template-columns:repeat(4,1fr)}
-  .kpi-val{font-size:22px}
   table{font-size:12px}
   th{font-size:11px;padding:8px 12px}
   td{padding:7px 12px}
-}
-@media(min-width:1024px){
-  .content{padding:20px;max-width:1400px;margin:0 auto}
-  .two-col{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-  .three-col{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}
-  .ch-small{height:200px}
-  .ch-med{height:240px}
 }
 </style>
 </head>
 <body>
 
-<!-- TOP BAR -->
 <header class="topbar">
   <div>
     <div class="topbar-title">📊 داشبورد المبيعات</div>
@@ -122,7 +120,6 @@ td.neutral{color:#374151}
   </div>
 </header>
 
-<!-- NAV -->
 <nav class="nav">
   <button class="nav-btn active" onclick="go('ov',this)">🏠 الرئيسية</button>
   <button class="nav-btn" onclick="go('mon',this)">📅 الشهرية</button>
@@ -133,29 +130,37 @@ td.neutral{color:#374151}
 
 <main class="content">
 
-<!-- ══ PAGE: OVERVIEW ══ -->
 <div class="pg active" id="pg-ov">
 
   <div class="sec">📊 ملخص الكوارتر الأول</div>
   <div class="kpi-row">
-    <div class="kpi b"><div class="kpi-lbl">إجمالي المبيعات 2026</div><div class="kpi-val">13.49M</div><div class="kpi-chg up">▲ +16.9% عن 2025</div><div class="kpi-sub">2025: 11.54M جنيه</div></div>
-    <div class="kpi a"><div class="kpi-lbl">متوسط الفاتورة 2026</div><div class="kpi-val">2,302</div><div class="kpi-chg up">▲ +21% عن 2025</div><div class="kpi-sub">2025: 1,901 جنيه</div></div>
-    <div class="kpi g"><div class="kpi-lbl">إجمالي الفواتير 2026</div><div class="kpi-val">5,859</div><div class="kpi-chg dn">▼ −208 عن 2025</div><div class="kpi-sub">2025: 6,067 فاتورة</div></div>
-    <div class="kpi p"><div class="kpi-lbl">إجمالي العملاء 2026</div><div class="kpi-val">1,169</div><div class="kpi-chg up">▲ +99 عميل</div><div class="kpi-sub">2025: 1,070 عميل</div></div>
+    <div class="kpi b"><div class="kpi-lbl">إجمالي المبيعات 2026</div><div class="kpi-val">13.49M</div><div class="kpi-chg up">▲ +16.9% عن 2025</div></div>
+    <div class="kpi a"><div class="kpi-lbl">متوسط الفاتورة 2026</div><div class="kpi-val">2,302</div><div class="kpi-chg up">▲ +21.1% عن 2025</div></div>
+    <div class="kpi g"><div class="kpi-lbl">إجمالي الفواتير 2026</div><div class="kpi-val">5,859</div><div class="kpi-chg dn">▼ −3.4% عن 2025</div></div>
+    <div class="kpi p"><div class="kpi-lbl">إجمالي العملاء 2026</div><div class="kpi-val">1,169</div><div class="kpi-chg up">▲ +9.3% نمو</div></div>
   </div>
 
   <div class="sec">📋 ملخص الأشهر الثلاثة</div>
   <div class="tcard">
-    <div class="tcard-hd">ملخص مبيعات Q1 <span class="badge-sm">يناير – مارس 2026</span></div>
+    <div class="tcard-hd">ملخص مبيعات Q1 <span class="badge-sm">يناير – مارس</span></div>
     <div class="tw">
       <table>
-        <thead><tr><th>الشهر</th><th>مبيعات 2025</th><th>مبيعات 2026</th><th>الفرق</th><th>نسبة النمو</th><th>فواتير 2025</th><th>فواتير 2026</th><th>Δ فواتير</th><th>م.فاتورة 2025</th><th>م.فاتورة 2026</th><th>Δ المتوسط</th></tr></thead>
+        <thead>
+          <tr>
+            <th>الشهر</th>
+            <th>مبيعات 25</th><th>مبيعات 26</th><th>الفرق</th><th>% المبيعات</th>
+            <th>فواتير 25</th><th>فواتير 26</th><th>Δ فواتير</th><th>% فواتير</th>
+            <th>م.فاتورة 25</th><th>م.فاتورة 26</th><th>Δ المتوسط</th><th>% متوسط</th>
+          </tr>
+        </thead>
         <tbody>
-          <tr><td class="nm">يناير</td><td>3,409,232</td><td>4,514,756</td><td class="up2">+1,105,524</td><td><div class="pb-wrap"><div class="pb"><div class="pb-fill" style="width:32%;background:#1a56db"></div></div><span class="pb-lbl up2">32.4%</span></div></td><td>2,155</td><td>2,156</td><td class="up2">+1</td><td>1,582</td><td>2,094</td><td class="up2">+512</td></tr>
-          <tr><td class="nm">فبراير</td><td>3,351,489</td><td>3,611,979</td><td class="up2">+260,490</td><td><div class="pb-wrap"><div class="pb"><div class="pb-fill" style="width:8%;background:#d97706"></div></div><span class="pb-lbl up2">7.8%</span></div></td><td>1,731</td><td>1,629</td><td class="dn2">−102</td><td>1,936</td><td>2,217</td><td class="up2">+281</td></tr>
-          <tr><td class="nm">مارس</td><td>4,774,615</td><td>5,362,152</td><td class="up2">+587,537</td><td><div class="pb-wrap"><div class="pb"><div class="pb-fill" style="width:12%;background:#7c3aed"></div></div><span class="pb-lbl up2">12.3%</span></div></td><td>2,181</td><td>2,074</td><td class="dn2">−107</td><td>2,189</td><td>2,585</td><td class="up2">+396</td></tr>
+          <tr><td class="nm">يناير</td><td>3,409,232</td><td>4,514,756</td><td class="up2">+1,105,524</td><td><div class="pb-wrap"><div class="pb"><div class="pb-fill" style="width:32%;background:#1a56db"></div></div><span class="pb-lbl up2">32.4%</span></div></td><td>2,155</td><td>2,156</td><td class="up2">+1</td><td class="up2">+0.05%</td><td>1,582</td><td>2,094</td><td class="up2">+512</td><td class="up2">+32.4%</td></tr>
+          <tr><td class="nm">فبراير</td><td>3,351,489</td><td>3,611,979</td><td class="up2">+260,490</td><td><div class="pb-wrap"><div class="pb"><div class="pb-fill" style="width:8%;background:#d97706"></div></div><span class="pb-lbl up2">7.8%</span></div></td><td>1,731</td><td>1,629</td><td class="dn2">−102</td><td class="dn2">−5.9%</td><td>1,936</td><td>2,217</td><td class="up2">+281</td><td class="up2">+14.5%</td></tr>
+          <tr><td class="nm">مارس</td><td>4,774,615</td><td>5,362,152</td><td class="up2">+587,537</td><td><div class="pb-wrap"><div class="pb"><div class="pb-fill" style="width:12%;background:#7c3aed"></div></div><span class="pb-lbl up2">12.3%</span></div></td><td>2,181</td><td>2,074</td><td class="dn2">−107</td><td class="dn2">−4.9%</td><td>2,189</td><td>2,585</td><td class="up2">+396</td><td class="up2">+18.1%</td></tr>
         </tbody>
-        <tfoot><tr class="ft"><td>الإجمالي</td><td>11,535,336</td><td>13,488,887</td><td>+1,953,551</td><td>+16.9%</td><td>6,067</td><td>5,859</td><td>−208</td><td>1,901</td><td>2,302</td><td>+401</td></tr></tfoot>
+        <tfoot>
+          <tr class="ft"><td>الإجمالي</td><td>11,535,336</td><td>13,488,887</td><td>+1,953,551</td><td>+16.9%</td><td>6,067</td><td>5,859</td><td>−208</td><td>−3.4%</td><td>1,901</td><td>2,302</td><td>+401</td><td>+21.1%</td></tr>
+        </tfoot>
       </table>
     </div>
   </div>
@@ -178,9 +183,8 @@ td.neutral{color:#374151}
   <div class="sec">📈 رسم بياني – المبيعات الشهرية</div>
   <div class="chart-wrap"><div class="chart-ttl">مبيعات 2025 مقابل 2026</div><div class="ch-med"><canvas id="c-monthly"></canvas></div></div>
 
-</div><!-- /ov -->
+</div>
 
-<!-- ══ PAGE: MONTHLY ══ -->
 <div class="pg" id="pg-mon">
 
   <div class="sec">📅 يناير – تفاصيل المناطق</div>
@@ -188,18 +192,24 @@ td.neutral{color:#374151}
     <div class="tcard-hd">يناير 2025 vs 2026 <span class="badge-sm">بالمنطقة</span></div>
     <div class="tw">
       <table>
-        <thead><tr><th>المنطقة</th><th>مبيعات 2025</th><th>مبيعات 2026</th><th>الفرق</th><th>النسبة</th><th>فواتير 2025</th><th>فواتير 2026</th><th>Δ فواتير</th><th>م.فاتورة 2025</th><th>م.فاتورة 2026</th><th>Δ المتوسط</th></tr></thead>
+        <thead>
+          <tr>
+            <th>المنطقة</th><th>مبيعات 25</th><th>مبيعات 26</th><th>الفرق</th><th>% النمو</th>
+            <th>فواتير 25</th><th>فواتير 26</th><th>Δ فواتير</th><th>% فواتير</th>
+            <th>م.فاتورة 25</th><th>م.فاتورة 26</th><th>Δ المتوسط</th><th>% متوسط</th>
+          </tr>
+        </thead>
         <tbody>
-          <tr><td class="nm">الافرنجي</td><td>582,862</td><td>770,851</td><td class="up2">+187,989</td><td class="up2">32.3%</td><td>294</td><td>301</td><td class="up2">+7</td><td>1,983</td><td>2,561</td><td class="up2">+578</td></tr>
-          <tr><td class="nm">التل</td><td>455,461</td><td>644,793</td><td class="up2">+189,332</td><td class="up2">41.6%</td><td>296</td><td>297</td><td class="up2">+1</td><td>1,539</td><td>2,171</td><td class="up2">+632</td></tr>
-          <tr><td class="nm">التمليك</td><td>519,053</td><td>581,654</td><td class="up2">+62,601</td><td class="up2">12.1%</td><td>341</td><td>304</td><td class="dn2">−37</td><td>1,522</td><td>1,913</td><td class="up2">+391</td></tr>
-          <tr><td class="nm">الجملة</td><td>8,471</td><td>353,430</td><td class="up2">+344,959</td><td class="up2">4072%</td><td>2</td><td>16</td><td class="up2">+14</td><td>4,236</td><td>22,089</td><td class="up2">+17,854</td></tr>
-          <tr><td class="nm">الشيخ زايد</td><td>554,910</td><td>484,272</td><td class="dn2">−70,638</td><td class="dn2">−12.7%</td><td>266</td><td>249</td><td class="dn2">−17</td><td>2,086</td><td>1,945</td><td class="dn2">−141</td></tr>
-          <tr><td class="nm">العريشية</td><td>377,703</td><td>523,297</td><td class="up2">+145,594</td><td class="up2">38.5%</td><td>306</td><td>306</td><td>0</td><td>1,234</td><td>1,710</td><td class="up2">+476</td></tr>
-          <tr><td class="nm">القنطرة</td><td>563,351</td><td>661,300</td><td class="up2">+97,949</td><td class="up2">17.4%</td><td>355</td><td>391</td><td class="up2">+36</td><td>1,587</td><td>1,691</td><td class="up2">+104</td></tr>
-          <tr><td class="nm">فايد</td><td>347,421</td><td>505,313</td><td class="up2">+157,892</td><td class="up2">45.4%</td><td>295</td><td>292</td><td class="dn2">−3</td><td>1,178</td><td>1,731</td><td class="up2">+553</td></tr>
+          <tr><td class="nm">الافرنجي</td><td>582,862</td><td>770,851</td><td class="up2">+187,989</td><td class="up2">32.3%</td><td>294</td><td>301</td><td class="up2">+7</td><td class="up2">+2.4%</td><td>1,983</td><td>2,561</td><td class="up2">+578</td><td class="up2">+29.2%</td></tr>
+          <tr><td class="nm">التل</td><td>455,461</td><td>644,793</td><td class="up2">+189,332</td><td class="up2">41.6%</td><td>296</td><td>297</td><td class="up2">+1</td><td class="up2">+0.3%</td><td>1,539</td><td>2,171</td><td class="up2">+632</td><td class="up2">+41.1%</td></tr>
+          <tr><td class="nm">التمليك</td><td>519,053</td><td>581,654</td><td class="up2">+62,601</td><td class="up2">12.1%</td><td>341</td><td>304</td><td class="dn2">−37</td><td class="dn2">−10.9%</td><td>1,522</td><td>1,913</td><td class="up2">+391</td><td class="up2">+25.7%</td></tr>
+          <tr><td class="nm">الجملة</td><td>8,471</td><td>353,430</td><td class="up2">+344,959</td><td class="up2">4072%</td><td>2</td><td>16</td><td class="up2">+14</td><td class="up2">+700%</td><td>4,236</td><td>22,089</td><td class="up2">+17,854</td><td class="up2">+421%</td></tr>
+          <tr><td class="nm">الشيخ زايد</td><td>554,910</td><td>484,272</td><td class="dn2">−70,638</td><td class="dn2">−12.7%</td><td>266</td><td>249</td><td class="dn2">−17</td><td class="dn2">−6.4%</td><td>2,086</td><td>1,945</td><td class="dn2">−141</td><td class="dn2">−6.8%</td></tr>
+          <tr><td class="nm">العريشية</td><td>377,703</td><td>523,297</td><td class="up2">+145,594</td><td class="up2">38.5%</td><td>306</td><td>306</td><td>0</td><td class="neutral">0%</td><td>1,234</td><td>1,710</td><td class="up2">+476</td><td class="up2">+38.6%</td></tr>
+          <tr><td class="nm">القنطرة</td><td>563,351</td><td>661,300</td><td class="up2">+97,949</td><td class="up2">17.4%</td><td>355</td><td>391</td><td class="up2">+36</td><td class="up2">+10.1%</td><td>1,587</td><td>1,691</td><td class="up2">+104</td><td class="up2">+6.6%</td></tr>
+          <tr><td class="nm">فايد</td><td>347,421</td><td>505,313</td><td class="up2">+157,892</td><td class="up2">45.4%</td><td>295</td><td>292</td><td class="dn2">−3</td><td class="dn2">−1.0%</td><td>1,178</td><td>1,731</td><td class="up2">+553</td><td class="up2">+46.9%</td></tr>
         </tbody>
-        <tfoot><tr class="ft"><td>الإجمالي</td><td>3,409,232</td><td>4,524,910</td><td>+1,115,678</td><td>+32.7%</td><td>2,155</td><td>2,156</td><td>+1</td><td>1,582</td><td>2,099</td><td>+517</td></tr></tfoot>
+        <tfoot><tr class="ft"><td>الإجمالي</td><td>3,409,232</td><td>4,524,910</td><td>+1,115,678</td><td>+32.7%</td><td>2,155</td><td>2,156</td><td>+1</td><td>+0.05%</td><td>1,582</td><td>2,099</td><td>+517</td><td>+32.7%</td></tr></tfoot>
       </table>
     </div>
   </div>
@@ -209,18 +219,24 @@ td.neutral{color:#374151}
     <div class="tcard-hd">فبراير 2025 vs 2026 <span class="badge-sm">بالمنطقة</span></div>
     <div class="tw">
       <table>
-        <thead><tr><th>المنطقة</th><th>مبيعات 2025</th><th>مبيعات 2026</th><th>الفرق</th><th>النسبة</th><th>فواتير 2025</th><th>فواتير 2026</th><th>Δ فواتير</th><th>م.فاتورة 2025</th><th>م.فاتورة 2026</th><th>Δ المتوسط</th></tr></thead>
+        <thead>
+          <tr>
+            <th>المنطقة</th><th>مبيعات 25</th><th>مبيعات 26</th><th>الفرق</th><th>% النمو</th>
+            <th>فواتير 25</th><th>فواتير 26</th><th>Δ فواتير</th><th>% فواتير</th>
+            <th>م.فاتورة 25</th><th>م.فاتورة 26</th><th>Δ المتوسط</th><th>% متوسط</th>
+          </tr>
+        </thead>
         <tbody>
-          <tr><td class="nm">الافرنجي</td><td>517,427</td><td>486,018</td><td class="dn2">−31,409</td><td class="dn2">−6.1%</td><td>232</td><td>228</td><td class="dn2">−4</td><td>2,230</td><td>2,132</td><td class="dn2">−98</td></tr>
-          <tr><td class="nm">التل</td><td>509,328</td><td>527,618</td><td class="up2">+18,290</td><td class="up2">3.6%</td><td>252</td><td>223</td><td class="dn2">−29</td><td>2,021</td><td>2,366</td><td class="up2">+345</td></tr>
-          <tr><td class="nm">التمليك</td><td>409,402</td><td>424,777</td><td class="up2">+15,375</td><td class="up2">3.8%</td><td>271</td><td>215</td><td class="dn2">−56</td><td>1,511</td><td>1,976</td><td class="up2">+465</td></tr>
-          <tr><td class="nm">الجملة</td><td>3,049</td><td>271,500</td><td class="up2">+268,451</td><td class="up2">8805%</td><td>2</td><td>5</td><td class="up2">+3</td><td>1,525</td><td>54,300</td><td class="up2">+52,775</td></tr>
-          <tr><td class="nm">الشيخ زايد</td><td>525,275</td><td>420,836</td><td class="dn2">−104,439</td><td class="dn2">−19.9%</td><td>228</td><td>234</td><td class="up2">+6</td><td>2,304</td><td>1,798</td><td class="dn2">−506</td></tr>
-          <tr><td class="nm">العريشية</td><td>394,315</td><td>436,576</td><td class="up2">+42,261</td><td class="up2">10.7%</td><td>227</td><td>242</td><td class="up2">+15</td><td>1,737</td><td>1,804</td><td class="up2">+67</td></tr>
-          <tr><td class="nm">القنطرة</td><td>565,162</td><td>589,382</td><td class="up2">+24,220</td><td class="up2">4.3%</td><td>295</td><td>287</td><td class="dn2">−8</td><td>1,916</td><td>2,054</td><td class="up2">+138</td></tr>
-          <tr><td class="nm">فايد</td><td>427,531</td><td>455,354</td><td class="up2">+27,823</td><td class="up2">6.5%</td><td>224</td><td>195</td><td class="dn2">−29</td><td>1,909</td><td>2,335</td><td class="up2">+427</td></tr>
+          <tr><td class="nm">الافرنجي</td><td>517,427</td><td>486,018</td><td class="dn2">−31,409</td><td class="dn2">−6.1%</td><td>232</td><td>228</td><td class="dn2">−4</td><td class="dn2">−1.7%</td><td>2,230</td><td>2,132</td><td class="dn2">−98</td><td class="dn2">−4.4%</td></tr>
+          <tr><td class="nm">التل</td><td>509,328</td><td>527,618</td><td class="up2">+18,290</td><td class="up2">3.6%</td><td>252</td><td>223</td><td class="dn2">−29</td><td class="dn2">−11.5%</td><td>2,021</td><td>2,366</td><td class="up2">+345</td><td class="up2">+17.1%</td></tr>
+          <tr><td class="nm">التمليك</td><td>409,402</td><td>424,777</td><td class="up2">+15,375</td><td class="up2">3.8%</td><td>271</td><td>215</td><td class="dn2">−56</td><td class="dn2">−20.7%</td><td>1,511</td><td>1,976</td><td class="up2">+465</td><td class="up2">+30.8%</td></tr>
+          <tr><td class="nm">الجملة</td><td>3,049</td><td>271,500</td><td class="up2">+268,451</td><td class="up2">8805%</td><td>2</td><td>5</td><td class="up2">+3</td><td class="up2">+150%</td><td>1,525</td><td>54,300</td><td class="up2">+52,775</td><td class="up2">+3460%</td></tr>
+          <tr><td class="nm">الشيخ زايد</td><td>525,275</td><td>420,836</td><td class="dn2">−104,439</td><td class="dn2">−19.9%</td><td>228</td><td>234</td><td class="up2">+6</td><td class="up2">+2.6%</td><td>2,304</td><td>1,798</td><td class="dn2">−506</td><td class="dn2">−22.0%</td></tr>
+          <tr><td class="nm">العريشية</td><td>394,315</td><td>436,576</td><td class="up2">+42,261</td><td class="up2">10.7%</td><td>227</td><td>242</td><td class="up2">+15</td><td class="up2">+6.6%</td><td>1,737</td><td>1,804</td><td class="up2">+67</td><td class="up2">+3.9%</td></tr>
+          <tr><td class="nm">القنطرة</td><td>565,162</td><td>589,382</td><td class="up2">+24,220</td><td class="up2">4.3%</td><td>295</td><td>287</td><td class="dn2">−8</td><td class="dn2">−2.7%</td><td>1,916</td><td>2,054</td><td class="up2">+138</td><td class="up2">+7.2%</td></tr>
+          <tr><td class="nm">فايد</td><td>427,531</td><td>455,354</td><td class="up2">+27,823</td><td class="up2">6.5%</td><td>224</td><td>195</td><td class="dn2">−29</td><td class="dn2">−12.9%</td><td>1,909</td><td>2,335</td><td class="up2">+427</td><td class="up2">+22.4%</td></tr>
         </tbody>
-        <tfoot><tr class="ft"><td>الإجمالي</td><td>3,351,489</td><td>3,612,062</td><td>+260,573</td><td>+7.8%</td><td>1,731</td><td>1,629</td><td>−102</td><td>1,936</td><td>2,217</td><td>+281</td></tr></tfoot>
+        <tfoot><tr class="ft"><td>الإجمالي</td><td>3,351,489</td><td>3,612,062</td><td>+260,573</td><td>+7.8%</td><td>1,731</td><td>1,629</td><td>−102</td><td>−5.9%</td><td>1,936</td><td>2,217</td><td>+281</td><td>+14.5%</td></tr></tfoot>
       </table>
     </div>
   </div>
@@ -230,25 +246,30 @@ td.neutral{color:#374151}
     <div class="tcard-hd">مارس 2025 vs 2026 <span class="badge-sm">بالمنطقة</span></div>
     <div class="tw">
       <table>
-        <thead><tr><th>المنطقة</th><th>مبيعات 2025</th><th>مبيعات 2026</th><th>الفرق</th><th>النسبة</th><th>فواتير 2025</th><th>فواتير 2026</th><th>Δ فواتير</th><th>م.فاتورة 2025</th><th>م.فاتورة 2026</th><th>Δ المتوسط</th></tr></thead>
+        <thead>
+          <tr>
+            <th>المنطقة</th><th>مبيعات 25</th><th>مبيعات 26</th><th>الفرق</th><th>% النمو</th>
+            <th>فواتير 25</th><th>فواتير 26</th><th>Δ فواتير</th><th>% فواتير</th>
+            <th>م.فاتورة 25</th><th>م.فاتورة 26</th><th>Δ المتوسط</th><th>% متوسط</th>
+          </tr>
+        </thead>
         <tbody>
-          <tr><td class="nm">الافرنجي</td><td>739,791</td><td>751,426</td><td class="up2">+11,635</td><td class="up2">1.6%</td><td>318</td><td>259</td><td class="dn2">−59</td><td>2,326</td><td>2,901</td><td class="up2">+575</td></tr>
-          <tr><td class="nm">التل</td><td>702,035</td><td>654,707</td><td class="dn2">−47,328</td><td class="dn2">−6.7%</td><td>353</td><td>269</td><td class="dn2">−84</td><td>1,989</td><td>2,434</td><td class="up2">+445</td></tr>
-          <tr><td class="nm">التمليك</td><td>547,047</td><td>640,103</td><td class="up2">+93,056</td><td class="up2">17.0%</td><td>307</td><td>291</td><td class="dn2">−16</td><td>1,782</td><td>2,200</td><td class="up2">+418</td></tr>
-          <tr><td class="nm">الجملة</td><td>9,620</td><td>696,000</td><td class="up2">+686,380</td><td class="up2">7134%</td><td>3</td><td>3</td><td>0</td><td>3,207</td><td>232,000</td><td class="up2">+228,793</td></tr>
-          <tr><td class="nm">الشيخ زايد</td><td>693,985</td><td>652,002</td><td class="dn2">−41,983</td><td class="dn2">−6.0%</td><td>240</td><td>232</td><td class="dn2">−8</td><td>2,892</td><td>2,810</td><td class="dn2">−81</td></tr>
-          <tr><td class="nm">العريشية</td><td>603,164</td><td>551,553</td><td class="dn2">−51,611</td><td class="dn2">−8.6%</td><td>312</td><td>323</td><td class="up2">+11</td><td>1,933</td><td>1,708</td><td class="dn2">−226</td></tr>
-          <tr><td class="nm">القنطرة</td><td>750,481</td><td>780,194</td><td class="up2">+29,713</td><td class="up2">4.0%</td><td>367</td><td>404</td><td class="up2">+37</td><td>2,045</td><td>1,931</td><td class="dn2">−114</td></tr>
-          <tr><td class="nm">فايد</td><td>728,492</td><td>636,227</td><td class="dn2">−92,265</td><td class="dn2">−12.7%</td><td>281</td><td>293</td><td class="up2">+12</td><td>2,592</td><td>2,171</td><td class="dn2">−421</td></tr>
+          <tr><td class="nm">الافرنجي</td><td>739,791</td><td>751,426</td><td class="up2">+11,635</td><td class="up2">1.6%</td><td>318</td><td>259</td><td class="dn2">−59</td><td class="dn2">−18.6%</td><td>2,326</td><td>2,901</td><td class="up2">+575</td><td class="up2">+24.7%</td></tr>
+          <tr><td class="nm">التل</td><td>702,035</td><td>654,707</td><td class="dn2">−47,328</td><td class="dn2">−6.7%</td><td>353</td><td>269</td><td class="dn2">−84</td><td class="dn2">−23.8%</td><td>1,989</td><td>2,434</td><td class="up2">+445</td><td class="up2">+22.4%</td></tr>
+          <tr><td class="nm">التمليك</td><td>547,047</td><td>640,103</td><td class="up2">+93,056</td><td class="up2">17.0%</td><td>307</td><td>291</td><td class="dn2">−16</td><td class="dn2">−5.2%</td><td>1,782</td><td>2,200</td><td class="up2">+418</td><td class="up2">+23.5%</td></tr>
+          <tr><td class="nm">الجملة</td><td>9,620</td><td>696,000</td><td class="up2">+686,380</td><td class="up2">7134%</td><td>3</td><td>3</td><td>0</td><td class="neutral">0%</td><td>3,207</td><td>232,000</td><td class="up2">+228,793</td><td class="up2">+7134%</td></tr>
+          <tr><td class="nm">الشيخ زايد</td><td>693,985</td><td>652,002</td><td class="dn2">−41,983</td><td class="dn2">−6.0%</td><td>240</td><td>232</td><td class="dn2">−8</td><td class="dn2">−3.3%</td><td>2,892</td><td>2,810</td><td class="dn2">−81</td><td class="dn2">−2.8%</td></tr>
+          <tr><td class="nm">العريشية</td><td>603,164</td><td>551,553</td><td class="dn2">−51,611</td><td class="dn2">−8.6%</td><td>312</td><td>323</td><td class="up2">+11</td><td class="up2">+3.5%</td><td>1,933</td><td>1,708</td><td class="dn2">−226</td><td class="dn2">−11.7%</td></tr>
+          <tr><td class="nm">القنطرة</td><td>750,481</td><td>780,194</td><td class="up2">+29,713</td><td class="up2">4.0%</td><td>367</td><td>404</td><td class="up2">+37</td><td class="up2">+10.1%</td><td>2,045</td><td>1,931</td><td class="dn2">−114</td><td class="dn2">−5.6%</td></tr>
+          <tr><td class="nm">فايد</td><td>728,492</td><td>636,227</td><td class="dn2">−92,265</td><td class="dn2">−12.7%</td><td>281</td><td>293</td><td class="up2">+12</td><td class="up2">+4.3%</td><td>2,592</td><td>2,171</td><td class="dn2">−421</td><td class="dn2">−16.2%</td></tr>
         </tbody>
-        <tfoot><tr class="ft"><td>الإجمالي</td><td>4,774,615</td><td>5,362,212</td><td>+587,597</td><td>+12.3%</td><td>2,181</td><td>2,074</td><td>−107</td><td>2,189</td><td>2,585</td><td>+396</td></tr></tfoot>
+        <tfoot><tr class="ft"><td>الإجمالي</td><td>4,774,615</td><td>5,362,212</td><td>+587,597</td><td>+12.3%</td><td>2,181</td><td>2,074</td><td>−107</td><td>−4.9%</td><td>2,189</td><td>2,585</td><td>+396</td><td>+18.1%</td></tr></tfoot>
       </table>
     </div>
   </div>
 
-</div><!-- /mon -->
+</div>
 
-<!-- ══ PAGE: REGIONS ══ -->
 <div class="pg" id="pg-reg">
 
   <div class="sec">📍 إجمالي Q1 لكل منطقة (2025 vs 2026)</div>
@@ -256,18 +277,23 @@ td.neutral{color:#374151}
     <div class="tcard-hd">إجمالي الكوارتر الأول <span class="badge-sm">يناير + فبراير + مارس</span></div>
     <div class="tw">
       <table>
-        <thead><tr><th>المنطقة</th><th>إجمالي 2025</th><th>إجمالي 2026</th><th>الفرق</th><th>نسبة النمو</th><th>ف. 2025</th><th>ف. 2026</th><th>Δ فواتير</th><th>م.فاتورة 2026</th></tr></thead>
+        <thead>
+          <tr>
+            <th>المنطقة</th><th>إجمالي 25</th><th>إجمالي 26</th><th>الفرق</th><th>% النمو</th>
+            <th>ف. 2025</th><th>ف. 2026</th><th>Δ فواتير</th><th>% فواتير</th><th>م.فاتورة 26</th>
+          </tr>
+        </thead>
         <tbody>
-          <tr><td class="nm">الافرنجي</td><td>1,840,080</td><td>2,008,295</td><td class="up2">+168,215</td><td class="up2">9.1%</td><td>844</td><td>788</td><td class="dn2">−56</td><td>2,549</td></tr>
-          <tr><td class="nm">التل</td><td>1,666,824</td><td>1,827,118</td><td class="up2">+160,294</td><td class="up2">9.6%</td><td>901</td><td>789</td><td class="dn2">−112</td><td>2,316</td></tr>
-          <tr><td class="nm">التمليك</td><td>1,475,502</td><td>1,646,534</td><td class="up2">+171,032</td><td class="up2">11.6%</td><td>919</td><td>810</td><td class="dn2">−109</td><td>2,033</td></tr>
-          <tr><td class="nm">الجملة</td><td>21,140</td><td>1,320,930</td><td class="up2">+1,299,790</td><td class="up2">+∞</td><td>7</td><td>24</td><td class="up2">+17</td><td>55,039</td></tr>
-          <tr><td class="nm">الشيخ زايد</td><td>1,774,170</td><td>1,557,110</td><td class="dn2">−217,060</td><td class="dn2">−12.2%</td><td>734</td><td>715</td><td class="dn2">−19</td><td>2,178</td></tr>
-          <tr><td class="nm">العريشية</td><td>1,375,182</td><td>1,511,426</td><td class="up2">+136,244</td><td class="up2">9.9%</td><td>845</td><td>871</td><td class="up2">+26</td><td>1,735</td></tr>
-          <tr><td class="nm">القنطرة</td><td>1,878,994</td><td>2,030,876</td><td class="up2">+151,882</td><td class="up2">8.1%</td><td>1,017</td><td>1,082</td><td class="up2">+65</td><td>1,877</td></tr>
-          <tr><td class="nm">فايد</td><td>1,503,444</td><td>1,596,894</td><td class="up2">+93,450</td><td class="up2">6.2%</td><td>800</td><td>780</td><td class="dn2">−20</td><td>2,047</td></tr>
+          <tr><td class="nm">الافرنجي</td><td>1,840,080</td><td>2,008,295</td><td class="up2">+168,215</td><td class="up2">9.1%</td><td>844</td><td>788</td><td class="dn2">−56</td><td class="dn2">−6.6%</td><td>2,549</td></tr>
+          <tr><td class="nm">التل</td><td>1,666,824</td><td>1,827,118</td><td class="up2">+160,294</td><td class="up2">9.6%</td><td>901</td><td>789</td><td class="dn2">−112</td><td class="dn2">−12.4%</td><td>2,316</td></tr>
+          <tr><td class="nm">التمليك</td><td>1,475,502</td><td>1,646,534</td><td class="up2">+171,032</td><td class="up2">11.6%</td><td>919</td><td>810</td><td class="dn2">−109</td><td class="dn2">−11.9%</td><td>2,033</td></tr>
+          <tr><td class="nm">الجملة</td><td>21,140</td><td>1,320,930</td><td class="up2">+1,299,790</td><td class="up2">+∞</td><td>7</td><td>24</td><td class="up2">+17</td><td class="up2">+242.9%</td><td>55,039</td></tr>
+          <tr><td class="nm">الشيخ زايد</td><td>1,774,170</td><td>1,557,110</td><td class="dn2">−217,060</td><td class="dn2">−12.2%</td><td>734</td><td>715</td><td class="dn2">−19</td><td class="dn2">−2.6%</td><td>2,178</td></tr>
+          <tr><td class="nm">العريشية</td><td>1,375,182</td><td>1,511,426</td><td class="up2">+136,244</td><td class="up2">9.9%</td><td>845</td><td>871</td><td class="up2">+26</td><td class="up2">+3.1%</td><td>1,735</td></tr>
+          <tr><td class="nm">القنطرة</td><td>1,878,994</td><td>2,030,876</td><td class="up2">+151,882</td><td class="up2">8.1%</td><td>1,017</td><td>1,082</td><td class="up2">+65</td><td class="up2">+6.4%</td><td>1,877</td></tr>
+          <tr><td class="nm">فايد</td><td>1,503,444</td><td>1,596,894</td><td class="up2">+93,450</td><td class="up2">6.2%</td><td>800</td><td>780</td><td class="dn2">−20</td><td class="dn2">−2.5%</td><td>2,047</td></tr>
         </tbody>
-        <tfoot><tr class="ft"><td>الإجمالي</td><td>11,535,336</td><td>13,499,183</td><td>+1,963,847</td><td>+17.0%</td><td>6,067</td><td>5,859</td><td>−208</td><td>2,302</td></tr></tfoot>
+        <tfoot><tr class="ft"><td>الإجمالي</td><td>11,535,336</td><td>13,499,183</td><td>+1,963,847</td><td>+17.0%</td><td>6,067</td><td>5,859</td><td>−208</td><td>−3.4%</td><td>2,302</td></tr></tfoot>
       </table>
     </div>
   </div>
@@ -277,7 +303,7 @@ td.neutral{color:#374151}
     <div class="tcard-hd">عملاء وفتح حسابات Q1 <span class="badge-sm">2025 vs 2026</span></div>
     <div class="tw">
       <table>
-        <thead><tr><th>المنطقة</th><th>عملاء 2025</th><th>عملاء 2026</th><th>Δ عملاء</th><th>% نمو</th><th>فتح 2025</th><th>فتح 2026</th><th>Δ فتح</th><th>% نمو الفتح</th></tr></thead>
+        <thead><tr><th>المنطقة</th><th>عملاء 25</th><th>عملاء 26</th><th>Δ عملاء</th><th>% نمو</th><th>فتح 25</th><th>فتح 26</th><th>Δ فتح</th><th>% نمو الفتح</th></tr></thead>
         <tbody>
           <tr><td class="nm">الافرنجي</td><td>140</td><td>145</td><td class="up2">+5</td><td class="up2">3.6%</td><td>133</td><td>138</td><td class="up2">+5</td><td class="up2">3.8%</td></tr>
           <tr><td class="nm">التل</td><td>155</td><td>168</td><td class="up2">+13</td><td class="up2">8.4%</td><td>142</td><td>164</td><td class="up2">+22</td><td class="up2">15.5%</td></tr>
@@ -296,17 +322,16 @@ td.neutral{color:#374151}
   <div class="sec">📈 رسم بياني – المناطق</div>
   <div class="chart-wrap"><div class="chart-ttl">إجمالي مبيعات Q1 لكل منطقة</div><div class="ch-med"><canvas id="c-reg"></canvas></div></div>
 
-</div><!-- /reg -->
+</div>
 
-<!-- ══ PAGE: PERFORMANCE ══ -->
 <div class="pg" id="pg-per">
 
   <div class="sec">📋 ملخص الأداء</div>
   <div class="kpi-row">
-    <div class="kpi b"><div class="kpi-lbl">الهدف الإجمالي</div><div class="kpi-val">7.75M</div><div class="kpi-sub">مجموع الأهداف</div></div>
+    <div class="kpi b"><div class="kpi-lbl">الهدف الإجمالي</div><div class="kpi-val">7.75M</div></div>
     <div class="kpi g"><div class="kpi-lbl">المحقق (6 أيام)</div><div class="kpi-val">1.49M</div><div class="kpi-chg up">19.2% من الهدف</div></div>
-    <div class="kpi a"><div class="kpi-lbl">مبيعات اليوم</div><div class="kpi-val">213,048</div><div class="kpi-sub">إجمالي يومي</div></div>
-    <div class="kpi p"><div class="kpi-lbl">المطلوب يومياً</div><div class="kpi-val">313,185</div><div class="kpi-sub">للوصول للهدف</div></div>
+    <div class="kpi a"><div class="kpi-lbl">مبيعات اليوم</div><div class="kpi-val">213,048</div></div>
+    <div class="kpi p"><div class="kpi-lbl">المطلوب يومياً</div><div class="kpi-val">313,185</div></div>
   </div>
 
   <div class="sec">🏆 أداء المندوبين التفصيلي</div>
@@ -333,17 +358,16 @@ td.neutral{color:#374151}
   <div class="sec">📈 رسم بياني – الإنجاز والمطلوب</div>
   <div class="chart-wrap"><div class="chart-ttl">المحقق اليومي مقابل المطلوب يومياً</div><div class="ch-med"><canvas id="c-daily"></canvas></div></div>
 
-</div><!-- /per -->
+</div>
 
-<!-- ══ PAGE: APRIL ══ -->
 <div class="pg" id="pg-apr">
 
   <div class="sec">🗓️ ملخص أبريل 6 أيام</div>
   <div class="kpi-row">
-    <div class="kpi b"><div class="kpi-lbl">إجمالي 2026</div><div class="kpi-val">1.49M</div><div class="kpi-chg up">▲ +13.2%</div><div class="kpi-sub">2025: 1.31M</div></div>
-    <div class="kpi g"><div class="kpi-lbl">الفواتير 2026</div><div class="kpi-val">746</div><div class="kpi-chg up">▲ +37</div><div class="kpi-sub">2025: 709</div></div>
-    <div class="kpi a"><div class="kpi-lbl">متوسط الفاتورة 2026</div><div class="kpi-val">1,992</div><div class="kpi-chg up">▲ +7.6%</div><div class="kpi-sub">2025: 1,852</div></div>
-    <div class="kpi p"><div class="kpi-lbl">أفضل يوم (اليوم 3)</div><div class="kpi-val">488,941</div><div class="kpi-chg up">▲ +141.8%</div><div class="kpi-sub">2025: 202,240</div></div>
+    <div class="kpi b"><div class="kpi-lbl">إجمالي 2026</div><div class="kpi-val">1.49M</div><div class="kpi-chg up">▲ +13.2%</div></div>
+    <div class="kpi g"><div class="kpi-lbl">الفواتير 2026</div><div class="kpi-val">746</div><div class="kpi-chg up">▲ +5.2%</div></div>
+    <div class="kpi a"><div class="kpi-lbl">متوسط الفاتورة 2026</div><div class="kpi-val">1,992</div><div class="kpi-chg up">▲ +7.6%</div></div>
+    <div class="kpi p"><div class="kpi-lbl">أفضل يوم (اليوم 3)</div><div class="kpi-val">488,941</div><div class="kpi-chg up">▲ +141.8%</div></div>
   </div>
 
   <div class="sec">📊 تفاصيل 6 أيام عمل – أبريل</div>
@@ -351,16 +375,22 @@ td.neutral{color:#374151}
     <div class="tcard-hd">أبريل 2025 vs 2026 – يوم بيوم <span class="badge-sm">6 أيام عمل</span></div>
     <div class="tw">
       <table>
-        <thead><tr><th>اليوم</th><th>مبيعات 2025</th><th>مبيعات 2026</th><th>الفرق</th><th>نسبة النمو</th><th>فواتير 2025</th><th>فواتير 2026</th><th>Δ فواتير</th><th>نسبة Δ ف.</th><th>م.فاتورة 2025</th><th>م.فاتورة 2026</th><th>Δ المتوسط</th></tr></thead>
+        <thead>
+          <tr>
+            <th>اليوم</th><th>مبيعات 25</th><th>مبيعات 26</th><th>الفرق</th><th>% النمو</th>
+            <th>فواتير 25</th><th>فواتير 26</th><th>Δ فواتير</th><th>% فواتير</th>
+            <th>م.فاتورة 25</th><th>م.فاتورة 26</th><th>Δ المتوسط</th><th>% متوسط</th>
+          </tr>
+        </thead>
         <tbody>
-          <tr><td class="nm">اليوم 1</td><td>181,165</td><td>154,541</td><td class="dn2">−26,624</td><td><div class="pb-wrap"><div class="pb"><div class="pb-fill" style="width:15%;background:#c81e1e"></div></div><span class="pb-lbl dn2">−14.7%</span></div></td><td>78</td><td>104</td><td class="up2">+26</td><td class="up2">33.3%</td><td>2,323</td><td>1,486</td><td class="dn2">−836</td></tr>
-          <tr><td class="nm">اليوم 2</td><td>178,586</td><td>166,660</td><td class="dn2">−11,926</td><td><div class="pb-wrap"><div class="pb"><div class="pb-fill" style="width:7%;background:#c81e1e"></div></div><span class="pb-lbl dn2">−6.7%</span></div></td><td>111</td><td>121</td><td class="up2">+10</td><td class="up2">9.0%</td><td>1,609</td><td>1,377</td><td class="dn2">−231</td></tr>
-          <tr><td class="nm">اليوم 3</td><td>202,240</td><td>488,941</td><td class="up2">+286,701</td><td><div class="pb-wrap"><div class="pb"><div class="pb-fill" style="width:100%;background:#057a55"></div></div><span class="pb-lbl up2">+142%</span></div></td><td>112</td><td>119</td><td class="up2">+7</td><td class="up2">6.3%</td><td>1,806</td><td>4,109</td><td class="up2">+2,303</td></tr>
-          <tr><td class="nm">اليوم 4</td><td>235,585</td><td>188,462</td><td class="dn2">−47,123</td><td><div class="pb-wrap"><div class="pb"><div class="pb-fill" style="width:20%;background:#c81e1e"></div></div><span class="pb-lbl dn2">−20.0%</span></div></td><td>137</td><td>138</td><td class="up2">+1</td><td class="up2">0.7%</td><td>1,720</td><td>1,366</td><td class="dn2">−354</td></tr>
-          <tr><td class="nm">اليوم 5</td><td>233,088</td><td>274,656</td><td class="up2">+41,568</td><td><div class="pb-wrap"><div class="pb"><div class="pb-fill" style="width:18%;background:#057a55"></div></div><span class="pb-lbl up2">+17.8%</span></div></td><td>129</td><td>145</td><td class="up2">+16</td><td class="up2">12.4%</td><td>1,807</td><td>1,894</td><td class="up2">+87</td></tr>
-          <tr><td class="nm">اليوم 6</td><td>282,601</td><td>213,048</td><td class="dn2">−69,553</td><td><div class="pb-wrap"><div class="pb"><div class="pb-fill" style="width:25%;background:#c81e1e"></div></div><span class="pb-lbl dn2">−24.6%</span></div></td><td>142</td><td>119</td><td class="dn2">−23</td><td class="dn2">−16.2%</td><td>1,990</td><td>1,790</td><td class="dn2">−199</td></tr>
+          <tr><td class="nm">اليوم 1</td><td>181,165</td><td>154,541</td><td class="dn2">−26,624</td><td><div class="pb-wrap"><div class="pb"><div class="pb-fill" style="width:15%;background:#c81e1e"></div></div><span class="pb-lbl dn2">−14.7%</span></div></td><td>78</td><td>104</td><td class="up2">+26</td><td class="up2">+33.3%</td><td>2,323</td><td>1,486</td><td class="dn2">−837</td><td class="dn2">−36.0%</td></tr>
+          <tr><td class="nm">اليوم 2</td><td>178,586</td><td>166,660</td><td class="dn2">−11,926</td><td><div class="pb-wrap"><div class="pb"><div class="pb-fill" style="width:7%;background:#c81e1e"></div></div><span class="pb-lbl dn2">−6.7%</span></div></td><td>111</td><td>121</td><td class="up2">+10</td><td class="up2">+9.0%</td><td>1,609</td><td>1,377</td><td class="dn2">−232</td><td class="dn2">−14.4%</td></tr>
+          <tr><td class="nm">اليوم 3</td><td>202,240</td><td>488,941</td><td class="up2">+286,701</td><td><div class="pb-wrap"><div class="pb"><div class="pb-fill" style="width:100%;background:#057a55"></div></div><span class="pb-lbl up2">+142%</span></div></td><td>112</td><td>119</td><td class="up2">+7</td><td class="up2">+6.3%</td><td>1,806</td><td>4,109</td><td class="up2">+2,303</td><td class="up2">+127.5%</td></tr>
+          <tr><td class="nm">اليوم 4</td><td>235,585</td><td>188,462</td><td class="dn2">−47,123</td><td><div class="pb-wrap"><div class="pb"><div class="pb-fill" style="width:20%;background:#c81e1e"></div></div><span class="pb-lbl dn2">−20.0%</span></div></td><td>137</td><td>138</td><td class="up2">+1</td><td class="up2">+0.7%</td><td>1,720</td><td>1,366</td><td class="dn2">−354</td><td class="dn2">−20.6%</td></tr>
+          <tr><td class="nm">اليوم 5</td><td>233,088</td><td>274,656</td><td class="up2">+41,568</td><td><div class="pb-wrap"><div class="pb"><div class="pb-fill" style="width:18%;background:#057a55"></div></div><span class="pb-lbl up2">+17.8%</span></div></td><td>129</td><td>145</td><td class="up2">+16</td><td class="up2">+12.4%</td><td>1,807</td><td>1,894</td><td class="up2">+87</td><td class="up2">+4.8%</td></tr>
+          <tr><td class="nm">اليوم 6</td><td>282,601</td><td>213,048</td><td class="dn2">−69,553</td><td><div class="pb-wrap"><div class="pb"><div class="pb-fill" style="width:25%;background:#c81e1e"></div></div><span class="pb-lbl dn2">−24.6%</span></div></td><td>142</td><td>119</td><td class="dn2">−23</td><td class="dn2">−16.2%</td><td>1,990</td><td>1,790</td><td class="dn2">−200</td><td class="dn2">−10.1%</td></tr>
         </tbody>
-        <tfoot><tr class="ft"><td>الإجمالي</td><td>1,313,265</td><td>1,486,308</td><td>+173,043</td><td>+13.2%</td><td>709</td><td>746</td><td>+37</td><td>+5.2%</td><td>1,852</td><td>1,992</td><td>+140</td></tr></tfoot>
+        <tfoot><tr class="ft"><td>الإجمالي</td><td>1,313,265</td><td>1,486,308</td><td>+173,043</td><td>+13.2%</td><td>709</td><td>746</td><td>+37</td><td>+5.2%</td><td>1,852</td><td>1,992</td><td>+140</td><td>+7.6%</td></tr></tfoot>
       </table>
     </div>
   </div>
@@ -368,7 +398,7 @@ td.neutral{color:#374151}
   <div class="sec">📈 رسم بياني – أبريل يومياً</div>
   <div class="chart-wrap"><div class="chart-ttl">مبيعات أبريل يوم بيوم 2025 vs 2026</div><div class="ch-med"><canvas id="c-apr"></canvas></div></div>
 
-</div><!-- /apr -->
+</div>
 
 </main>
 <div style="text-align:center;padding:16px;font-size:10px;color:#9ca3af;border-top:1px solid #e5e7eb;margin-top:16px">
