@@ -1,437 +1,1279 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>داشبورد مبيعات Q1 2025/2026</title>
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
-<style>
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{
-  --blue:#1a56db;--blue-l:#e8f0fe;--green:#057a55;--green-l:#def7ec;
-  --red:#c81e1e;--red-l:#fde8e8;--amber:#92400e;--amber-l:#fef3c7;
-  --purple:#5521b5;--purple-l:#edebfe;--gray:#6b7280;
-  --border:#d1d5db;--row-even:#f9fafb;--header-bg:#1e3a5f;
-  --header-txt:#ffffff;--white:#ffffff;--bg:#f3f4f6;
-  --shadow:0 1px 3px rgba(0,0,0,.1);--r:8px;
-}
-html{font-size:14px}
-body{font-family:'Cairo',sans-serif;background:var(--bg);color:#111827;direction:rtl;min-height:100vh}
-
-/* ── TOP BAR ── */
-.topbar{background:var(--header-bg);color:#fff;padding:10px 14px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:200;gap:8px}
-.topbar-title{font-size:15px;font-weight:900;white-space:nowrap}
-.topbar-sub{font-size:10px;opacity:.75;margin-top:1px}
-.topbar-pills{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
-.pill{font-size:10px;font-weight:700;padding:3px 8px;border-radius:12px;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25);white-space:nowrap}
-.pill.g{background:rgba(5,122,85,.35);border-color:rgba(5,122,85,.5)}
-
-/* ── NAV ── */
-.nav{background:#fff;border-bottom:2px solid var(--border);display:flex;overflow-x:auto;-webkit-overflow-scrolling:touch;scroll-snap-type:x mandatory;position:sticky;top:52px;z-index:190}
-.nav::-webkit-scrollbar{display:none}
-.nav-btn{flex:0 0 auto;scroll-snap-align:start;padding:10px 14px;font-family:'Cairo',sans-serif;font-size:12px;font-weight:700;color:var(--gray);background:none;border:none;border-bottom:3px solid transparent;cursor:pointer;white-space:nowrap;transition:.15s}
-.nav-btn.active{color:var(--blue);border-bottom-color:var(--blue)}
-
-/* ── CONTENT ── */
-.content{padding:12px}
-.pg{display:none}
-.pg.active{display:block}
-
-/* ── SECTION LABEL ── */
-.sec{font-size:11px;font-weight:700;color:var(--gray);text-transform:uppercase;letter-spacing:.4px;margin:16px 0 8px;display:flex;align-items:center;gap:6px}
-.sec::after{content:'';flex:1;height:1px;background:var(--border)}
-
-/* ── KPI ROW ── */
-.kpi-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px}
-.kpi-row.four{grid-template-columns:repeat(4,1fr)}
-.kpi{background:#fff;border-radius:var(--r);padding:10px 12px;box-shadow:var(--shadow);border-right:3px solid transparent}
-.kpi.b{border-right-color:var(--blue)}.kpi.g{border-right-color:var(--green)}.kpi.a{border-right-color:#d97706}.kpi.p{border-right-color:#7c3aed}
-.kpi-lbl{font-size:10px;color:var(--gray);font-weight:600;margin-bottom:2px}
-.kpi-val{font-size:20px;font-weight:900;line-height:1.1}
-.kpi.b .kpi-val{color:var(--blue)}.kpi.g .kpi-val{color:var(--green)}.kpi.a .kpi-val{color:#d97706}.kpi.p .kpi-val{color:#7c3aed}
-.kpi-chg{font-size:10px;font-weight:700;margin-top:2px}
-.up{color:var(--green)}.dn{color:var(--red)}
-.kpi-sub{font-size:9px;color:var(--gray);margin-top:1px}
-
-/* ── EXCEL TABLE ── */
-.tcard{background:#fff;border-radius:var(--r);box-shadow:var(--shadow);overflow:hidden;margin-bottom:8px}
-.tcard-hd{background:var(--blue);color:#fff;padding:8px 12px;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:space-between}
-.tcard-hd .badge-sm{font-size:10px;background:rgba(255,255,255,.2);padding:2px 8px;border-radius:10px}
-.tw{overflow-x:auto;-webkit-overflow-scrolling:touch;position:relative;}
-table{width:100%;border-collapse:collapse;font-size:11px;min-width:340px}
-thead tr{background:#1e3a5f;color:#fff;position:sticky;top:0;z-index:15;}
-th{padding:7px 10px;text-align:right;font-weight:700;font-size:10px;white-space:nowrap;border-left:1px solid rgba(255,255,255,.1)}
-
-/* STICKY FIRST COLUMN */
-th:first-child, td:first-child { position: sticky; right: 0; z-index: 10; border-left: 2px solid var(--border) !important; }
-thead th:first-child { z-index: 20; background: #1e3a5f; border-left-color: rgba(255,255,255,.2) !important; }
-tbody td:first-child { background: #fff; }
-tbody tr:nth-child(even) td:first-child { background: var(--row-even); }
-tbody tr:hover td:first-child { background: #e8f0fe; }
-tfoot td:first-child { background: #1e3a5f !important; z-index: 11; border-left-color: rgba(255,255,255,.2) !important; }
-
-tbody tr:nth-child(even){background:var(--row-even)}
-tbody tr:hover{background:#e8f0fe}
-td{padding:6px 10px;border-bottom:1px solid var(--border);white-space:nowrap;border-left:1px solid #f0f0f0}
-.ft{background:#1e3a5f!important;color:#fff;font-weight:900}
-.ft td{border-left:1px solid rgba(255,255,255,.15)!important}
-td.nm{font-weight:700;color:#1e3a5f}
-td.up2{color:var(--green);font-weight:700}
-td.dn2{color:var(--red);font-weight:700}
-td.neutral{color:#374151}
-
-/* ── PROGRESS BAR ── */
-.pb-wrap{display:flex;align-items:center;gap:5px;min-width:90px}
-.pb{flex:1;height:5px;background:#e5e7eb;border-radius:3px;overflow:hidden;min-width:40px}
-.pb-fill{height:100%;border-radius:3px}
-.pb-lbl{font-size:10px;font-weight:700;min-width:32px;text-align:left}
-
-/* ── CHART ── */
-.chart-wrap{background:#fff;border-radius:var(--r);box-shadow:var(--shadow);padding:12px;margin-bottom:8px}
-.chart-ttl{font-size:12px;font-weight:700;margin-bottom:8px;color:#1e3a5f}
-.ch-med{height:200px}
-
-/* ── RESPONSIVE ── */
-@media(max-width:639px){
-  table{font-size:10.5px;}
-  th{padding:6px 6px;font-size:9px;}
-  td{padding:5px 6px;}
-  .pb-wrap{min-width:60px;}
-  .pb{min-width:30px;}
-}
-@media(min-width:640px){
-  html{font-size:14px}
-  table{font-size:12px}
-  th{font-size:11px;padding:8px 12px}
-  td{padding:7px 12px}
-}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة التحكم | طارق زهران - إسماعيلية</title>
+    <style>
+        :root {
+            --primary: #0d6b6e;
+            --primary-light: #e0f2f3;
+            --primary-dark: #06474a;
+            --accent: #e8913a;
+            --accent-light: #fef3e8;
+            --bg: #f5f6f8;
+            --card: #ffffff;
+            --text: #1a1a2e;
+            --text-secondary: #5a5a7a;
+            --border: #e8eaef;
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06);
+            --shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+            --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.12);
+            --radius: 20px;
+            --radius-sm: 14px;
+            --radius-xs: 10px;
+            --transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            --font: 'Tajawal', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+        }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: var(--font);
+            background: var(--bg);
+            color: var(--text);
+            direction: rtl;
+            min-height: 100vh;
+            -webkit-tap-highlight-color: transparent;
+            -webkit-font-smoothing: antialiased;
+            line-height: 1.6;
+            padding-bottom: env(safe-area-inset-bottom, 20px);
+        }
+        .header {
+            background: linear-gradient(135deg, #06474a 0%, #0a5c60 100%);
+            color: #fff;
+            padding: 20px 20px 24px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 4px 20px rgba(13, 107, 110, 0.25);
+            border-radius: 0 0 28px 28px;
+            backdrop-filter: blur(10px);
+        }
+        .header-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .header h1 {
+            font-size: 1.35rem;
+            font-weight: 700;
+            letter-spacing: -0.3px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .header h1 .icon {
+            font-size: 1.6rem;
+        }
+        .header .badge-area {
+            font-size: 0.75rem;
+            background: rgba(255, 255, 255, 0.15);
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-weight: 500;
+            backdrop-filter: blur(4px);
+            white-space: nowrap;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        .header .subtitle {
+            font-size: 0.8rem;
+            opacity: 0.85;
+            margin-top: 6px;
+            font-weight: 400;
+        }
+        .container {
+            max-width: 720px;
+            margin: 0 auto;
+            padding: 16px 16px 30px;
+        }
+        .stats-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        .stat-card {
+            background: var(--card);
+            border-radius: var(--radius-sm);
+            padding: 18px 16px;
+            box-shadow: var(--shadow-sm);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border: 1px solid var(--border);
+            transition: var(--transition);
+            cursor: default;
+        }
+        .stat-card:active {
+            transform: scale(0.97);
+            box-shadow: var(--shadow);
+        }
+        .stat-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            flex-shrink: 0;
+            background: var(--primary-light);
+            color: var(--primary);
+        }
+        .stat-icon.blue {
+            background: #e8f0fe;
+            color: #1a73e8;
+        }
+        .stat-info {
+            min-width: 0;
+        }
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            line-height: 1.2;
+        }
+        .stat-label {
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            margin-top: 2px;
+        }
+        .search-section {
+            background: var(--card);
+            border-radius: var(--radius);
+            padding: 18px;
+            box-shadow: var(--shadow);
+            margin-bottom: 18px;
+            border: 1px solid var(--border);
+            position: relative;
+            z-index: 50;
+        }
+        .search-label {
+            font-weight: 700;
+            font-size: 0.95rem;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--text);
+        }
+        .search-wrapper {
+            position: relative;
+        }
+        .search-input {
+            width: 100%;
+            padding: 14px 46px 14px 46px;
+            font-size: 1rem;
+            border: 2px solid var(--border);
+            border-radius: 30px;
+            background: #f9fafb;
+            color: var(--text);
+            font-family: var(--font);
+            transition: var(--transition);
+            outline: none;
+            direction: rtl;
+        }
+        .search-input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(13, 107, 110, 0.08);
+            background: #fff;
+        }
+        .search-input::placeholder {
+            color: #b0b0c0;
+            font-size: 0.9rem;
+        }
+        .search-icon {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.2rem;
+            color: #999;
+            pointer-events: none;
+        }
+        .search-icon.right {
+            right: 16px;
+        }
+        .search-icon.left {
+            left: 12px;
+            cursor: pointer;
+            pointer-events: auto;
+            font-size: 1rem;
+            color: #aaa;
+            background: none;
+            border: none;
+            padding: 6px;
+            border-radius: 50%;
+            transition: var(--transition);
+        }
+        .search-icon.left:hover {
+            color: #666;
+            background: #f0f0f0;
+        }
+        .suggestions-dropdown {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: #fff;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-xs);
+            box-shadow: var(--shadow-lg);
+            max-height: 250px;
+            overflow-y: auto;
+            z-index: 60;
+            margin-top: 6px;
+            display: none;
+        }
+        .suggestions-dropdown.active {
+            display: block;
+        }
+        .suggestion-item {
+            padding: 12px 16px;
+            cursor: pointer;
+            border-bottom: 1px solid #f0f0f0;
+            font-size: 0.9rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background 0.15s;
+            gap: 8px;
+        }
+        .suggestion-item:last-child {
+            border-bottom: none;
+        }
+        .suggestion-item:active,
+        .suggestion-item:hover {
+            background: var(--primary-light);
+        }
+        .suggestion-item .code {
+            font-weight: 700;
+            color: var(--primary);
+            font-size: 0.85rem;
+            white-space: nowrap;
+            min-width: 50px;
+            text-align: center;
+        }
+        .suggestion-item .name {
+            flex: 1;
+            text-align: right;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .suggestion-item .area-tag {
+            font-size: 0.7rem;
+            background: #f0f0f5;
+            padding: 4px 10px;
+            border-radius: 12px;
+            color: var(--text-secondary);
+            white-space: nowrap;
+        }
+        .no-results {
+            padding: 18px;
+            text-align: center;
+            color: #999;
+            font-size: 0.85rem;
+        }
+        .result-card {
+            background: var(--card);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            margin-bottom: 16px;
+            border: 1px solid var(--border);
+            overflow: hidden;
+            animation: fadeInUp 0.35s ease-out;
+        }
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(16px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .result-header {
+            background: linear-gradient(135deg, #f8fafb 0%, #f0f4f5 100%);
+            padding: 18px 20px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .result-header .cust-name {
+            font-weight: 700;
+            font-size: 1.15rem;
+            color: var(--text);
+        }
+        .result-header .cust-code {
+            font-size: 0.8rem;
+            background: var(--primary);
+            color: #fff;
+            padding: 6px 14px;
+            border-radius: 16px;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+        .result-body {
+            padding: 18px 20px;
+        }
+        .info-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+            font-size: 0.9rem;
+            flex-wrap: wrap;
+        }
+        .info-row .info-label {
+            font-weight: 600;
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+            white-space: nowrap;
+            min-width: 60px;
+        }
+        .info-row .info-value {
+            color: var(--text);
+            font-weight: 500;
+            background: #f8f9fb;
+            padding: 5px 12px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+        }
+        .badge {
+            display: inline-block;
+            padding: 6px 14px;
+            border-radius: 14px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            background: var(--primary-light);
+            color: var(--primary-dark);
+        }
+        .fridge-section-title {
+            font-weight: 700;
+            font-size: 0.95rem;
+            margin: 20px 0 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .fridge-count-badge {
+            background: var(--accent);
+            color: #fff;
+            font-size: 0.75rem;
+            padding: 4px 12px;
+            border-radius: 14px;
+            font-weight: 600;
+        }
+        .table-wrapper {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            border-radius: var(--radius-xs);
+            border: 1px solid var(--border);
+            margin-bottom: 6px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.8rem;
+            min-width: 400px;
+        }
+        table thead {
+            background: #f4f5f7;
+            position: sticky;
+            top: 0;
+        }
+        table th {
+            padding: 12px 10px;
+            font-weight: 700;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            text-align: center;
+            white-space: nowrap;
+            border-bottom: 2px solid #ddd;
+        }
+        table td {
+            padding: 10px 10px;
+            text-align: center;
+            border-bottom: 1px solid #eee;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        table tbody tr {
+            transition: background 0.15s;
+        }
+        table tbody tr:active {
+            background: #f8fafb;
+        }
+        .empty-state {
+            text-align: center;
+            padding: 50px 20px;
+            color: #aaa;
+        }
+        .empty-state .icon {
+            font-size: 4rem;
+            display: block;
+            margin-bottom: 14px;
+            opacity: 0.7;
+        }
+        .empty-state p {
+            font-size: 1rem;
+            font-weight: 500;
+        }
+        .empty-state .hint {
+            font-size: 0.8rem;
+            color: #bbb;
+            margin-top: 6px;
+        }
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #333;
+            color: #fff;
+            padding: 12px 24px;
+            border-radius: 24px;
+            font-size: 0.85rem;
+            z-index: 200;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+            white-space: nowrap;
+            box-shadow: var(--shadow-lg);
+        }
+        .toast.show {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        @media (max-width: 480px) {
+            .stats-row {
+                gap: 10px;
+            }
+            .stat-card {
+                padding: 14px 12px;
+                gap: 10px;
+            }
+            .stat-icon {
+                width: 40px;
+                height: 40px;
+                font-size: 1.3rem;
+                border-radius: 12px;
+            }
+            .stat-value {
+                font-size: 1.3rem;
+            }
+            .stat-label {
+                font-size: 0.65rem;
+            }
+            .header h1 {
+                font-size: 1.15rem;
+            }
+            .header {
+                padding: 14px 16px 18px;
+                border-radius: 0 0 20px 20px;
+            }
+            .search-input {
+                padding: 12px 40px 12px 40px;
+                font-size: 0.9rem;
+            }
+            .result-header {
+                padding: 14px 16px;
+            }
+            .result-body {
+                padding: 14px 16px;
+            }
+        }
+    </style>
 </head>
 <body>
-
-<header class="topbar">
-  <div>
-    <div class="topbar-title">📊 داشبورد المبيعات</div>
-    <div class="topbar-sub">الكوارتر الأول 2025 / 2026</div>
-  </div>
-  <div class="topbar-pills">
-    <span class="pill">Q1 2025–2026</span>
-    <span class="pill g">▲ +16.9%</span>
-  </div>
-</header>
-
-<nav class="nav">
-  <button class="nav-btn active" onclick="go('ov',this)">🏠 الرئيسية</button>
-  <button class="nav-btn" onclick="go('mon',this)">📅 الشهرية</button>
-  <button class="nav-btn" onclick="go('reg',this)">📍 المناطق</button>
-  <button class="nav-btn" onclick="go('per',this)">📋 المندوبين</button>
-  <button class="nav-btn" onclick="go('apr',this)">🗓️ أبريل</button>
-</nav>
-
-<main class="content">
-
-<div class="pg active" id="pg-ov">
-
-  <div class="sec">📊 ملخص الكوارتر الأول</div>
-  <div class="kpi-row">
-    <div class="kpi b"><div class="kpi-lbl">إجمالي المبيعات 2026</div><div class="kpi-val">13.49M</div><div class="kpi-chg up">▲ +16.9% عن 2025</div></div>
-    <div class="kpi a"><div class="kpi-lbl">متوسط الفاتورة 2026</div><div class="kpi-val">2,302</div><div class="kpi-chg up">▲ +21.1% عن 2025</div></div>
-    <div class="kpi g"><div class="kpi-lbl">إجمالي الفواتير 2026</div><div class="kpi-val">5,859</div><div class="kpi-chg dn">▼ −3.4% عن 2025</div></div>
-    <div class="kpi p"><div class="kpi-lbl">إجمالي العملاء 2026</div><div class="kpi-val">1,169</div><div class="kpi-chg up">▲ +9.3% نمو</div></div>
-  </div>
-
-  <div class="sec">📋 ملخص الأشهر الثلاثة</div>
-  <div class="tcard">
-    <div class="tcard-hd">ملخص مبيعات Q1 <span class="badge-sm">يناير – مارس</span></div>
-    <div class="tw">
-      <table>
-        <thead>
-          <tr>
-            <th>الشهر</th>
-            <th>مبيعات 25</th><th>مبيعات 26</th><th>الفرق</th><th>% المبيعات</th>
-            <th>فواتير 25</th><th>فواتير 26</th><th>Δ فواتير</th><th>% فواتير</th>
-            <th>م.فاتورة 25</th><th>م.فاتورة 26</th><th>Δ المتوسط</th><th>% متوسط</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr><td class="nm">يناير</td><td>3,409,232</td><td>4,514,756</td><td class="up2">+1,105,524</td><td><div class="pb-wrap"><div class="pb"><div class="pb-fill" style="width:32%;background:#1a56db"></div></div><span class="pb-lbl up2">32.4%</span></div></td><td>2,155</td><td>2,156</td><td class="up2">+1</td><td class="up2">+0.05%</td><td>1,582</td><td>2,094</td><td class="up2">+512</td><td class="up2">+32.4%</td></tr>
-          <tr><td class="nm">فبراير</td><td>3,351,489</td><td>3,611,979</td><td class="up2">+260,490</td><td><div class="pb-wrap"><div class="pb"><div class="pb-fill" style="width:8%;background:#d97706"></div></div><span class="pb-lbl up2">7.8%</span></div></td><td>1,731</td><td>1,629</td><td class="dn2">−102</td><td class="dn2">−5.9%</td><td>1,936</td><td>2,217</td><td class="up2">+281</td><td class="up2">+14.5%</td></tr>
-          <tr><td class="nm">مارس</td><td>4,774,615</td><td>5,362,152</td><td class="up2">+587,537</td><td><div class="pb-wrap"><div class="pb"><div class="pb-fill" style="width:12%;background:#7c3aed"></div></div><span class="pb-lbl up2">12.3%</span></div></td><td>2,181</td><td>2,074</td><td class="dn2">−107</td><td class="dn2">−4.9%</td><td>2,189</td><td>2,585</td><td class="up2">+396</td><td class="up2">+18.1%</td></tr>
-        </tbody>
-        <tfoot>
-          <tr class="ft"><td>الإجمالي</td><td>11,535,336</td><td>13,488,887</td><td>+1,953,551</td><td>+16.9%</td><td>6,067</td><td>5,859</td><td>−208</td><td>−3.4%</td><td>1,901</td><td>2,302</td><td>+401</td><td>+21.1%</td></tr>
-        </tfoot>
-      </table>
+    <div class="header">
+        <div class="header-top">
+            <h1><span class="icon">📋</span>لوحة زيارات المبيعات</h1>
+            <span class="badge-area">📍 طارق زهران - إسماعيلية</span>
+        </div>
+        <div class="subtitle">العاشر من رمضان · الأردنية · مدينة العاشر</div>
     </div>
-  </div>
 
-  <div class="sec">🧊 إحصائيات الثلاجات – يناير إلى مارس</div>
-  <div class="tcard">
-    <div class="tcard-hd">مبيعات الثلاجات <span class="badge-sm">Q1</span></div>
-    <div class="tw">
-      <table>
-        <thead><tr><th>النوع</th><th>العدد</th><th>إجمالي المبيعات</th><th>متوسط السعر</th></tr></thead>
-        <tbody>
-          <tr><td class="nm">ثلاجات جديدة</td><td>148</td><td>2,111,031</td><td>14,264</td></tr>
-          <tr><td class="nm">ثلاجات مستعملة</td><td>8</td><td>68,816</td><td>8,602</td></tr>
-        </tbody>
-        <tfoot><tr class="ft"><td>الإجمالي</td><td>156</td><td>2,179,847</td><td>13,973</td></tr></tfoot>
-      </table>
+    <div class="container">
+        <div class="stats-row" id="statsRow">
+            <div class="stat-card">
+                <div class="stat-icon">👥</div>
+                <div class="stat-info">
+                    <div class="stat-value" id="statCustomers">-</div>
+                    <div class="stat-label">عدد العملاء</div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon blue">❄️</div>
+                <div class="stat-info">
+                    <div class="stat-value" id="statFridges">-</div>
+                    <div class="stat-label">إجمالي الثلاجات</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="search-section">
+            <div class="search-label">🔍 بحث عن عميل بالكود</div>
+            <div class="search-wrapper">
+                <span class="search-icon right">🔎</span>
+                <input type="text" class="search-input" id="searchInput" placeholder="اكتب كود العميل هنا... مثال: 25531" autocomplete="off" inputmode="numeric">
+                <button class="search-icon left" id="clearBtn" title="مسح">✕</button>
+                <div class="suggestions-dropdown" id="suggestionsDropdown"></div>
+            </div>
+        </div>
+
+        <div id="resultsArea">
+            <div class="empty-state" id="emptyState">
+                <span class="icon">📱</span>
+                <p>ابحث عن كود العميل لعرض بياناته</p>
+                <span class="hint">اكتب رقم الكود في مربع البحث أعلاه</span>
+            </div>
+        </div>
     </div>
-  </div>
 
-  <div class="sec">📈 رسم بياني – المبيعات الشهرية</div>
-  <div class="chart-wrap"><div class="chart-ttl">مبيعات 2025 مقابل 2026</div><div class="ch-med"><canvas id="c-monthly"></canvas></div></div>
+    <div class="toast" id="toast"></div>
 
-</div>
+    <script>
+        (function() {
+            const rawData = [
+                ["25531", "ماركت القائد", "EL Asher", "Tarek Zahran Ismailia", "EF15-2768N", "", "لا", "", "", "", "", ""],
+                ["25607", "كشك بشره خير", "EL Asher", "Tarek Zahran Ismailia", "26EG04376", "", "لا", "", "", "", "", ""],
+                ["25711", "بقالة الاسره 2", "Madint El-Asher", "Tarek Zahran Ismailia", "22EG02120", "10126386", "نعم", "", "", "", "", ""],
+                ["25761", "اسواق الحجاز", "Madint El-Asher", "Tarek Zahran Ismailia", "24EG06448", "10068540", "نعم", "", "", "", "", ""],
+                ["25121", "مقلة المختار", "El Ordonia", "Tarek Zahran Ismailia", "NE17-0378Z", "", "لا", "", "", "", "", ""],
+                ["25175", "ماركت الهداية للمواد الغذائيه", "El Ordonia", "Tarek Zahran Ismailia", "25EG02449", "", "لا", "", "", "", "", ""],
+                ["25125", "بقالة مى وبسملة", "El Ordonia", "Tarek Zahran Ismailia", "22EG05842", "10017150", "نعم", "", "", "", "", ""],
+                ["24935", "ماركت اولاد علي", "Madint El-Asher", "Tarek Zahran Ismailia", "24EG03581", "", "لا", "", "", "", "", ""],
+                ["25701", "كشك جيمى", "Madint El-Asher", "Tarek Zahran Ismailia", "20EG00880", "", "لا", "", "", "", "", ""],
+                ["25123", "ماركت الشهامه", "El Ordonia", "Tarek Zahran Ismailia", "22EG06037", "10010153", "نعم", "", "", "", "", ""],
+                ["25175", "ماركت الهداية للمواد الغذائيه", "El Ordonia", "Tarek Zahran Ismailia", "NJ08-0011N", "", "لا", "", "", "", "", ""],
+                ["24934", "كشك الثالثه", "EL Asher", "Tarek Zahran Ismailia", "NF17-3666N", "", "لا", "", "", "", "", ""],
+                ["25526", "ماركت اولاد الدهشان", "EL Asher", "Tarek Zahran Ismailia", "24EG02525", "", "لا", "", "", "", "", ""],
+                ["25706", "ماركت اسيل 2", "Madint El-Asher", "Tarek Zahran Ismailia", "24EG02655", "", "لا", "", "", "", "", ""],
+                ["25137", "بقالة المعتز", "El Ordonia", "Tarek Zahran Ismailia", "23EG01016", "", "لا", "", "", "", "", ""],
+                ["24944", "كشك وكافيه رحيم", "EL Asher", "Tarek Zahran Ismailia", "26EG07008", "", "لا", "", "", "", "", ""],
+                ["25235", "كشك ماندو", "El Ordonia", "Tarek Zahran Ismailia", "20EG04180", "", "لا", "", "", "", "", ""],
+                ["25626", "بيت اللبن", "EL Asher", "Tarek Zahran Ismailia", "22EG14390", "", "لا", "", "", "", "", ""],
+                ["25220", "ماركت زمزم الحى 33", "El Ordonia", "Tarek Zahran Ismailia", "23EG01118", "", "لا", "", "", "", "", ""],
+                ["25490", "س م الندى", "EL Asher", "Tarek Zahran Ismailia", "20EG06170", "10031938", "نعم", "", "", "", "", ""],
+                ["25734", "ماركت الاباصيرى", "Madint El-Asher", "Tarek Zahran Ismailia", "24EG06472", "10075532", "نعم", "", "", "", "", ""],
+                ["25261", "ماركت حكايه12", "El Ordonia", "Tarek Zahran Ismailia", "20EG10026", "", "لا", "", "", "", "", ""],
+                ["25803", "مكتبه التميز", "Madint El-Asher", "Tarek Zahran Ismailia", "25EG02344", "10132606", "نعم", "", "", "", "", ""],
+                ["25467", "شركة نماء التجمع للاستثمار", "EL Asher", "Tarek Zahran Ismailia", "LJ13-0036N", "", "لا", "", "", "", "", ""],
+                ["24938", "مزاجو الروبيكى", "Madint El-Asher", "Tarek Zahran Ismailia", "26EG00572", "", "لا", "", "", "", "", ""],
+                ["25767", "ماركت فاطمة", "Madint El-Asher", "Tarek Zahran Ismailia", "24EG02433", "10116986", "نعم", "", "", "", "", ""],
+                ["25587", "الحياه ماركت ابنى بيتك", "EL Asher", "Tarek Zahran Ismailia", "24EG08652", "", "لا", "", "", "", "", ""],
+                ["25732", "بقالة الامل", "Madint El-Asher", "Tarek Zahran Ismailia", "NJ11-5816D", "", "لا", "", "", "", "", ""],
+                ["25776", "جاردن الاردنيه", "Madint El-Asher", "Tarek Zahran Ismailia", "24EG09009", "10130658", "نعم", "", "", "", "", ""],
+                ["25546", "ماركت النصر", "EL Asher", "Tarek Zahran Ismailia", "20EG06286", "", "لا", "", "", "", "", ""],
+                ["25733", "بقالة لوما", "Madint El-Asher", "Tarek Zahran Ismailia", "LF13-0806N", "10024610", "نعم", "", "", "", "", ""],
+                ["25128", "بكار مجاوره 25", "El Ordonia", "Tarek Zahran Ismailia", "24EG06446", "10068523", "نعم", "", "", "", "", ""],
+                ["24941", "ايزى ماركت", "Madint El-Asher", "Tarek Zahran Ismailia", "25EG05907", "", "لا", "", "", "", "", ""],
+                ["25466", "بقالة العلاف 3", "EL Asher", "Tarek Zahran Ismailia", "22EG12175", "", "لا", "", "", "", "", ""],
+                ["25548", "بقالة ام عبد الله", "EL Asher", "Tarek Zahran Ismailia", "24EG08013", "10069061", "نعم", "", "", "", "", ""],
+                ["24939", "هدايا اعياد ميلاد", "Madint El-Asher", "Tarek Zahran Ismailia", "26EG01146", "", "لا", "", "", "", "", ""],
+                ["25751", "بقالة ابو كريم", "Madint El-Asher", "Tarek Zahran Ismailia", "LF13-0614N", "10010380", "نعم", "", "", "", "", ""],
+                ["25632", "ماركت احباب النبى", "EL Asher", "Tarek Zahran Ismailia", "25EG05921", "", "لا", "", "", "", "", ""],
+                ["25713", "ماركت متولي", "Madint El-Asher", "Tarek Zahran Ismailia", "22EG10283", "10010383", "نعم", "", "", "", "", ""],
+                ["25523", "اسواق مصر", "EL Asher", "Tarek Zahran Ismailia", "19EG00003", "", "لا", "", "", "", "", ""],
+                ["25494", "بقالة الوادى الاخضر 2", "EL Asher", "Tarek Zahran Ismailia", "LJ12-0005N", "", "لا", "", "", "", "", ""],
+                ["25478", "سوبر ماركت الهنا", "EL Asher", "Tarek Zahran Ismailia", "24EG02547", "10117088", "نعم", "", "", "", "", ""],
+                ["25594", "هايبر الياسمين", "EL Asher", "Tarek Zahran Ismailia", "20EG06070", "", "لا", "", "", "", "", ""],
+                ["25577", "اسواق السوهاجى كيرهاوس", "EL Asher", "Tarek Zahran Ismailia", "24EG11435", "", "لا", "", "", "", "", ""],
+                ["25521", "بقالة عباد الرحمن", "EL Asher", "Tarek Zahran Ismailia", "EJ12-1451N", "", "لا", "", "", "", "", ""],
+                ["25221", "ماركت المحبه 12", "El Ordonia", "Tarek Zahran Ismailia", "24EG11502", "", "لا", "", "", "", "", ""],
+                ["25787", "جوفى استور", "El Ordonia", "Tarek Zahran Ismailia", "24EG11434", "", "لا", "", "", "", "", ""],
+                ["25690", "سوبر ماركت خالد محمود", "Madint El-Asher", "Tarek Zahran Ismailia", "LJ13-0531N", "10010374", "نعم", "", "", "", "", ""],
+                ["25474", "كشك كليبر", "EL Asher", "Tarek Zahran Ismailia", "22EG06902", "", "لا", "", "", "", "", ""],
+                ["25614", "ماركت فرج الله", "EL Asher", "Tarek Zahran Ismailia", "25EG04522", "", "لا", "", "", "", "", ""],
+                ["25606", "ماركت الفرجانى", "EL Asher", "Tarek Zahran Ismailia", "25EG05910", "", "لا", "", "", "", "", ""],
+                ["25118", "سوبر ماركت سنابل", "El Ordonia", "Tarek Zahran Ismailia", "26EG00577", "", "لا", "", "", "", "", ""],
+                ["25196", "سوبر ماركت الارزاق بالله 12", "El Ordonia", "Tarek Zahran Ismailia", "25EG02345", "", "لا", "", "", "", "", ""],
+                ["25148", "كشك بيبسى الحى16", "El Ordonia", "Tarek Zahran Ismailia", "19EG09277", "", "لا", "", "", "", "", ""],
+                ["24912", "شركة الشروق للأسواق و المحلات", "Madint El-Asher", "Tarek Zahran Ismailia", "22EG02591", "", "لا", "", "", "", "", ""],
+                ["25691", "بقالة الشيمى", "Madint El-Asher", "Tarek Zahran Ismailia", "26EG05597", "10148416", "نعم", "", "", "", "", ""],
+                ["25214", "هايبر جدو", "El Ordonia", "Tarek Zahran Ismailia", "25EG02663", "", "لا", "", "", "", "", ""],
+                ["25780", "بيت العيله", "El Ordonia", "Tarek Zahran Ismailia", "20EG12683", "10039824", "نعم", "", "", "", "", ""],
+                ["25809", "تاجر السعاده", "Madint El-Asher", "Tarek Zahran Ismailia", "LF13-3155D", "", "لا", "", "", "", "", ""],
+                ["25633", "SBOT", "EL Asher", "Tarek Zahran Ismailia", "26EG07035", "", "لا", "", "", "", "", ""],
+                ["25187", "كشك ريست مترو", "El Ordonia", "Tarek Zahran Ismailia", "18EG01076", "10001974", "نعم", "", "", "", "", ""],
+                ["25559", "اولاد رزق الكير هاووس", "EL Asher", "Tarek Zahran Ismailia", "19EG12289", "", "لا", "", "", "", "", ""],
+                ["25476", "جندية ماركت", "EL Asher", "Tarek Zahran Ismailia", "22EG12322", "", "لا", "", "", "", "", ""],
+                ["25177", "ماركت ابو ادم", "El Ordonia", "Tarek Zahran Ismailia", "NF18-0597N", "", "لا", "", "", "", "", ""],
+                ["25602", "ماركت اسواق المدينه", "EL Asher", "Tarek Zahran Ismailia", "25EG05530", "10128055", "نعم", "", "", "", "", ""],
+                ["25744", "كليوباترا ماركت", "Madint El-Asher", "Tarek Zahran Ismailia", "18EG00025", "10024670", "نعم", "", "", "", "", ""],
+                ["25171", "ماركت ضمان", "El Ordonia", "Tarek Zahran Ismailia", "24EG00982", "10034473", "نعم", "", "", "", "", ""],
+                ["25747", "بقاله الخلفاء 2", "Madint El-Asher", "Tarek Zahran Ismailia", "25EG05284", "", "لا", "", "", "", "", ""],
+                ["25720", "ماركت سنابل", "Madint El-Asher", "Tarek Zahran Ismailia", "26EG01090", "", "لا", "", "", "", "", ""],
+                ["25236", "كشك السوهاجى المجاوره 64", "El Ordonia", "Tarek Zahran Ismailia", "25EG05111", "", "لا", "", "", "", "", ""],
+                ["25576", "ماركت ابو مهند", "EL Asher", "Tarek Zahran Ismailia", "25EG02661", "", "لا", "", "", "", "", ""],
+                ["25240", "الراعى", "El Ordonia", "Tarek Zahran Ismailia", "26EG04138", "", "لا", "", "", "", "", ""],
+                ["25832", "ماركت المصطفى الموقف", "Madint El-Asher", "Tarek Zahran Ismailia", "26EG05269", "", "لا", "", "", "", "", ""],
+                ["25190", "بقالة الرومانى", "El Ordonia", "Tarek Zahran Ismailia", "EJ13-1057D", "10017166", "نعم", "", "", "", "", ""],
+                ["25170", "ميني ماركت مجاورة 64", "El Ordonia", "Tarek Zahran Ismailia", "19EG05503", "", "لا", "", "", "", "", ""],
+                ["25135", "الامير ماركت", "El Ordonia", "Tarek Zahran Ismailia", "24EG11969", "", "لا", "", "", "", "", ""],
+                ["24920", "مقلة بلازا", "Madint El-Asher", "Tarek Zahran Ismailia", "LF16-0353N", "", "لا", "", "", "", "", ""],
+                ["25250", "كشك واحه الاندلس", "El Ordonia", "Tarek Zahran Ismailia", "20EG04622", "", "لا", "", "", "", "", ""],
+                ["25838", "حمزة ماركت 36", "Madint El-Asher", "Tarek Zahran Ismailia", "24EG06475", "10075525", "نعم", "", "", "", "", ""],
+                ["25168", "كشك الكوثر 2", "El Ordonia", "Tarek Zahran Ismailia", "26EG07215", "", "لا", "", "", "", "", ""],
+                ["25210", "اسواق السوهاجى", "El Ordonia", "Tarek Zahran Ismailia", "24EG09005", "", "لا", "", "", "", "", ""],
+                ["25516", "ماركت المصريه", "EL Asher", "Tarek Zahran Ismailia", "22EG09541", "10015020", "نعم", "", "", "", "", ""],
+                ["25837", "كشك القط", "Madint El-Asher", "Tarek Zahran Ismailia", "NF18-6566N", "", "لا", "", "", "", "", ""],
+                ["25139", "بقالة الفردوس", "El Ordonia", "Tarek Zahran Ismailia", "22EG02363", "10019570", "نعم", "", "", "", "", ""],
+                ["25509", "ماركت اولاد عساكر", "EL Asher", "Tarek Zahran Ismailia", "24EG01180", "10117965", "نعم", "", "", "", "", ""],
+                ["25736", "اسواق النصر 70", "Madint El-Asher", "Tarek Zahran Ismailia", "22EG02583", "", "لا", "", "", "", "", ""],
+                ["25608", "ادم واسيل", "EL Asher", "Tarek Zahran Ismailia", "26EG02713", "10142124", "نعم", "", "", "", "", ""],
+                ["25541", "بقالة ابو احمد", "EL Asher", "Tarek Zahran Ismailia", "22EG13990", "10118441", "نعم", "", "", "", "", ""],
+                ["25525", "سوبر ماركت اولاد سعيد", "EL Asher", "Tarek Zahran Ismailia", "24EG00954", "", "لا", "", "", "", "", ""],
+                ["25195", "سوبر ماركت مكه", "El Ordonia", "Tarek Zahran Ismailia", "22EG13050", "", "لا", "", "", "", "", ""],
+                ["25472", "بقالة الشباب 15", "EL Asher", "Tarek Zahran Ismailia", "24EG02956", "10104127", "نعم", "", "", "", "", ""],
+                ["25799", "ماركت الشيماء", "Madint El-Asher", "Tarek Zahran Ismailia", "19EG03018", "", "لا", "", "", "", "", ""],
+                ["25556", "ماركت بدوى", "EL Asher", "Tarek Zahran Ismailia", "24EG03860", "", "لا", "", "", "", "", ""],
+                ["25466", "بقالة العلاف 3", "EL Asher", "Tarek Zahran Ismailia", "24EG11958", "", "لا", "", "", "", "", ""],
+                ["25470", "كشك الصعيدى", "EL Asher", "Tarek Zahran Ismailia", "22EG04688", "", "لا", "", "", "", "", ""],
+                ["25585", "بقاله الرحمه", "EL Asher", "Tarek Zahran Ismailia", "24EG11506", "", "لا", "", "", "", "", ""],
+                ["25690", "سوبر ماركت خالد محمود", "Madint El-Asher", "Tarek Zahran Ismailia", "NJ10-1165N", "10010376", "نعم", "", "", "", "", ""],
+                ["25494", "بقالة الوادى الاخضر 2", "EL Asher", "Tarek Zahran Ismailia", "18EG00797", "", "لا", "", "", "", "", ""],
+                ["24943", "كشك اولاد الشيخ", "EL Asher", "Tarek Zahran Ismailia", "26EG07289", "", "لا", "", "", "", "", ""],
+                ["25224", "بروكار", "El Ordonia", "Tarek Zahran Ismailia", "25EG01836", "10138086", "نعم", "", "", "", "", ""],
+                ["25812", "جنديه 2", "Madint El-Asher", "Tarek Zahran Ismailia", "26EG00566", "", "لا", "", "", "", "", ""],
+                ["25507", "بقالة ام ياسر", "EL Asher", "Tarek Zahran Ismailia", "19EG12964", "10013449", "نعم", "", "", "", "", ""],
+                ["25256", "كشك فريش", "El Ordonia", "Tarek Zahran Ismailia", "26EG03843", "", "لا", "", "", "", "", ""],
+                ["25800", "عطاره مكه", "El Ordonia", "Tarek Zahran Ismailia", "NF18-6163N", "10036857", "نعم", "", "", "", "", ""],
+                ["25746", "ماركت اولاد وصفى", "Madint El-Asher", "Tarek Zahran Ismailia", "24EG08709", "10137025", "نعم", "", "", "", "", ""],
+                ["25583", "ماركت السوهاجي", "EL Asher", "Tarek Zahran Ismailia", "24EG01660", "", "لا", "", "", "", "", ""],
+                ["25736", "اسواق النصر 70", "Madint El-Asher", "Tarek Zahran Ismailia", "22EG07970", "", "لا", "", "", "", "", ""],
+                ["25831", "كشك اكس بريس الثالثه", "Madint El-Asher", "Tarek Zahran Ismailia", "26EG05316", "10149434", "نعم", "", "", "", "", ""],
+                ["25566", "كشك هامبورجر", "EL Asher", "Tarek Zahran Ismailia", "24EG00934", "", "لا", "", "", "", "", ""],
+                ["25707", "اولاد حجازي", "Madint El-Asher", "Tarek Zahran Ismailia", "22EG06523", "10031949", "نعم", "", "", "", "", ""],
+                ["25118", "سوبر ماركت سنابل", "El Ordonia", "Tarek Zahran Ismailia", "22EG04020", "", "لا", "", "", "", "", ""],
+                ["25723", "ماركت الهلالى 2", "Madint El-Asher", "Tarek Zahran Ismailia", "NF18-2795N", "10136890", "نعم", "", "", "", "", ""],
+                ["25611", "س.م ام كريم", "EL Asher", "Tarek Zahran Ismailia", "25EG04531", "10126079", "نعم", "", "", "", "", ""],
+                ["25132", "ابوخالد", "El Ordonia", "Tarek Zahran Ismailia", "22EG04042", "10017196", "نعم", "", "", "", "", ""],
+                ["25596", "ماركت الواحه ابنى بيتك", "EL Asher", "Tarek Zahran Ismailia", "19EG12742", "", "لا", "", "", "", "", ""],
+                ["25723", "ماركت الهلالى 2", "Madint El-Asher", "Tarek Zahran Ismailia", "NF18-4787N", "10019744", "نعم", "", "", "", "", ""],
+                ["25174", "عبادالرحمن2", "El Ordonia", "Tarek Zahran Ismailia", "26EG01124", "10140633", "نعم", "", "", "", "", ""],
+                ["25782", "هايبر الاصدقاء", "Madint El-Asher", "Tarek Zahran Ismailia", "24EG03112", "", "لا", "", "", "", "", ""],
+                ["25806", "محمصات وماركت مكه2", "Madint El-Asher", "Tarek Zahran Ismailia", "20EG04226", "", "لا", "", "", "", "", ""],
+                ["25466", "بقالة العلاف 3", "EL Asher", "Tarek Zahran Ismailia", "EJ13-1044D", "", "لا", "", "", "", "", ""],
+                ["25119", "بقالة العائلات", "El Ordonia", "Tarek Zahran Ismailia", "26EG05063", "10141660", "نعم", "", "", "", "", ""],
+                ["25234", "اولاد رزق", "El Ordonia", "Tarek Zahran Ismailia", "NF17-6901N", "", "لا", "", "", "", "", ""],
+                ["25580", "كشك النمر 3", "EL Asher", "Tarek Zahran Ismailia", "24EG02135", "10007855", "نعم", "", "", "", "", ""],
+                ["25473", "كشك صالح", "EL Asher", "Tarek Zahran Ismailia", "NJ18-0077N", "10012263", "نعم", "", "", "", "", ""],
+                ["25584", "ماركت اسواق العدوى", "EL Asher", "Tarek Zahran Ismailia", "24EG03892", "", "لا", "", "", "", "", ""],
+                ["24911", "سوبر ماركت الحسن", "Madint El-Asher", "Tarek Zahran Ismailia", "22EG04076", "", "لا", "", "", "", "", ""],
+                ["25597", "جيمى 3", "EL Asher", "Tarek Zahran Ismailia", "26EG07287", "", "لا", "", "", "", "", ""],
+                ["25513", "ماركت ابو احمد", "EL Asher", "Tarek Zahran Ismailia", "24EG02390", "", "لا", "", "", "", "", ""],
+                ["25508", "بقالة اولاد بكار", "EL Asher", "Tarek Zahran Ismailia", "NF17-8783N", "", "لا", "", "", "", "", ""],
+                ["24925", "ماركت بروسيا", "Madint El-Asher", "Tarek Zahran Ismailia", "24EG02435", "", "لا", "", "", "", "", ""],
+                ["25209", "الاصدقاء", "El Ordonia", "Tarek Zahran Ismailia", "NF17-6356N", "", "لا", "", "", "", "", ""],
+                ["25192", "لولو ماركت 2", "El Ordonia", "Tarek Zahran Ismailia", "LF16-0754N", "10079282", "نعم", "", "", "", "", ""],
+                ["25826", "كشك بسكوته", "Madint El-Asher", "Tarek Zahran Ismailia", "26EG04077", "", "لا", "", "", "", "", ""],
+                ["25160", "بقالة محمد علي", "El Ordonia", "Tarek Zahran Ismailia", "LJ16-0686N", "", "لا", "", "", "", "", ""],
+                ["25728", "بقالة تبارك", "Madint El-Asher", "Tarek Zahran Ismailia", "22EG07954", "", "لا", "", "", "", "", ""],
+                ["25219", "اسواق غزة", "El Ordonia", "Tarek Zahran Ismailia", "24EG02866", "10145745", "نعم", "", "", "", "", ""],
+                ["25552", "الايمان ابني بيتك", "EL Asher", "Tarek Zahran Ismailia", "19EG06296", "", "لا", "", "", "", "", ""],
+                ["25551", "ماركت الامانه", "EL Asher", "Tarek Zahran Ismailia", "22EG13689", "", "لا", "", "", "", "", ""],
+                ["25698", "سوبر ماركت العمدة للمواد الغذا", "Madint El-Asher", "Tarek Zahran Ismailia", "24EG02112", "", "لا", "", "", "", "", ""],
+                ["25571", "ماركت احباب المصطفي", "EL Asher", "Tarek Zahran Ismailia", "24EG00952", "", "لا", "", "", "", "", ""],
+                ["25562", "اسواق ابو ضيف 14", "EL Asher", "Tarek Zahran Ismailia", "20EG11260", "", "لا", "", "", "", "", ""],
+                ["25699", "بقالة حدوته", "El Ordonia", "Tarek Zahran Ismailia", "EJ14-6674D", "", "لا", "", "", "", "", ""],
+                ["25470", "كشك الصعيدى", "EL Asher", "Tarek Zahran Ismailia", "NF18-4779N", "", "لا", "", "", "", "", ""],
+                ["25824", "ماركت الجزيره", "Madint El-Asher", "Tarek Zahran Ismailia", "26EG02710", "", "لا", "", "", "", "", ""],
+                ["25819", "سيف ماركت", "Madint El-Asher", "Tarek Zahran Ismailia", "25EG05238", "", "لا", "", "", "", "", ""],
+                ["24930", "كشك بازوكا", "Madint El-Asher", "Tarek Zahran Ismailia", "NF07-0719N", "", "لا", "", "", "", "", ""],
+                ["24914", "كشك وسط البلد", "Madint El-Asher", "Tarek Zahran Ismailia", "LJ15-1623N", "", "لا", "", "", "", "", ""],
+                ["25538", "كشك وليد", "EL Asher", "Tarek Zahran Ismailia", "21EG00871", "", "لا", "", "", "", "", ""],
+                ["25533", "ليدل ماركت", "EL Asher", "Tarek Zahran Ismailia", "24EG01658", "10093616", "نعم", "", "", "", "", ""],
+                ["25627", "ماركت اولاد سعيده", "EL Asher", "Tarek Zahran Ismailia", "19EG12161", "", "لا", "", "", "", "", ""],
+                ["25708", "كشك الريست هاوس", "El Ordonia", "Tarek Zahran Ismailia", "24EG08061", "", "لا", "", "", "", "", ""],
+                ["25260", "اسواق جده 59", "El Ordonia", "Tarek Zahran Ismailia", "NF11-5046N", "", "لا", "", "", "", "", ""],
+                ["25714", "اسواق حامل العسل", "Madint El-Asher", "Tarek Zahran Ismailia", "26EG03608", "10144018", "نعم", "", "", "", "", ""],
+                ["25180", "اسواق المجد", "El Ordonia", "Tarek Zahran Ismailia", "25EG02656", "10133196", "نعم", "", "", "", "", ""],
+                ["25506", "بقالة اسواق الشيماء 2", "EL Asher", "Tarek Zahran Ismailia", "NF18-3594N", "", "لا", "", "", "", "", ""],
+                ["25598", "كشك الدهشان", "EL Asher", "Tarek Zahran Ismailia", "24EG03845", "", "لا", "", "", "", "", ""],
+                ["25688", "سوبر ماركت ابو مسلم", "Madint El-Asher", "Tarek Zahran Ismailia", "22EG12270", "", "لا", "", "", "", "", ""],
+                ["25603", "كشك ابناء المنصوره", "EL Asher", "Tarek Zahran Ismailia", "LJ16-1226N", "10129492", "نعم", "", "", "", "", ""],
+                ["25717", "مقلة البركة 2", "Madint El-Asher", "Tarek Zahran Ismailia", "LJ15-0665N", "10010377", "نعم", "", "", "", "", ""],
+                ["25503", "ماركت العلاف 2", "EL Asher", "Tarek Zahran Ismailia", "24EG04128", "", "لا", "", "", "", "", ""],
+                ["25818", "كشك الموقف", "Madint El-Asher", "Tarek Zahran Ismailia", "22EG00312", "", "لا", "", "", "", "", ""],
+                ["25200", "ماركت المصرى", "El Ordonia", "Tarek Zahran Ismailia", "24EG08829", "10130106", "نعم", "", "", "", "", ""],
+                ["24919", "بقالة قلعة حلب", "Madint El-Asher", "Tarek Zahran Ismailia", "22EG08549", "", "لا", "", "", "", "", ""],
+                ["25578", "ماركت هايبر فود", "EL Asher", "Tarek Zahran Ismailia", "25EG00216", "", "لا", "", "", "", "", ""],
+                ["25231", "محمصات الخير", "El Ordonia", "Tarek Zahran Ismailia", "EJ12-0555N", "", "لا", "", "", "", "", ""],
+                ["25515", "كشك ابو الليل", "EL Asher", "Tarek Zahran Ismailia", "24EG07562", "10069252", "نعم", "", "", "", "", ""],
+                ["25836", "اولا عوده", "Madint El-Asher", "Tarek Zahran Ismailia", "26EG03412", "", "لا", "", "", "", "", ""],
+                ["25588", "هايبر الياسمين 2", "EL Asher", "Tarek Zahran Ismailia", "22EG05891", "", "لا", "", "", "", "", ""],
+                ["25567", "ماركت طيبه ابن بيتك", "EL Asher", "Tarek Zahran Ismailia", "EF14-6156D", "", "لا", "", "", "", "", ""],
+                ["25709", "هايبر الريان", "Madint El-Asher", "Tarek Zahran Ismailia", "EF15-3613N", "10014467", "نعم", "", "", "", "", ""],
+                ["25192", "لولو ماركت 2", "El Ordonia", "Tarek Zahran Ismailia", "25EG02593", "10139744", "نعم", "", "", "", "", ""],
+                ["25591", "كشك أكس أو", "EL Asher", "Tarek Zahran Ismailia", "20EG07643", "", "لا", "", "", "", "", ""],
+                ["25785", "كشك بكار", "El Ordonia", "Tarek Zahran Ismailia", "24EG03857", "", "لا", "", "", "", "", ""],
+                ["25703", "ماركت اولاد عوده", "Madint El-Asher", "Tarek Zahran Ismailia", "EF14-5700D", "", "لا", "", "", "", "", ""],
+                ["25258", "مدرسه العلا", "El Ordonia", "Tarek Zahran Ismailia", "24EG03805", "10031924", "نعم", "", "", "", "", ""],
+                ["24947", "مقله ومكسرات الاكرم ابو زيد", "Madint El-Asher", "Tarek Zahran Ismailia", "26EG07288", "", "لا", "", "", "", "", ""],
+                ["25466", "بقالة العلاف 3", "EL Asher", "Tarek Zahran Ismailia", "EF15-0717N", "", "لا", "", "", "", "", ""],
+                ["25484", "ماركت حكايه", "EL Asher", "Tarek Zahran Ismailia", "22EG04781", "10010906", "نعم", "", "", "", "", ""],
+                ["25750", "ماركت الفاروق", "Madint El-Asher", "Tarek Zahran Ismailia", "24EG03844", "", "لا", "", "", "", "", ""],
+                ["25610", "ماركت اللؤلؤة", "EL Asher", "Tarek Zahran Ismailia", "25EG01213", "10138489", "نعم", "", "", "", "", ""],
+                ["25827", "منفذ الوفاء", "Madint El-Asher", "Tarek Zahran Ismailia", "26EG00576", "", "لا", "", "", "", "", ""],
+                ["24917", "سوبر ماركت الحلبي", "Madint El-Asher", "Tarek Zahran Ismailia", "24EG02434", "", "لا", "", "", "", "", ""],
+                ["25176", "مقله اشرف2", "El Ordonia", "Tarek Zahran Ismailia", "25EG02441", "10132629", "نعم", "", "", "", "", ""],
+                ["25125", "بقالة مى وبسملة", "El Ordonia", "Tarek Zahran Ismailia", "20EG04871", "100368571", "نعم", "", "", "", "", ""],
+                ["25592", "ماركت ابو مازن", "EL Asher", "Tarek Zahran Ismailia", "19EG12961", "", "لا", "", "", "", "", ""],
+                ["24924", "ماركت أل الرحمن", "Madint El-Asher", "Tarek Zahran Ismailia", "20EG04106", "", "لا", "", "", "", "", ""],
+                ["25499", "سوبرماركت ياسين", "EL Asher", "Tarek Zahran Ismailia", "24EG06502", "", "لا", "", "", "", "", ""],
+                ["24926", "عصير فرغلى", "Madint El-Asher", "Tarek Zahran Ismailia", "25EG00661", "", "لا", "", "", "", "", ""],
+                ["25828", "الامانه ماركت", "Madint El-Asher", "Tarek Zahran Ismailia", "26EG02603", "", "لا", "", "", "", "", ""],
+                ["24921", "عصير فرغلي", "Madint El-Asher", "Tarek Zahran Ismailia", "22EG04392", "", "لا", "", "", "", "", ""],
+                ["25841", "سيتى ماركت", "Madint El-Asher", "Tarek Zahran Ismailia", "24EG03872", "", "لا", "", "", "", "", ""],
+                ["25619", "كافتريا ساجد", "EL Asher", "Tarek Zahran Ismailia", "EJ13-0787N", "", "لا", "", "", "", "", ""],
+                ["25497", "سوبر ماركت خالد ابو خير", "EL Asher", "Tarek Zahran Ismailia", "24EG02543", "", "لا", "", "", "", "", ""],
+                ["25511", "بقالة النجار", "EL Asher", "Tarek Zahran Ismailia", "NF17-8637N", "10031791", "نعم", "", "", "", "", ""],
+                ["25241", "ماركت ريماس", "El Ordonia", "Tarek Zahran Ismailia", "25EG05531", "", "لا", "", "", "", "", ""],
+                ["25590", "ماركت البتول", "EL Asher", "Tarek Zahran Ismailia", "24EG03859", "", "لا", "", "", "", "", ""],
+                ["25238", "بقالة البركة", "El Ordonia", "Tarek Zahran Ismailia", "19EG03266", "", "لا", "", "", "", "", ""],
+                ["25134", "ماركت خيرات الرياض", "El Ordonia", "Tarek Zahran Ismailia", "EF12-1159N", "10126409", "نعم", "", "", "", "", ""],
+                ["25757", "بقالة ابو الدهب", "Madint El-Asher", "Tarek Zahran Ismailia", "20EG02559", "10010379", "نعم", "", "", "", "", ""],
+                ["24928", "سوبر ماركت النيل", "Madint El-Asher", "Tarek Zahran Ismailia", "EF13-1283D", "", "لا", "", "", "", "", ""],
+                ["24918", "بقالة دولسى", "Madint El-Asher", "Tarek Zahran Ismailia", "LF13-0560N", "", "لا", "", "", "", "", ""],
+                ["25126", "بقالة الصواف", "El Ordonia", "Tarek Zahran Ismailia", "22EG07736", "10017156", "نعم", "", "", "", "", ""],
+                ["24936", "ماركت تبارك", "Madint El-Asher", "Tarek Zahran Ismailia", "26EG03439", "10004804", "نعم", "", "", "", "", ""],
+                ["25741", "سوبر ماركت ابو احمد 2", "Madint El-Asher", "Tarek Zahran Ismailia", "EJ14-1090N", "", "لا", "", "", "", "", ""],
+                ["25712", "ماركت يوسف شبانة", "Madint El-Asher", "Tarek Zahran Ismailia", "24EG02134", "", "لا", "", "", "", "", ""],
+                ["25469", "بقالة شركة مصر", "EL Asher", "Tarek Zahran Ismailia", "NF17-1535N", "", "لا", "", "", "", "", ""],
+                ["25491", "ماركت الزغبي", "EL Asher", "Tarek Zahran Ismailia", "24EG02106", "10013345", "نعم", "", "", "", "", ""],
+                ["25469", "بقالة شركة مصر", "EL Asher", "Tarek Zahran Ismailia", "NF09-0632N", "", "لا", "", "", "", "", ""],
+                ["25155", "سوبر ماركت ابو احمد", "El Ordonia", "Tarek Zahran Ismailia", "LF13-0127N", "10111441", "نعم", "", "", "", "", ""],
+                ["25801", "كشك الارزاق بالله", "Madint El-Asher", "Tarek Zahran Ismailia", "NF17-0005N", "10010388", "نعم", "", "", "", "", ""],
+                ["25704", "تسالى بكار", "El Ordonia", "Tarek Zahran Ismailia", "22EG10149", "", "لا", "", "", "", "", ""],
+                ["25537", "البان عبده شبانة", "EL Asher", "Tarek Zahran Ismailia", "19EG01027", "", "لا", "", "", "", "", ""],
+                ["25536", "ماركت ابو الوفا", "EL Asher", "Tarek Zahran Ismailia", "24EG08012", "", "لا", "", "", "", "", ""],
+                ["25485", "كشك نبيل", "EL Asher", "Tarek Zahran Ismailia", "22EG10118", "10015798", "نعم", "", "", "", "", ""],
+                ["25213", "سله التسوق", "El Ordonia", "Tarek Zahran Ismailia", "22EG01905", "", "لا", "", "", "", "", ""],
+                ["25784", "ماركت الهلالى5", "Madint El-Asher", "Tarek Zahran Ismailia", "25EG00398", "", "لا", "", "", "", "", ""],
+                ["25725", "زهران الدولي", "Madint El-Asher", "Tarek Zahran Ismailia", "LJ16-1298N", "10013423", "نعم", "", "", "", "", ""],
+                ["25694", "مقلة الانوار المحمدية", "Madint El-Asher", "Tarek Zahran Ismailia", "22EG06007", "", "لا", "", "", "", "", ""],
+                ["25510", "برووكار2", "EL Asher", "Tarek Zahran Ismailia", "25EG07408", "10143115", "نعم", "", "", "", "", ""],
+                ["25630", "ماركت ودجاج رضوان", "EL Asher", "Tarek Zahran Ismailia", "26EG05474", "", "لا", "", "", "", "", ""],
+                ["25201", "بقالة نور الإيمان", "El Ordonia", "Tarek Zahran Ismailia", "19EG09897", "", "لا", "", "", "", "", ""],
+                ["25212", "كشك اولاد علي", "El Ordonia", "Tarek Zahran Ismailia", "24EG08740", "", "لا", "", "", "", "", ""],
+                ["25568", "بقاله الملك", "EL Asher", "Tarek Zahran Ismailia", "EF15-1426N", "", "لا", "", "", "", "", ""],
+                ["25469", "بقالة شركة مصر", "EL Asher", "Tarek Zahran Ismailia", "22EG04000", "", "لا", "", "", "", "", ""],
+                ["25742", "ماركت الشيماء", "Madint El-Asher", "Tarek Zahran Ismailia", "NF18-2127N", "", "لا", "", "", "", "", ""],
+                ["25131", "ماركت المناهري", "El Ordonia", "Tarek Zahran Ismailia", "24EG02954", "", "لا", "", "", "", "", ""],
+                ["25186", "السوهاجى23", "El Ordonia", "Tarek Zahran Ismailia", "22EG10375", "", "لا", "", "", "", "", ""],
+                ["25695", "بقالة اولاد شبانه", "Madint El-Asher", "Tarek Zahran Ismailia", "22EG10275", "", "لا", "", "", "", "", ""],
+                ["24940", "بريك السراميك", "El Ordonia", "Tarek Zahran Ismailia", "26EG04139", "", "لا", "", "", "", "", ""],
+                ["25467", "شركة نماء التجمع للاستثمار", "EL Asher", "Tarek Zahran Ismailia", "LJ13-0343N", "10024238", "نعم", "", "", "", "", ""],
+                ["25121", "مقلة المختار", "El Ordonia", "Tarek Zahran Ismailia", "22EG07338", "", "لا", "", "", "", "", ""],
+                ["25582", "ماركت اولاد الفولى", "EL Asher", "Tarek Zahran Ismailia", "NF17-6574N", "", "لا", "", "", "", "", ""],
+                ["25737", "ماركت زيزينيا", "Madint El-Asher", "Tarek Zahran Ismailia", "22EG07758", "10031930", "نعم", "", "", "", "", ""],
+                ["25572", "ماركت العقبى", "EL Asher", "Tarek Zahran Ismailia", "23EG04896", "", "لا", "", "", "", "", ""],
+                ["25589", "ماركت البركة", "EL Asher", "Tarek Zahran Ismailia", "24EG00896", "", "لا", "", "", "", "", ""],
+                ["25738", "كشك الهلال الاردينيه", "Madint El-Asher", "Tarek Zahran Ismailia", "22EG02579", "10126411", "نعم", "", "", "", "", ""],
+                ["25251", "اسواق السوهاجى الحى 12", "El Ordonia", "Tarek Zahran Ismailia", "26EG05311", "", "لا", "", "", "", "", ""],
+                ["25849", "سوبر ماركت الرحمه", "Madint El-Asher", "Tarek Zahran Ismailia", "20EG07645", "", "لا", "", "", "", "", ""],
+                ["25833", "ماركت المحبه", "Madint El-Asher", "Tarek Zahran Ismailia", "26EG04465", "", "لا", "", "", "", "", ""],
+                ["25613", "اسواق الصحابه الحى30", "EL Asher", "Tarek Zahran Ismailia", "26EG06527", "", "لا", "", "", "", "", ""],
+                ["25690", "سوبر ماركت خالد محمود", "Madint El-Asher", "Tarek Zahran Ismailia", "22EG04031", "", "لا", "", "", "", "", ""],
+                ["25797", "مقله الصادق ( الموقف )", "Madint El-Asher", "Tarek Zahran Ismailia", "24EG00885", "", "لا", "", "", "", "", ""],
+                ["25699", "بقالة حدوته", "El Ordonia", "Tarek Zahran Ismailia", "NJ11-2005N", "", "لا", "", "", "", "", ""],
+                ["25721", "النويهي ماركت", "Madint El-Asher", "Tarek Zahran Ismailia", "23EG00963", "", "لا", "", "", "", "", ""],
+                ["25539", "سيتي ماركت شادي", "EL Asher", "Tarek Zahran Ismailia", "20EG01964", "", "لا", "", "", "", "", ""],
+                ["25164", "هايبر المنسي", "El Ordonia", "Tarek Zahran Ismailia", "24EG06391", "", "لا", "", "", "", "", ""],
+                ["25243", "اسواق المدينه 59", "El Ordonia", "Tarek Zahran Ismailia", "EJ13-2303N", "", "لا", "", "", "", "", ""],
+                ["25778", "سوبرماركت الخطيب", "Madint El-Asher", "Tarek Zahran Ismailia", "NF08-1753D", "", "لا", "", "", "", "", ""],
+                ["25120", "بقالة التوأمان", "El Ordonia", "Tarek Zahran Ismailia", "22EG04258", "", "لا", "", "", "", "", ""],
+                ["25802", "سوبر ماركت النور", "Madint El-Asher", "Tarek Zahran Ismailia", "24EG11748", "10132347", "نعم", "", "", "", "", ""],
+                ["25791", "ماركت الخضرى", "Madint El-Asher", "Tarek Zahran Ismailia", "19EG06077", "", "لا", "", "", "", "", ""],
+                ["25825", "البطل الحى15", "Madint El-Asher", "Tarek Zahran Ismailia", "LJ15-1152N", "", "لا", "", "", "", "", ""],
+                ["25600", "بقاله الياسمين", "EL Asher", "Tarek Zahran Ismailia", "LJ15-1707N", "10133078", "نعم", "", "", "", "", ""],
+                ["25136", "ماركت كوكو", "El Ordonia", "Tarek Zahran Ismailia", "LJ16-1409N", "", "لا", "", "", "", "", ""],
+                ["24916", "كشك ديجيب", "Madint El-Asher", "Tarek Zahran Ismailia", "23EG00991", "", "لا", "", "", "", "", ""],
+                ["25702", "ماركت عباد الرحمن 55", "Madint El-Asher", "Tarek Zahran Ismailia", "22EG04235", "", "لا", "", "", "", "", ""],
+                ["25569", "ماركت اسواق الهدى", "EL Asher", "Tarek Zahran Ismailia", "24EG03869", "", "لا", "", "", "", "", ""],
+                ["25512", "سوبر ماركت السعادة", "EL Asher", "Tarek Zahran Ismailia", "20EG08936", "", "لا", "", "", "", "", ""],
+                ["25189", "الايمان ابراهيم", "El Ordonia", "Tarek Zahran Ismailia", "20EG07927", "", "لا", "", "", "", "", ""],
+                ["25208", "ماركت التقوي", "El Ordonia", "Tarek Zahran Ismailia", "24EG03858", "", "لا", "", "", "", "", ""],
+                ["25501", "عطارة الجمال", "EL Asher", "Tarek Zahran Ismailia", "24EG02545", "", "لا", "", "", "", "", ""],
+                ["25138", "ماركت الكوثر", "El Ordonia", "Tarek Zahran Ismailia", "23EG00630", "", "لا", "", "", "", "", ""],
+                ["25724", "بقالة شيكو", "Madint El-Asher", "Tarek Zahran Ismailia", "NF18-3600N", "", "لا", "", "", "", "", ""],
+                ["25773", "ماركت الصادق 4", "Madint El-Asher", "Tarek Zahran Ismailia", "24EG03847", "", "لا", "", "", "", "", ""],
+                ["25739", "سوبر ماركت ميدو", "Madint El-Asher", "Tarek Zahran Ismailia", "23EG04981", "", "لا", "", "", "", "", ""],
+                ["25770", "كشك المصطفي", "Madint El-Asher", "Tarek Zahran Ismailia", "LJ13-0530N", "", "لا", "", "", "", "", ""],
+                ["25169", "بيت البركه", "El Ordonia", "Tarek Zahran Ismailia", "NF18-6240N", "10127838", "نعم", "", "", "", "", ""],
+                ["25692", "ماركت الرساله الحى 15", "Madint El-Asher", "Tarek Zahran Ismailia", "26EG03437", "", "لا", "", "", "", "", ""],
+                ["25745", "بقالة الكريم", "Madint El-Asher", "Tarek Zahran Ismailia", "LJ16-0512N", "10010381", "نعم", "", "", "", "", ""],
+                ["25166", "الكابتن", "El Ordonia", "Tarek Zahran Ismailia", "19EG12121", "", "لا", "", "", "", "", ""],
+                ["25779", "ماركت منتصر", "Madint El-Asher", "Tarek Zahran Ismailia", "25EG01222", "", "لا", "", "", "", "", ""],
+                ["25141", "اسواق البدري", "El Ordonia", "Tarek Zahran Ismailia", "24EG02432", "", "لا", "", "", "", "", ""],
+                ["25154", "بقالة الفادي 2", "El Ordonia", "Tarek Zahran Ismailia", "EF15-3281N", "", "لا", "", "", "", "", ""],
+                ["25500", "بقالة هبة الله", "EL Asher", "Tarek Zahran Ismailia", "EF12-1287N", "", "لا", "", "", "", "", ""],
+                ["25768", "ماركت الدهشان الموقف", "Madint El-Asher", "Tarek Zahran Ismailia", "26EG05428", "", "لا", "", "", "", "", ""],
+                ["25783", "ماركت العطار", "El Ordonia", "Tarek Zahran Ismailia", "22EG01562", "10017186", "نعم", "", "", "", "", ""],
+                ["25255", "اسواق السوهاجى دار مصر", "El Ordonia", "Tarek Zahran Ismailia", "LF13-3186D", "", "لا", "", "", "", "", ""],
+                ["25811", "مقله العشرى", "Madint El-Asher", "Tarek Zahran Ismailia", "24EG03344", "", "لا", "", "", "", "", ""],
+                ["25514", "كشك الصعيدي 2", "EL Asher", "Tarek Zahran Ismailia", "22EG07879", "", "لا", "", "", "", "", ""],
+                ["25565", "اسواق السوهاجى امان", "EL Asher", "Tarek Zahran Ismailia", "25EG00312", "", "لا", "", "", "", "", ""],
+                ["24910", "البان النجار", "Madint El-Asher", "Tarek Zahran Ismailia", "22EG11097", "", "لا", "", "", "", "", ""],
+                ["25181", "ماركت سلمى", "El Ordonia", "Tarek Zahran Ismailia", "22EG01506", "10010596", "نعم", "", "", "", "", ""],
+                ["25715", "كشك ابو حسني", "Madint El-Asher", "Tarek Zahran Ismailia", "24EG02386", "", "لا", "", "", "", "", ""],
+                ["25159", "بقالة كامل فتوح", "El Ordonia", "Tarek Zahran Ismailia", "NJ11-0295N", "", "لا", "", "", "", "", ""],
+                ["25758", "ماركت طيبه", "Madint El-Asher", "Tarek Zahran Ismailia", "26EG01123", "", "لا", "", "", "", "", ""],
+                ["25247", "مينى ماركت الرحمه", "El Ordonia", "Tarek Zahran Ismailia", "26EG04625", "10144287", "نعم", "", "", "", "", ""],
+                ["25183", "البطل 3", "El Ordonia", "Tarek Zahran Ismailia", "24EG03024", "", "لا", "", "", "", "", ""],
+                ["25601", "ماركت ابو البنات", "EL Asher", "Tarek Zahran Ismailia", "NF18-1189N", "", "لا", "", "", "", "", ""],
+                ["25788", "الفاروق2", "Madint El-Asher", "Tarek Zahran Ismailia", "24EG09599", "", "لا", "", "", "", "", ""],
+                ["25629", "ماركت الصعيدى مجاوره 10", "EL Asher", "Tarek Zahran Ismailia", "25EG02158", "101338544", "نعم", "", "", "", "", ""],
+                ["25166", "الكابتن", "El Ordonia", "Tarek Zahran Ismailia", "19EG07242", "", "لا", "", "", "", "", ""],
+                ["25517", "بقاله حسام العدوي", "EL Asher", "Tarek Zahran Ismailia", "22EG10750", "10017066", "نعم", "", "", "", "", ""],
+                ["25156", "كشك النمر", "El Ordonia", "Tarek Zahran Ismailia", "23EG01434", "10015026", "نعم", "", "", "", "", ""],
+                ["25468", "بقالة رزق", "EL Asher", "Tarek Zahran Ismailia", "NJ11-5460D", "", "لا", "", "", "", "", ""],
+                ["25158", "بقالة نبيل", "El Ordonia", "Tarek Zahran Ismailia", "NF17-8698N", "", "لا", "", "", "", "", ""],
+                ["25229", "ماركت الملكة", "El Ordonia", "Tarek Zahran Ismailia", "NF18-1538N", "", "لا", "", "", "", "", ""],
+                ["25823", "ماركت الجمال", "Madint El-Asher", "Tarek Zahran Ismailia", "26EG07286", "", "لا", "", "", "", "", ""],
+                ["25121", "مقلة المختار", "El Ordonia", "Tarek Zahran Ismailia", "22EG03623", "", "لا", "", "", "", "", ""],
+                ["25124", "ماركت الشهامه الحي 15", "El Ordonia", "Tarek Zahran Ismailia", "22EG10901", "10002835", "نعم", "", "", "", "", ""],
+                ["25560", "منفذ كلنا واحد ال30", "EL Asher", "Tarek Zahran Ismailia", "24EG03870", "10137960", "نعم", "", "", "", "", ""],
+                ["25122", "ابو مسلم 2", "El Ordonia", "Tarek Zahran Ismailia", "24EG12005", "", "لا", "", "", "", "", ""],
+                ["25182", "عبدالرحمن مجاورة 31", "El Ordonia", "Tarek Zahran Ismailia", "25EG00308", "10131583", "نعم", "", "", "", "", ""],
+                ["25173", "بقالة الكبير اوي", "El Ordonia", "Tarek Zahran Ismailia", "LJ16-1509N", "10094870", "نعم", "", "", "", "", ""],
+                ["25522", "سوبر ماركت على بركة الله", "EL Asher", "Tarek Zahran Ismailia", "24EG03777", "", "لا", "", "", "", "", ""],
+                ["25153", "بقالة الايمان", "El Ordonia", "Tarek Zahran Ismailia", "24EG02622", "10117116", "نعم", "", "", "", "", ""],
+                ["25480", "سوبر ماركت العلاف", "EL Asher", "Tarek Zahran Ismailia", "22EG01927", "", "لا", "", "", "", "", ""],
+                ["24931", "ماركت اولاد الدهشان", "EL Asher", "Tarek Zahran Ismailia", "25EG01151", "", "لا", "", "", "", "", ""],
+                ["25121", "مقلة المختار", "El Ordonia", "Tarek Zahran Ismailia", "20EG00332", "", "لا", "", "", "", "", ""],
+                ["25722", "ماركت ادم", "Madint El-Asher", "Tarek Zahran Ismailia", "22EG04892", "10010382", "نعم", "", "", "", "", ""],
+                ["25162", "المصرى2", "El Ordonia", "Tarek Zahran Ismailia", "25EG02313", "", "لا", "", "", "", "", ""],
+                ["25524", "خان الشهباء", "EL Asher", "Tarek Zahran Ismailia", "23EG01736", "", "لا", "", "", "", "", ""],
+                ["25840", "شريف السوهاجي", "Madint El-Asher", "Tarek Zahran Ismailia", "26EG07006", "", "لا", "", "", "", "", ""],
+                ["25553", "سوبر ماركت االشريف", "EL Asher", "Tarek Zahran Ismailia", "22EG01937", "", "لا", "", "", "", "", ""],
+                ["25502", "كشك الفيروز", "EL Asher", "Tarek Zahran Ismailia", "24EG02621", "10117120", "نعم", "", "", "", "", ""],
+                ["25834", "كشك عبده", "Madint El-Asher", "Tarek Zahran Ismailia", "23EG00632", "", "لا", "", "", "", "", ""],
+                ["25178", "بقالة اسواق دار السلام", "El Ordonia", "Tarek Zahran Ismailia", "24EG02347", "", "لا", "", "", "", "", ""],
+                ["25700", "سوبر ماركت الصفوة", "Madint El-Asher", "Tarek Zahran Ismailia", "24EG08173", "10024061", "نعم", "", "", "", "", ""],
+                ["24951", "عصائر زهراء", "Madint El-Asher", "Tarek Zahran Ismailia", "20EG11895", "", "لا", "", "", "", "", ""],
+                ["25505", "كوكا كولا السوهاجي", "EL Asher", "Tarek Zahran Ismailia", "20EG07928", "10134652", "نعم", "", "", "", "", ""],
+                ["25467", "شركة نماء التجمع للاستثمار", "EL Asher", "Tarek Zahran Ismailia", "NE17-0163Z", "10024240", "نعم", "", "", "", "", ""],
+                ["25216", "سوبر ماركت البركه", "El Ordonia", "Tarek Zahran Ismailia", "24EG03778", "10118423", "نعم", "", "", "", "", ""],
+                ["25835", "ماركت مرموش", "Madint El-Asher", "Tarek Zahran Ismailia", "26EG04462", "", "لا", "", "", "", "", ""],
+                ["25604", "كشك واحه الاندلس", "EL Asher", "Tarek Zahran Ismailia", "22EG03761", "10013440", "نعم", "", "", "", "", ""],
+                ["25727", "ماركت الخير", "Madint El-Asher", "Tarek Zahran Ismailia", "NF17-5674N", "", "لا", "", "", "", "", ""],
+                ["25549", "بقاله اولاد شبانه 4", "EL Asher", "Tarek Zahran Ismailia", "EJ14-1143N", "", "لا", "", "", "", "", ""],
+                ["25202", "دار العطاره", "El Ordonia", "Tarek Zahran Ismailia", "25EG02507", "", "لا", "", "", "", "", ""],
+                ["24923", "سوبرماركت السلام", "Madint El-Asher", "Tarek Zahran Ismailia", "22EG06267", "", "لا", "", "", "", "", ""],
+                ["25599", "ماركت ادم الحى14", "EL Asher", "Tarek Zahran Ismailia", "NF10-0886N", "", "لا", "", "", "", "", ""],
+                ["25554", "البان مصطفي", "EL Asher", "Tarek Zahran Ismailia", "24EG03921", "10124406", "نعم", "", "", "", "", ""],
+                ["25199", "بالينو كافيه", "El Ordonia", "Tarek Zahran Ismailia", "23EG02480", "10039863", "نعم", "", "", "", "", ""],
+                ["25528", "ماركت احباب المصطفي", "EL Asher", "Tarek Zahran Ismailia", "LJ15-0569N", "", "لا", "", "", "", "", ""],
+                ["25543", "كشك السوهاجى ال 110", "EL Asher", "Tarek Zahran Ismailia", "24EG03890", "10117094", "نعم", "", "", "", "", ""],
+                ["25519", "ماركت الاصدقاء ابني بيتك", "EL Asher", "Tarek Zahran Ismailia", "23EG05202", "", "لا", "", "", "", "", ""],
+                ["25736", "اسواق النصر 70", "Madint El-Asher", "Tarek Zahran Ismailia", "19EG02096", "", "لا", "", "", "", "", ""],
+                ["24911", "سوبر ماركت الحسن", "Madint El-Asher", "Tarek Zahran Ismailia", "LJ15-2007N", "", "لا", "", "", "", "", ""],
+                ["25254", "س.م التقوى33", "El Ordonia", "Tarek Zahran Ismailia", "26EG04624", "", "لا", "", "", "", "", ""],
+                ["25615", "اسواق الصباغ", "EL Asher", "Tarek Zahran Ismailia", "26EG04137", "10144991", "نعم", "", "", "", "", ""],
+                ["25795", "ماركت الهلالى", "Madint El-Asher", "Tarek Zahran Ismailia", "25EG00383", "", "لا", "", "", "", "", ""],
+                ["24927", "سوبر ماركت ضياء الرحمن", "Madint El-Asher", "Tarek Zahran Ismailia", "24EG06471", "", "لا", "", "", "", "", ""],
+                ["25557", "ماركتا المنافذ", "EL Asher", "Tarek Zahran Ismailia", "24EG00852", "", "لا", "", "", "", "", ""],
+                ["25140", "ماركت الصعيدي", "El Ordonia", "Tarek Zahran Ismailia", "25EG00310", "", "لا", "", "", "", "", ""],
+                ["25529", "الامير 46", "EL Asher", "Tarek Zahran Ismailia", "22EG06777", "", "لا", "", "", "", "", ""],
+                ["25579", "مينى ماركت الصفا", "EL Asher", "Tarek Zahran Ismailia", "LJ16-0268N", "", "لا", "", "", "", "", ""],
+                ["25555", "مينى ماركت ادم", "EL Asher", "Tarek Zahran Ismailia", "24EG03776", "", "لا", "", "", "", "", ""],
+                ["25165", "ماركت هاروون", "El Ordonia", "Tarek Zahran Ismailia", "23EG02988", "", "لا", "", "", "", "", ""],
+                ["25726", "البان و سوبر ماركت الجنه", "Madint El-Asher", "Tarek Zahran Ismailia", "22EG06049", "10024687", "نعم", "", "", "", "", ""],
+                ["25794", "كشك الاسطزورة", "Madint El-Asher", "Tarek Zahran Ismailia", "19EG03850", "10127834", "نعم", "", "", "", "", ""],
+                ["25144", "ابو مسلم3", "El Ordonia", "Tarek Zahran Ismailia", "23EG00965", "", "لا", "", "", "", "", ""],
+                ["25586", "كشك جيمي 2", "EL Asher", "Tarek Zahran Ismailia", "LF13-0457N", "10146080", "نعم", "", "", "", "", ""],
+                ["25705", "ماركت لولو", "Madint El-Asher", "Tarek Zahran Ismailia", "22EG08079", "", "لا", "", "", "", "", ""],
+                ["25820", "اسواق الغرباوى", "Madint El-Asher", "Tarek Zahran Ismailia", "19EG05875", "", "لا", "", "", "", "", ""],
+                ["25177", "ماركت ابو ادم", "El Ordonia", "Tarek Zahran Ismailia", "22EG12955", "", "لا", "", "", "", "", ""],
+                ["25781", "ماركت بن ناجح", "Madint El-Asher", "Tarek Zahran Ismailia", "NF17-7035N", "", "لا", "", "", "", "", ""],
+                ["25252", "محمصات الخير", "El Ordonia", "Tarek Zahran Ismailia", "26EG05476", "", "لا", "", "", "", "", ""],
+                ["25143", "بقالة ابراهيم", "El Ordonia", "Tarek Zahran Ismailia", "22EG12981", "10010539", "نعم", "", "", "", "", ""],
+                ["25616", "ماركت ابو انس", "EL Asher", "Tarek Zahran Ismailia", "26EG05310", "10149606", "نعم", "", "", "", "", ""],
+                ["25762", "ماركت البراء", "Madint El-Asher", "Tarek Zahran Ismailia", "22EG08069", "", "لا", "", "", "", "", ""],
+                ["25146", "بقالة سامى", "El Ordonia", "Tarek Zahran Ismailia", "EF14-6437D", "", "لا", "", "", "", "", ""],
+                ["25217", "نور ماركت", "El Ordonia", "Tarek Zahran Ismailia", "19EG02536", "", "لا", "", "", "", "", ""],
+                ["25467", "شركة نماء التجمع للاستثمار", "EL Asher", "Tarek Zahran Ismailia", "LJ15-2285N", "", "لا", "", "", "", "", ""],
+                ["25743", "الايمان 2", "Madint El-Asher", "Tarek Zahran Ismailia", "22EG05901", "", "لا", "", "", "", "", ""],
+                ["25493", "كشك السوهاجى", "EL Asher", "Tarek Zahran Ismailia", "19EG03306", "", "لا", "", "", "", "", ""],
+                ["25759", "ماركت زين", "Madint El-Asher", "Tarek Zahran Ismailia", "25EG00657", "", "لا", "", "", "", "", ""],
+                ["25489", "كشك بيبسى", "EL Asher", "Tarek Zahran Ismailia", "24EG02116", "10013346", "نعم", "", "", "", "", ""],
+                ["25179", "مقله زين ز زياد", "El Ordonia", "Tarek Zahran Ismailia", "LJ16-0377N", "10017177", "نعم", "", "", "", "", ""],
+                ["25495", "بقالة ابو دوجانة", "EL Asher", "Tarek Zahran Ismailia", "LJ15-0785N", "10124403", "نعم", "", "", "", "", ""],
+                ["25701", "كشك جيمى", "Madint El-Asher", "Tarek Zahran Ismailia", "22EG10906", "", "لا", "", "", "", "", ""],
+                ["25211", "ماركت ابناء اسوان", "El Ordonia", "Tarek Zahran Ismailia", "26EG05429", "10149610", "نعم", "", "", "", "", ""],
+                ["25477", "كشك المصرية", "EL Asher", "Tarek Zahran Ismailia", "22EG12974", "", "لا", "", "", "", "", ""],
+                ["25147", "الجزيرة ماركت", "El Ordonia", "Tarek Zahran Ismailia", "22EG01285", "", "لا", "", "", "", "", ""],
+                ["25467", "شركة نماء التجمع للاستثمار", "EL Asher", "Tarek Zahran Ismailia", "20EG13001", "10024241", "نعم", "", "", "", "", ""],
+                ["25487", "سوبر ماركت اليزا", "EL Asher", "Tarek Zahran Ismailia", "22EG03946", "10007485", "نعم", "", "", "", "", ""],
+                ["25253", "السوهاجى24", "El Ordonia", "Tarek Zahran Ismailia", "26EG07034", "", "لا", "", "", "", "", ""],
+                ["25157", "اسواق السوهاجى", "El Ordonia", "Tarek Zahran Ismailia", "24EG08861", "", "لا", "", "", "", "", ""],
+                ["25815", "محمصات المهدي", "Madint El-Asher", "Tarek Zahran Ismailia", "26EG04244", "", "لا", "", "", "", "", ""],
+                ["25625", "محمصة الثوره", "EL Asher", "Tarek Zahran Ismailia", "22EG00435", "", "لا", "", "", "", "", ""],
+                ["25765", "كشك كاش", "Madint El-Asher", "Tarek Zahran Ismailia", "22EG10009", "", "لا", "", "", "", "", ""],
+                ["25535", "بقالة زهرة الاقصى", "EL Asher", "Tarek Zahran Ismailia", "NF09-0628N", "", "لا", "", "", "", "", ""],
+                ["25496", "بقالة اولاد ابو عقبة", "EL Asher", "Tarek Zahran Ismailia", "19EG10845", "", "لا", "", "", "", "", ""],
+                ["25483", "بقالة رحمه", "EL Asher", "Tarek Zahran Ismailia", "22EG04872", "10010949", "نعم", "", "", "", "", ""],
+                ["25185", "ماركت الصعيدي", "El Ordonia", "Tarek Zahran Ismailia", "NJ18-0357N", "", "لا", "", "", "", "", ""],
+                ["25822", "ريست جمعه", "Madint El-Asher", "Tarek Zahran Ismailia", "NF08-0280N", "", "لا", "", "", "", "", ""],
+                ["25133", "سوبر ماركت المهندسين", "El Ordonia", "Tarek Zahran Ismailia", "22EG12985", "", "لا", "", "", "", "", ""],
+                ["25119", "بقالة العائلات", "El Ordonia", "Tarek Zahran Ismailia", "NF18-4158N", "", "لا", "", "", "", "", ""],
+                ["25129", "ماركت المصطفى", "El Ordonia", "Tarek Zahran Ismailia", "EF13-1880N", "10122120", "نعم", "", "", "", "", ""],
+                ["25479", "بقالة حاتم", "EL Asher", "Tarek Zahran Ismailia", "EF13-0109N", "", "لا", "", "", "", "", ""],
+                ["24913", "بقالة المدينة المنورة", "Madint El-Asher", "Tarek Zahran Ismailia", "22EG06665", "", "لا", "", "", "", "", ""],
+                ["25730", "ماركت اولاد حنفي", "Madint El-Asher", "Tarek Zahran Ismailia", "24EG02527", "10117082", "نعم", "", "", "", "", ""],
+                ["25561", "اسواق السوهاجى الـ29", "EL Asher", "Tarek Zahran Ismailia", "25EG00311", "10131581", "نعم", "", "", "", "", ""],
+                ["25830", "CR7", "Madint El-Asher", "Tarek Zahran Ismailia", "26EG04464", "", "لا", "", "", "", "", ""],
+                ["25624", "ماركت الايمان", "EL Asher", "Tarek Zahran Ismailia", "24EG11510", "10120690", "نعم", "", "", "", "", ""],
+                ["25720", "ماركت سنابل", "Madint El-Asher", "Tarek Zahran Ismailia", "NF18-1222N", "", "لا", "", "", "", "", ""],
+                ["25807", "مقله الصادق ( مول امازون )", "Madint El-Asher", "Tarek Zahran Ismailia", "23EG04897", "", "لا", "", "", "", "", ""],
+                ["25623", "سوبر ماركت اولاد حسن", "EL Asher", "Tarek Zahran Ismailia", "24EG11707", "", "لا", "", "", "", "", ""],
+                ["25786", "كشك الاردنيه", "Madint El-Asher", "Tarek Zahran Ismailia", "24EG01181", "", "لا", "", "", "", "", ""],
+                ["25167", "بقالة البطل", "El Ordonia", "Tarek Zahran Ismailia", "22EG04028", "", "لا", "", "", "", "", ""],
+                ["25796", "محصات وماركت مكه", "Madint El-Asher", "Tarek Zahran Ismailia", "25EG02349", "", "لا", "", "", "", "", ""],
+                ["25793", "ماركت كويك", "El Ordonia", "Tarek Zahran Ismailia", "24EG04127", "", "لا", "", "", "", "", ""],
+                ["25621", "بقالة زهرة الاقصى", "EL Asher", "Tarek Zahran Ismailia", "19EG05267", "", "لا", "", "", "", "", ""],
+                ["25207", "اسواق ابو ضيف", "El Ordonia", "Tarek Zahran Ismailia", "24EG02999", "", "لا", "", "", "", "", ""],
+                ["25754", "ماركت الراعي", "El Ordonia", "Tarek Zahran Ismailia", "25EG01944", "10136294", "نعم", "", "", "", "", ""],
+                ["25813", "ماركت شيخ العرب", "Madint El-Asher", "Tarek Zahran Ismailia", "25EG05237", "", "لا", "", "", "", "", ""],
+                ["25547", "بقالة عاطف", "EL Asher", "Tarek Zahran Ismailia", "EF13-0561D", "", "لا", "", "", "", "", ""],
+                ["25816", "بساطه الدوحه", "Madint El-Asher", "Tarek Zahran Ismailia", "19EG01517", "", "لا", "", "", "", "", ""],
+                ["25203", "خوجة ماركت", "El Ordonia", "Tarek Zahran Ismailia", "LJ16-0927N", "", "لا", "", "", "", "", ""],
+                ["24948", "كشك السويدى", "EL Asher", "Tarek Zahran Ismailia", "26EG05317", "", "لا", "", "", "", "", ""],
+                ["25595", "ابو ضيف مجاوره7", "EL Asher", "Tarek Zahran Ismailia", "19EG03705", "10010360", "نعم", "", "", "", "", ""],
+                ["25151", "ماركت الافندي", "El Ordonia", "Tarek Zahran Ismailia", "22EG01860", "", "لا", "", "", "", "", ""],
+                ["25842", "ماركت اسواق الاردنيه", "Madint El-Asher", "Tarek Zahran Ismailia", "26EG04080", "", "لا", "", "", "", "", ""],
+                ["25492", "ماركت الاميره", "EL Asher", "Tarek Zahran Ismailia", "24EG02387", "", "لا", "", "", "", "", ""],
+                ["25218", "العلاف الاندلس", "El Ordonia", "Tarek Zahran Ismailia", "23EG01015", "", "لا", "", "", "", "", ""],
+                ["25756", "اسواق جنه الحى 15", "Madint El-Asher", "Tarek Zahran Ismailia", "24EG03084", "10075509", "نعم", "", "", "", "", ""],
+                ["25821", "بريك الثالثه", "Madint El-Asher", "Tarek Zahran Ismailia", "25EG05879", "10105956", "نعم", "", "", "", "", ""],
+                ["25527", "ماركت ال مرجان", "EL Asher", "Tarek Zahran Ismailia", "EF15-3619N", "10013448", "نعم", "", "", "", "", ""],
+                ["25769", "ماركت أنس", "Madint El-Asher", "Tarek Zahran Ismailia", "20EG01996", "", "لا", "", "", "", "", ""],
+                ["24945", "كشك فريش", "EL Asher", "Tarek Zahran Ismailia", "26EG07010", "", "لا", "", "", "", "", ""],
+                ["25206", "كشك كريم", "El Ordonia", "Tarek Zahran Ismailia", "24EG02431", "", "لا", "", "", "", "", ""],
+                ["24915", "حميدو ماركت", "Madint El-Asher", "Tarek Zahran Ismailia", "25EG02709", "", "لا", "", "", "", "", ""],
+                ["25248", "ماركت العجايبى", "El Ordonia", "Tarek Zahran Ismailia", "25EG05372", "", "لا", "", "", "", "", ""],
+                ["25575", "ميدو ماركت", "EL Asher", "Tarek Zahran Ismailia", "24EG08828", "10131310", "نعم", "", "", "", "", ""],
+                ["25716", "بقالة مروة ياسين", "Madint El-Asher", "Tarek Zahran Ismailia", "24EG02111", "", "لا", "", "", "", "", ""],
+                ["24932", "كشك احمد راغب", "EL Asher", "Tarek Zahran Ismailia", "19EG05763", "", "لا", "", "", "", "", ""],
+                ["25766", "دايموند سينما ماركت", "Madint El-Asher", "Tarek Zahran Ismailia", "EF13-0245N", "", "لا", "", "", "", "", ""],
+                ["25693", "فاميلى ماركت", "Madint El-Asher", "Tarek Zahran Ismailia", "22EG10850", "10145870", "نعم", "", "", "", "", ""],
+                ["25222", "كشك بم بم", "El Ordonia", "Tarek Zahran Ismailia", "EJ13-1800D", "", "لا", "", "", "", "", ""],
+                ["25172", "ماركت ابن الشام", "El Ordonia", "Tarek Zahran Ismailia", "22EG13696", "10017183", "نعم", "", "", "", "", ""],
+                ["25829", "اسواق المهندس2", "Madint El-Asher", "Tarek Zahran Ismailia", "26EG05427", "", "لا", "", "", "", "", ""],
+                ["25719", "ماركت الصفا و المروة", "Madint El-Asher", "Tarek Zahran Ismailia", "22EG04724", "10010386", "نعم", "", "", "", "", ""],
+                ["25518", "ماركت النمر", "EL Asher", "Tarek Zahran Ismailia", "NJ18-0411N", "", "لا", "", "", "", "", ""],
+                ["25772", "اسواق زين 71", "Madint El-Asher", "Tarek Zahran Ismailia", "25EG03002", "", "لا", "", "", "", "", ""],
+                ["25184", "ماركت البركة", "El Ordonia", "Tarek Zahran Ismailia", "24EG09036", "", "لا", "", "", "", "", ""],
+                ["25482", "كشك تويكس", "EL Asher", "Tarek Zahran Ismailia", "24EG02188", "10032038", "نعم", "", "", "", "", ""],
+                ["25520", "بقالة كاريمان", "EL Asher", "Tarek Zahran Ismailia", "HI16-0065N", "10017052", "نعم", "", "", "", "", ""],
+                ["25262", "كشك مليكة", "El Ordonia", "Tarek Zahran Ismailia", "NF10-2115D", "", "لا", "", "", "", "", ""],
+                ["25498", "كشك مجاورة 15", "EL Asher", "Tarek Zahran Ismailia", "20EG00879", "10033701", "نعم", "", "", "", "", ""],
+                ["25475", "سوبر ماركت عواد", "EL Asher", "Tarek Zahran Ismailia", "22EG07718", "10017055", "نعم", "", "", "", "", ""],
+                ["25563", "هايبر الريان 3", "EL Asher", "Tarek Zahran Ismailia", "24EG03580", "", "لا", "", "", "", "", ""],
+                ["24929", "الايمان وان", "Madint El-Asher", "Tarek Zahran Ismailia", "20EG01851", "", "لا", "", "", "", "", ""],
+                ["25620", "كشك جلال", "EL Asher", "Tarek Zahran Ismailia", "25EG04516", "10128034", "نعم", "", "", "", "", ""],
+                ["25228", "كشك السوهاجى 12", "El Ordonia", "Tarek Zahran Ismailia", "LJ15-2249N", "", "لا", "", "", "", "", ""],
+                ["25542", "كشك ام عبده", "EL Asher", "Tarek Zahran Ismailia", "NF18-1553N", "10015455", "نعم", "", "", "", "", ""],
+                ["25570", "ماركت الدهشان الجديد", "EL Asher", "Tarek Zahran Ismailia", "20EG07543", "", "لا", "", "", "", "", ""],
+                ["25245", "بقاله اكس بريس", "El Ordonia", "Tarek Zahran Ismailia", "LF13-0365N", "", "لا", "", "", "", "", ""],
+                ["25699", "بقالة حدوته", "El Ordonia", "Tarek Zahran Ismailia", "22EG05852", "", "لا", "", "", "", "", ""],
+                ["25696", "اسواق شهد", "Madint El-Asher", "Tarek Zahran Ismailia", "24EG11956", "10125570", "نعم", "", "", "", "", ""],
+                ["25233", "ماركت فور", "El Ordonia", "Tarek Zahran Ismailia", "NJ11-3786D", "10031805", "نعم", "", "", "", "", ""],
+                ["25558", "بقاله فور ابني بيتك", "EL Asher", "Tarek Zahran Ismailia", "NJ11-4200D", "", "لا", "", "", "", "", ""],
+                ["25163", "كشك سراج", "El Ordonia", "Tarek Zahran Ismailia", "24EG01653", "10126405", "نعم", "", "", "", "", ""],
+                ["25808", "ماركت سميح", "El Ordonia", "Tarek Zahran Ismailia", "24EG02810", "10117100", "نعم", "", "", "", "", ""],
+                ["25775", "البان الغمراوي", "Madint El-Asher", "Tarek Zahran Ismailia", "21EG00878", "", "لا", "", "", "", "", ""],
+                ["24909", "كشك السوهاجى التاسعة", "Madint El-Asher", "Tarek Zahran Ismailia", "25EG01848", "10132773", "نعم", "", "", "", "", ""],
+                ["25550", "كوكيتا ماركت", "EL Asher", "Tarek Zahran Ismailia", "22EG09379", "10017062", "نعم", "", "", "", "", ""],
+                ["25729", "س م اشرقت", "Madint El-Asher", "Tarek Zahran Ismailia", "26EG03611", "10144014", "نعم", "", "", "", "", ""],
+                ["25257", "سوهاج المصانع", "El Ordonia", "Tarek Zahran Ismailia", "26EG03776", "", "لا", "", "", "", "", ""],
+                ["25753", "ماركت نسيم", "El Ordonia", "Tarek Zahran Ismailia", "22EG06755", "10017167", "نعم", "", "", "", "", ""],
+                ["25760", "فريش مارت", "Madint El-Asher", "Tarek Zahran Ismailia", "AF99-0032D", "", "لا", "", "", "", "", ""],
+                ["25534", "منفذ كلنا واحد ال29", "EL Asher", "Tarek Zahran Ismailia", "24EG03894", "10116104", "نعم", "", "", "", "", ""],
+                ["25142", "كارفور العاشر", "El Ordonia", "Tarek Zahran Ismailia", "24EG11922", "", "لا", "", "", "", "", ""],
+                ["25191", "سوبر ماركت الرحمن 12", "El Ordonia", "Tarek Zahran Ismailia", "25EG02659", "", "لا", "", "", "", "", ""],
+                ["25810", "بقاله احباب المصطفى 39", "Madint El-Asher", "Tarek Zahran Ismailia", "24EG00926", "", "لا", "", "", "", "", ""],
+                ["25777", "ماركت المصطفي 2", "Madint El-Asher", "Tarek Zahran Ismailia", "26EG01088", "10140565", "نعم", "", "", "", "", ""],
+                ["24946", "كشك فريش", "EL Asher", "Tarek Zahran Ismailia", "26EG07033", "", "لا", "", "", "", "", ""],
+                ["24949", "كشك الجمارك", "EL Asher", "Tarek Zahran Ismailia", "26EG05961", "", "لا", "", "", "", "", ""],
+                ["25471", "بقالة الوادى الاخضر", "EL Asher", "Tarek Zahran Ismailia", "24EG02201", "", "لا", "", "", "", "", ""],
+                ["25246", "كشك واحه الاندلس", "El Ordonia", "Tarek Zahran Ismailia", "25EG05234", "", "لا", "", "", "", "", ""],
+                ["25239", "ماركت الباشا", "El Ordonia", "Tarek Zahran Ismailia", "25EG04515", "10149544", "نعم", "", "", "", "", ""],
+                ["25605", "سوبر ماركت العفيفي", "EL Asher", "Tarek Zahran Ismailia", "EJ12-1072N", "", "لا", "", "", "", "", ""],
+                ["25197", "اسواق الروضه", "El Ordonia", "Tarek Zahran Ismailia", "25EG02660", "10133205", "نعم", "", "", "", "", ""],
+                ["25618", "ايوب", "EL Asher", "Tarek Zahran Ismailia", "26EG04383", "", "لا", "", "", "", "", ""],
+                ["25530", "سوبر ماركت كورال", "EL Asher", "Tarek Zahran Ismailia", "NF18-3601N", "", "لا", "", "", "", "", ""],
+                ["25479", "بقالة حاتم", "EL Asher", "Tarek Zahran Ismailia", "NJ18-0397N", "10010367", "نعم", "", "", "", "", ""],
+                ["25545", "ماركت دهب ابنى بيتك", "EL Asher", "Tarek Zahran Ismailia", "24EG09034", "", "لا", "", "", "", "", ""],
+                ["25215", "عطاره الايمان", "El Ordonia", "Tarek Zahran Ismailia", "25EG00676", "", "لا", "", "", "", "", ""],
+                ["25617", "ماركت العقبى2", "EL Asher", "Tarek Zahran Ismailia", "NF17-0445N", "", "لا", "", "", "", "", ""],
+                ["25150", "ماركت الجنزوري 2", "El Ordonia", "Tarek Zahran Ismailia", "22EG10378", "10013157", "نعم", "", "", "", "", ""],
+                ["25564", "كشك المسراوي", "EL Asher", "Tarek Zahran Ismailia", "EJ13-1377N", "", "لا", "", "", "", "", ""],
+                ["25804", "محمصات حافظ", "Madint El-Asher", "Tarek Zahran Ismailia", "22EG06663", "", "لا", "", "", "", "", ""],
+                ["25540", "ماركت الصعيدى", "EL Asher", "Tarek Zahran Ismailia", "24EG02546", "", "لا", "", "", "", "", ""],
+                ["25740", "مقله المدينه", "Madint El-Asher", "Tarek Zahran Ismailia", "24EG09597", "10136231", "نعم", "", "", "", "", ""],
+                ["25774", "ماركت خير زمان", "Madint El-Asher", "Tarek Zahran Ismailia", "23EG00629", "10073091", "نعم", "", "", "", "", ""],
+                ["25748", "ماركت النمر", "Madint El-Asher", "Tarek Zahran Ismailia", "24EG02653", "", "لا", "", "", "", "", ""],
+                ["25798", "البراء3", "Madint El-Asher", "Tarek Zahran Ismailia", "NF17-1078N", "", "لا", "", "", "", "", ""],
+                ["25249", "اسواق الحاوى", "El Ordonia", "Tarek Zahran Ismailia", "26EG04401", "", "لا", "", "", "", "", ""],
+                ["25736", "اسواق النصر 70", "Madint El-Asher", "Tarek Zahran Ismailia", "25EG03003", "", "لا", "", "", "", "", ""],
+                ["25504", "هايبر الريان", "EL Asher", "Tarek Zahran Ismailia", "19EG03708", "", "لا", "", "", "", "", ""],
+                ["25718", "اكس كورنر", "El Ordonia", "Tarek Zahran Ismailia", "24EG12004", "10138684", "نعم", "", "", "", "", ""],
+                ["25486", "كشك اولاد يحى", "EL Asher", "Tarek Zahran Ismailia", "22EG05930", "", "لا", "", "", "", "", ""],
+                ["25710", "البطل 2ماركت", "Madint El-Asher", "Tarek Zahran Ismailia", "24EG01654", "", "لا", "", "", "", "", ""],
+                ["25223", "ماركت الفيروز", "El Ordonia", "Tarek Zahran Ismailia", "22EG06001", "", "لا", "", "", "", "", ""],
+                ["25152", "العمده ماركت", "El Ordonia", "Tarek Zahran Ismailia", "24EG08174", "", "لا", "", "", "", "", ""],
+                ["25237", "ماركت الخير الاندلس", "El Ordonia", "Tarek Zahran Ismailia", "26EG04076", "", "لا", "", "", "", "", ""],
+                ["25749", "ماركت عباد الرحمن", "Madint El-Asher", "Tarek Zahran Ismailia", "24EG06473", "", "لا", "", "", "", "", ""],
+                ["24950", "محمد بكار", "Madint El-Asher", "Tarek Zahran Ismailia", "26EG03589", "", "لا", "", "", "", "", ""],
+                ["25790", "بازوكا الاردنيه", "Madint El-Asher", "Tarek Zahran Ismailia", "EJ13-0348N", "10133378", "نعم", "", "", "", "", ""],
+                ["25481", "ماركت ابو طه", "EL Asher", "Tarek Zahran Ismailia", "22EG10376", "", "لا", "", "", "", "", ""],
+                ["25735", "الفار ماركت", "Madint El-Asher", "Tarek Zahran Ismailia", "EJ13-0743N", "", "لا", "", "", "", "", ""],
+                ["25697", "بقالة الشباب", "Madint El-Asher", "Tarek Zahran Ismailia", "22EG04230", "", "لا", "", "", "", "", ""],
+                ["25789", "ماركت هوم باور", "Madint El-Asher", "Tarek Zahran Ismailia", "22EG05131", "10015785", "نعم", "", "", "", "", ""],
+                ["25468", "بقالة رزق", "EL Asher", "Tarek Zahran Ismailia", "24EG02716", "", "لا", "", "", "", "", ""],
+                ["25573", "ماركت الحكيم", "EL Asher", "Tarek Zahran Ismailia", "24EG03861", "", "لا", "", "", "", "", ""],
+                ["25488", "بقاله عماد", "EL Asher", "Tarek Zahran Ismailia", "24EG01182", "10118454", "نعم", "", "", "", "", ""],
+                ["25689", "اسواق بدر", "Madint El-Asher", "Tarek Zahran Ismailia", "22EG11871", "", "لا", "", "", "", "", ""],
+                ["25120", "بقالة التوأمان", "El Ordonia", "Tarek Zahran Ismailia", "19EG09824", "", "لا", "", "", "", "", ""],
+                ["25119", "بقالة العائلات", "El Ordonia", "Tarek Zahran Ismailia", "25EG00395", "", "لا", "", "", "", "", ""]
+            ];
 
-<div class="pg" id="pg-mon">
+            const customersMap = new Map();
+            const allFridges = [];
 
-  <div class="sec">📅 يناير – تفاصيل المناطق</div>
-  <div class="tcard">
-    <div class="tcard-hd">يناير 2025 vs 2026 <span class="badge-sm">بالمنطقة</span></div>
-    <div class="tw">
-      <table>
-        <thead>
-          <tr>
-            <th>المنطقة</th><th>مبيعات 25</th><th>مبيعات 26</th><th>الفرق</th><th>% النمو</th>
-            <th>فواتير 25</th><th>فواتير 26</th><th>Δ فواتير</th><th>% فواتير</th>
-            <th>م.فاتورة 25</th><th>م.فاتورة 26</th><th>Δ المتوسط</th><th>% متوسط</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr><td class="nm">الافرنجي</td><td>582,862</td><td>770,851</td><td class="up2">+187,989</td><td class="up2">32.3%</td><td>294</td><td>301</td><td class="up2">+7</td><td class="up2">+2.4%</td><td>1,983</td><td>2,561</td><td class="up2">+578</td><td class="up2">+29.2%</td></tr>
-          <tr><td class="nm">التل</td><td>455,461</td><td>644,793</td><td class="up2">+189,332</td><td class="up2">41.6%</td><td>296</td><td>297</td><td class="up2">+1</td><td class="up2">+0.3%</td><td>1,539</td><td>2,171</td><td class="up2">+632</td><td class="up2">+41.1%</td></tr>
-          <tr><td class="nm">التمليك</td><td>519,053</td><td>581,654</td><td class="up2">+62,601</td><td class="up2">12.1%</td><td>341</td><td>304</td><td class="dn2">−37</td><td class="dn2">−10.9%</td><td>1,522</td><td>1,913</td><td class="up2">+391</td><td class="up2">+25.7%</td></tr>
-          <tr><td class="nm">الجملة</td><td>8,471</td><td>353,430</td><td class="up2">+344,959</td><td class="up2">4072%</td><td>2</td><td>16</td><td class="up2">+14</td><td class="up2">+700%</td><td>4,236</td><td>22,089</td><td class="up2">+17,854</td><td class="up2">+421%</td></tr>
-          <tr><td class="nm">الشيخ زايد</td><td>554,910</td><td>484,272</td><td class="dn2">−70,638</td><td class="dn2">−12.7%</td><td>266</td><td>249</td><td class="dn2">−17</td><td class="dn2">−6.4%</td><td>2,086</td><td>1,945</td><td class="dn2">−141</td><td class="dn2">−6.8%</td></tr>
-          <tr><td class="nm">العريشية</td><td>377,703</td><td>523,297</td><td class="up2">+145,594</td><td class="up2">38.5%</td><td>306</td><td>306</td><td>0</td><td class="neutral">0%</td><td>1,234</td><td>1,710</td><td class="up2">+476</td><td class="up2">+38.6%</td></tr>
-          <tr><td class="nm">القنطرة</td><td>563,351</td><td>661,300</td><td class="up2">+97,949</td><td class="up2">17.4%</td><td>355</td><td>391</td><td class="up2">+36</td><td class="up2">+10.1%</td><td>1,587</td><td>1,691</td><td class="up2">+104</td><td class="up2">+6.6%</td></tr>
-          <tr><td class="nm">فايد</td><td>347,421</td><td>505,313</td><td class="up2">+157,892</td><td class="up2">45.4%</td><td>295</td><td>292</td><td class="dn2">−3</td><td class="dn2">−1.0%</td><td>1,178</td><td>1,731</td><td class="up2">+553</td><td class="up2">+46.9%</td></tr>
-        </tbody>
-        <tfoot><tr class="ft"><td>الإجمالي</td><td>3,409,232</td><td>4,524,910</td><td>+1,115,678</td><td>+32.7%</td><td>2,155</td><td>2,156</td><td>+1</td><td>+0.05%</td><td>1,582</td><td>2,099</td><td>+517</td><td>+32.7%</td></tr></tfoot>
-      </table>
-    </div>
-  </div>
+            rawData.forEach(row => {
+                const record = {
+                    code: row[0],
+                    name: row[1],
+                    area: row[2],
+                    agent: row[3],
+                    fridgeNumber: row[4],
+                    hasBarcode: row[6]
+                };
+                allFridges.push(record);
 
-  <div class="sec">📅 فبراير – تفاصيل المناطق</div>
-  <div class="tcard">
-    <div class="tcard-hd">فبراير 2025 vs 2026 <span class="badge-sm">بالمنطقة</span></div>
-    <div class="tw">
-      <table>
-        <thead>
-          <tr>
-            <th>المنطقة</th><th>مبيعات 25</th><th>مبيعات 26</th><th>الفرق</th><th>% النمو</th>
-            <th>فواتير 25</th><th>فواتير 26</th><th>Δ فواتير</th><th>% فواتير</th>
-            <th>م.فاتورة 25</th><th>م.فاتورة 26</th><th>Δ المتوسط</th><th>% متوسط</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr><td class="nm">الافرنجي</td><td>517,427</td><td>486,018</td><td class="dn2">−31,409</td><td class="dn2">−6.1%</td><td>232</td><td>228</td><td class="dn2">−4</td><td class="dn2">−1.7%</td><td>2,230</td><td>2,132</td><td class="dn2">−98</td><td class="dn2">−4.4%</td></tr>
-          <tr><td class="nm">التل</td><td>509,328</td><td>527,618</td><td class="up2">+18,290</td><td class="up2">3.6%</td><td>252</td><td>223</td><td class="dn2">−29</td><td class="dn2">−11.5%</td><td>2,021</td><td>2,366</td><td class="up2">+345</td><td class="up2">+17.1%</td></tr>
-          <tr><td class="nm">التمليك</td><td>409,402</td><td>424,777</td><td class="up2">+15,375</td><td class="up2">3.8%</td><td>271</td><td>215</td><td class="dn2">−56</td><td class="dn2">−20.7%</td><td>1,511</td><td>1,976</td><td class="up2">+465</td><td class="up2">+30.8%</td></tr>
-          <tr><td class="nm">الجملة</td><td>3,049</td><td>271,500</td><td class="up2">+268,451</td><td class="up2">8805%</td><td>2</td><td>5</td><td class="up2">+3</td><td class="up2">+150%</td><td>1,525</td><td>54,300</td><td class="up2">+52,775</td><td class="up2">+3460%</td></tr>
-          <tr><td class="nm">الشيخ زايد</td><td>525,275</td><td>420,836</td><td class="dn2">−104,439</td><td class="dn2">−19.9%</td><td>228</td><td>234</td><td class="up2">+6</td><td class="up2">+2.6%</td><td>2,304</td><td>1,798</td><td class="dn2">−506</td><td class="dn2">−22.0%</td></tr>
-          <tr><td class="nm">العريشية</td><td>394,315</td><td>436,576</td><td class="up2">+42,261</td><td class="up2">10.7%</td><td>227</td><td>242</td><td class="up2">+15</td><td class="up2">+6.6%</td><td>1,737</td><td>1,804</td><td class="up2">+67</td><td class="up2">+3.9%</td></tr>
-          <tr><td class="nm">القنطرة</td><td>565,162</td><td>589,382</td><td class="up2">+24,220</td><td class="up2">4.3%</td><td>295</td><td>287</td><td class="dn2">−8</td><td class="dn2">−2.7%</td><td>1,916</td><td>2,054</td><td class="up2">+138</td><td class="up2">+7.2%</td></tr>
-          <tr><td class="nm">فايد</td><td>427,531</td><td>455,354</td><td class="up2">+27,823</td><td class="up2">6.5%</td><td>224</td><td>195</td><td class="dn2">−29</td><td class="dn2">−12.9%</td><td>1,909</td><td>2,335</td><td class="up2">+427</td><td class="up2">+22.4%</td></tr>
-        </tbody>
-        <tfoot><tr class="ft"><td>الإجمالي</td><td>3,351,489</td><td>3,612,062</td><td>+260,573</td><td>+7.8%</td><td>1,731</td><td>1,629</td><td>−102</td><td>−5.9%</td><td>1,936</td><td>2,217</td><td>+281</td><td>+14.5%</td></tr></tfoot>
-      </table>
-    </div>
-  </div>
+                if (!customersMap.has(record.code)) {
+                    customersMap.set(record.code, {
+                        code: record.code,
+                        name: record.name,
+                        area: record.area,
+                        agent: record.agent,
+                        fridges: []
+                    });
+                }
+                customersMap.get(record.code).fridges.push(record);
+            });
 
-  <div class="sec">📅 مارس – تفاصيل المناطق</div>
-  <div class="tcard">
-    <div class="tcard-hd">مارس 2025 vs 2026 <span class="badge-sm">بالمنطقة</span></div>
-    <div class="tw">
-      <table>
-        <thead>
-          <tr>
-            <th>المنطقة</th><th>مبيعات 25</th><th>مبيعات 26</th><th>الفرق</th><th>% النمو</th>
-            <th>فواتير 25</th><th>فواتير 26</th><th>Δ فواتير</th><th>% فواتير</th>
-            <th>م.فاتورة 25</th><th>م.فاتورة 26</th><th>Δ المتوسط</th><th>% متوسط</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr><td class="nm">الافرنجي</td><td>739,791</td><td>751,426</td><td class="up2">+11,635</td><td class="up2">1.6%</td><td>318</td><td>259</td><td class="dn2">−59</td><td class="dn2">−18.6%</td><td>2,326</td><td>2,901</td><td class="up2">+575</td><td class="up2">+24.7%</td></tr>
-          <tr><td class="nm">التل</td><td>702,035</td><td>654,707</td><td class="dn2">−47,328</td><td class="dn2">−6.7%</td><td>353</td><td>269</td><td class="dn2">−84</td><td class="dn2">−23.8%</td><td>1,989</td><td>2,434</td><td class="up2">+445</td><td class="up2">+22.4%</td></tr>
-          <tr><td class="nm">التمليك</td><td>547,047</td><td>640,103</td><td class="up2">+93,056</td><td class="up2">17.0%</td><td>307</td><td>291</td><td class="dn2">−16</td><td class="dn2">−5.2%</td><td>1,782</td><td>2,200</td><td class="up2">+418</td><td class="up2">+23.5%</td></tr>
-          <tr><td class="nm">الجملة</td><td>9,620</td><td>696,000</td><td class="up2">+686,380</td><td class="up2">7134%</td><td>3</td><td>3</td><td>0</td><td class="neutral">0%</td><td>3,207</td><td>232,000</td><td class="up2">+228,793</td><td class="up2">+7134%</td></tr>
-          <tr><td class="nm">الشيخ زايد</td><td>693,985</td><td>652,002</td><td class="dn2">−41,983</td><td class="dn2">−6.0%</td><td>240</td><td>232</td><td class="dn2">−8</td><td class="dn2">−3.3%</td><td>2,892</td><td>2,810</td><td class="dn2">−81</td><td class="dn2">−2.8%</td></tr>
-          <tr><td class="nm">العريشية</td><td>603,164</td><td>551,553</td><td class="dn2">−51,611</td><td class="dn2">−8.6%</td><td>312</td><td>323</td><td class="up2">+11</td><td class="up2">+3.5%</td><td>1,933</td><td>1,708</td><td class="dn2">−226</td><td class="dn2">−11.7%</td></tr>
-          <tr><td class="nm">القنطرة</td><td>750,481</td><td>780,194</td><td class="up2">+29,713</td><td class="up2">4.0%</td><td>367</td><td>404</td><td class="up2">+37</td><td class="up2">+10.1%</td><td>2,045</td><td>1,931</td><td class="dn2">−114</td><td class="dn2">−5.6%</td></tr>
-          <tr><td class="nm">فايد</td><td>728,492</td><td>636,227</td><td class="dn2">−92,265</td><td class="dn2">−12.7%</td><td>281</td><td>293</td><td class="up2">+12</td><td class="up2">+4.3%</td><td>2,592</td><td>2,171</td><td class="dn2">−421</td><td class="dn2">−16.2%</td></tr>
-        </tbody>
-        <tfoot><tr class="ft"><td>الإجمالي</td><td>4,774,615</td><td>5,362,212</td><td>+587,597</td><td>+12.3%</td><td>2,181</td><td>2,074</td><td>−107</td><td>−4.9%</td><td>2,189</td><td>2,585</td><td>+396</td><td>+18.1%</td></tr></tfoot>
-      </table>
-    </div>
-  </div>
+            const uniqueCustomers = Array.from(customersMap.values());
+            const totalFridges = allFridges.length;
 
-</div>
+            const searchInput = document.getElementById('searchInput');
+            const clearBtn = document.getElementById('clearBtn');
+            const suggestionsDropdown = document.getElementById('suggestionsDropdown');
+            const resultsArea = document.getElementById('resultsArea');
+            const emptyState = document.getElementById('emptyState');
+            const toast = document.getElementById('toast');
+            const statCustomers = document.getElementById('statCustomers');
+            const statFridges = document.getElementById('statFridges');
 
-<div class="pg" id="pg-reg">
+            statCustomers.textContent = uniqueCustomers.length;
+            statFridges.textContent = totalFridges;
 
-  <div class="sec">📍 إجمالي Q1 لكل منطقة (2025 vs 2026)</div>
-  <div class="tcard">
-    <div class="tcard-hd">إجمالي الكوارتر الأول <span class="badge-sm">يناير + فبراير + مارس</span></div>
-    <div class="tw">
-      <table>
-        <thead>
-          <tr>
-            <th>المنطقة</th><th>إجمالي 25</th><th>إجمالي 26</th><th>الفرق</th><th>% النمو</th>
-            <th>ف. 2025</th><th>ف. 2026</th><th>Δ فواتير</th><th>% فواتير</th><th>م.فاتورة 26</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr><td class="nm">الافرنجي</td><td>1,840,080</td><td>2,008,295</td><td class="up2">+168,215</td><td class="up2">9.1%</td><td>844</td><td>788</td><td class="dn2">−56</td><td class="dn2">−6.6%</td><td>2,549</td></tr>
-          <tr><td class="nm">التل</td><td>1,666,824</td><td>1,827,118</td><td class="up2">+160,294</td><td class="up2">9.6%</td><td>901</td><td>789</td><td class="dn2">−112</td><td class="dn2">−12.4%</td><td>2,316</td></tr>
-          <tr><td class="nm">التمليك</td><td>1,475,502</td><td>1,646,534</td><td class="up2">+171,032</td><td class="up2">11.6%</td><td>919</td><td>810</td><td class="dn2">−109</td><td class="dn2">−11.9%</td><td>2,033</td></tr>
-          <tr><td class="nm">الجملة</td><td>21,140</td><td>1,320,930</td><td class="up2">+1,299,790</td><td class="up2">+∞</td><td>7</td><td>24</td><td class="up2">+17</td><td class="up2">+242.9%</td><td>55,039</td></tr>
-          <tr><td class="nm">الشيخ زايد</td><td>1,774,170</td><td>1,557,110</td><td class="dn2">−217,060</td><td class="dn2">−12.2%</td><td>734</td><td>715</td><td class="dn2">−19</td><td class="dn2">−2.6%</td><td>2,178</td></tr>
-          <tr><td class="nm">العريشية</td><td>1,375,182</td><td>1,511,426</td><td class="up2">+136,244</td><td class="up2">9.9%</td><td>845</td><td>871</td><td class="up2">+26</td><td class="up2">+3.1%</td><td>1,735</td></tr>
-          <tr><td class="nm">القنطرة</td><td>1,878,994</td><td>2,030,876</td><td class="up2">+151,882</td><td class="up2">8.1%</td><td>1,017</td><td>1,082</td><td class="up2">+65</td><td class="up2">+6.4%</td><td>1,877</td></tr>
-          <tr><td class="nm">فايد</td><td>1,503,444</td><td>1,596,894</td><td class="up2">+93,450</td><td class="up2">6.2%</td><td>800</td><td>780</td><td class="dn2">−20</td><td class="dn2">−2.5%</td><td>2,047</td></tr>
-        </tbody>
-        <tfoot><tr class="ft"><td>الإجمالي</td><td>11,535,336</td><td>13,499,183</td><td>+1,963,847</td><td>+17.0%</td><td>6,067</td><td>5,859</td><td>−208</td><td>−3.4%</td><td>2,302</td></tr></tfoot>
-      </table>
-    </div>
-  </div>
+            function showToast(msg) {
+                toast.textContent = msg;
+                toast.classList.add('show');
+                clearTimeout(toast._timeout);
+                toast._timeout = setTimeout(() => toast.classList.remove('show'), 1800);
+            }
 
-  <div class="sec">👥 عملاء الكوارتر الأول بالمنطقة</div>
-  <div class="tcard">
-    <div class="tcard-hd">عملاء وفتح حسابات Q1 <span class="badge-sm">2025 vs 2026</span></div>
-    <div class="tw">
-      <table>
-        <thead><tr><th>المنطقة</th><th>عملاء 25</th><th>عملاء 26</th><th>Δ عملاء</th><th>% نمو</th><th>فتح 25</th><th>فتح 26</th><th>Δ فتح</th><th>% نمو الفتح</th></tr></thead>
-        <tbody>
-          <tr><td class="nm">الافرنجي</td><td>140</td><td>145</td><td class="up2">+5</td><td class="up2">3.6%</td><td>133</td><td>138</td><td class="up2">+5</td><td class="up2">3.8%</td></tr>
-          <tr><td class="nm">التل</td><td>155</td><td>168</td><td class="up2">+13</td><td class="up2">8.4%</td><td>142</td><td>164</td><td class="up2">+22</td><td class="up2">15.5%</td></tr>
-          <tr><td class="nm">التمليك</td><td>139</td><td>154</td><td class="up2">+15</td><td class="up2">10.8%</td><td>134</td><td>151</td><td class="up2">+17</td><td class="up2">12.7%</td></tr>
-          <tr><td class="nm">الجملة</td><td>1</td><td>4</td><td class="up2">+3</td><td class="up2">300%</td><td>1</td><td>1</td><td>0</td><td>0%</td></tr>
-          <tr><td class="nm">الشيخ زايد</td><td>110</td><td>120</td><td class="up2">+10</td><td class="up2">9.1%</td><td>102</td><td>116</td><td class="up2">+14</td><td class="up2">13.7%</td></tr>
-          <tr><td class="nm">العريشية</td><td>180</td><td>192</td><td class="up2">+12</td><td class="up2">6.7%</td><td>160</td><td>190</td><td class="up2">+30</td><td class="up2">18.8%</td></tr>
-          <tr><td class="nm">القنطرة</td><td>191</td><td>204</td><td class="up2">+13</td><td class="up2">6.8%</td><td>175</td><td>199</td><td class="up2">+24</td><td class="up2">13.7%</td></tr>
-          <tr><td class="nm">فايد</td><td>154</td><td>182</td><td class="up2">+28</td><td class="up2">18.2%</td><td>137</td><td>177</td><td class="up2">+40</td><td class="up2">29.2%</td></tr>
-        </tbody>
-        <tfoot><tr class="ft"><td>الإجمالي</td><td>1,070</td><td>1,169</td><td>+99</td><td>+9.3%</td><td>984</td><td>1,136</td><td>+152</td><td>+15.4%</td></tr></tfoot>
-      </table>
-    </div>
-  </div>
+            function getAreaDisplay(area) {
+                if (area === 'EL Asher') return 'العاشر - EL Asher';
+                if (area === 'Madint El-Asher') return 'مدينة العاشر';
+                if (area === 'El Ordonia') return 'الأردنية';
+                return area;
+            }
 
-  <div class="sec">📈 رسم بياني – المناطق</div>
-  <div class="chart-wrap"><div class="chart-ttl">إجمالي مبيعات Q1 لكل منطقة</div><div class="ch-med"><canvas id="c-reg"></canvas></div></div>
+            function renderCustomerResult(customer) {
+                const fridgeCount = customer.fridges.length;
+                let fridgeRows = '';
+                customer.fridges.forEach((f, idx) => {
+                    fridgeRows += `
+                        <tr>
+                            <td>${idx + 1}</td>
+                            <td>${f.fridgeNumber}</td>
+                        </tr>`;
+                });
 
-</div>
+                return `
+                    <div class="result-card">
+                        <div class="result-header">
+                            <span class="cust-name">🏪 ${customer.name}</span>
+                            <span class="cust-code">#${customer.code}</span>
+                        </div>
+                        <div class="result-body">
+                            <div class="info-row">
+                                <span class="info-label">📌 المنطقة:</span>
+                                <span class="info-value">${getAreaDisplay(customer.area)}</span>
+                            </div>
+                            <div class="info-row">
+                                <span class="info-label">👤 الوكيل:</span>
+                                <span class="info-value">${customer.agent}</span>
+                            </div>
+                            <div class="info-row" style="margin-top: 8px;">
+                                <span class="badge">❄️ ${fridgeCount} ثلاجة</span>
+                            </div>
+                            <div class="fridge-section-title">
+                                📋 قائمة الثلاجات <span class="fridge-count-badge">${fridgeCount}</span>
+                            </div>
+                            <div class="table-wrapper">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>رقم / اسم الثلاجة</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        ${fridgeRows}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
 
-<div class="pg" id="pg-per">
+            function searchCustomer(code) {
+                const cleanCode = code.trim();
+                if (!cleanCode) return null;
+                if (customersMap.has(cleanCode)) {
+                    return customersMap.get(cleanCode);
+                }
+                for (const [key, val] of customersMap) {
+                    if (key.includes(cleanCode)) {
+                        return val;
+                    }
+                }
+                return null;
+            }
 
-  <div class="sec">📋 ملخص الأداء</div>
-  <div class="kpi-row">
-    <div class="kpi b"><div class="kpi-lbl">الهدف الإجمالي</div><div class="kpi-val">7.75M</div></div>
-    <div class="kpi g"><div class="kpi-lbl">المحقق (6 أيام)</div><div class="kpi-val">1.49M</div><div class="kpi-chg up">19.2% من الهدف</div></div>
-    <div class="kpi a"><div class="kpi-lbl">مبيعات اليوم</div><div class="kpi-val">213,048</div></div>
-    <div class="kpi p"><div class="kpi-lbl">المطلوب يومياً</div><div class="kpi-val">313,185</div></div>
-  </div>
+            function getSuggestions(query) {
+                const q = query.trim();
+                if (!q) return [];
+                const results = [];
+                for (const [code, cust] of customersMap) {
+                    if (code.includes(q) || cust.name.includes(q)) {
+                        results.push({ code, name: cust.name, area: cust.area, fridgeCount: cust.fridges.length });
+                        if (results.length >= 15) break;
+                    }
+                }
+                return results;
+            }
 
-  <div class="sec">🏆 أداء المندوبين التفصيلي</div>
-  <div class="tcard">
-    <div class="tcard-hd">أداء المناطق والمندوبين <span class="badge-sm">تقرير الأداء</span></div>
-    <div class="tw">
-      <table>
-        <thead><tr><th>المنطقة</th><th>المندوب</th><th>الهدف</th><th>المحقق</th><th>% الإنجاز</th><th>الباقي</th><th>مبيعات اليوم</th><th>المطلوب يومياً</th><th>تايم جن</th><th>متبقي أيام</th></tr></thead>
-        <tbody>
-          <tr><td class="nm">الافرنجي</td><td>طارق عبدالفتاح</td><td>1,100,000</td><td>218,298</td><td><div class="pb-wrap"><div class="pb"><div class="pb-fill" style="width:19.8%;background:#1a56db"></div></div><span class="pb-lbl">19.8%</span></div></td><td class="dn2">881,702</td><td>33,217</td><td>44,085</td><td>23.1%</td><td>20</td></tr>
-          <tr><td class="nm">التل</td><td>إسلام الضو</td><td>1,000,000</td><td>142,989</td><td><div class="pb-wrap"><div class="pb"><div class="pb-fill" style="width:14.3%;background:#1a56db"></div></div><span class="pb-lbl">14.3%</span></div></td><td class="dn2">857,011</td><td>37,144</td><td>42,851</td><td>23.1%</td><td>20</td></tr>
-          <tr><td class="nm">التمليك</td><td>أحمد حسن</td><td>880,000</td><td>130,716</td><td><div class="pb-wrap"><div class="pb"><div class="pb-fill" style="width:14.9%;background:#1a56db"></div></div><span class="pb-lbl">14.9%</span></div></td><td class="dn2">749,284</td><td>17,214</td><td>37,464</td><td>23.1%</td><td>20</td></tr>
-          <tr><td class="nm">الشيخ زايد</td><td>مروان عماد</td><td>1,130,000</td><td>185,499</td><td><div class="pb-wrap"><div class="pb"><div class="pb-fill" style="width:16.4%;background:#1a56db"></div></div><span class="pb-lbl">16.4%</span></div></td><td class="dn2">944,501</td><td>32,771</td><td>47,225</td><td>23.1%</td><td>20</td></tr>
-          <tr><td class="nm">العريشية</td><td>أحمد عماد</td><td>980,000</td><td>206,423</td><td><div class="pb-wrap"><div class="pb"><div class="pb-fill" style="width:21.1%;background:#057a55"></div></div><span class="pb-lbl up2">21.1%</span></div></td><td class="dn2">773,577</td><td>35,700</td><td>38,679</td><td>23.1%</td><td>20</td></tr>
-          <tr><td class="nm">القنطرة</td><td>سامي محمد</td><td>1,120,000</td><td>206,236</td><td><div class="pb-wrap"><div class="pb"><div class="pb-fill" style="width:18.4%;background:#1a56db"></div></div><span class="pb-lbl">18.4%</span></div></td><td class="dn2">913,764</td><td>32,272</td><td>45,688</td><td>23.1%</td><td>20</td></tr>
-          <tr><td class="nm">فايد</td><td>عبدالرحمن عادل</td><td>1,040,000</td><td>153,147</td><td><div class="pb-wrap"><div class="pb"><div class="pb-fill" style="width:14.7%;background:#1a56db"></div></div><span class="pb-lbl">14.7%</span></div></td><td class="dn2">886,853</td><td>24,730</td><td>44,343</td><td>23.1%</td><td>20</td></tr>
-          <tr><td class="nm">الجملة</td><td>محمد محسن</td><td>500,000</td><td>243,000</td><td><div class="pb-wrap"><div class="pb"><div class="pb-fill" style="width:48.6%;background:#057a55"></div></div><span class="pb-lbl up2">48.6%</span></div></td><td class="dn2">257,000</td><td>0</td><td>12,850</td><td>23.1%</td><td>20</td></tr>
-        </tbody>
-        <tfoot><tr class="ft"><td>الإجمالي</td><td>7 مناديب</td><td>7,750,000</td><td>1,486,308</td><td>19.2%</td><td>6,264,692</td><td>213,048</td><td>313,185</td><td>23.1%</td><td>20</td></tr></tfoot>
-      </table>
-    </div>
-  </div>
+            function displayCustomer(customer) {
+                resultsArea.innerHTML = renderCustomerResult(customer);
+                emptyState.style.display = 'none';
+                const firstCard = resultsArea.querySelector('.result-card');
+                if (firstCard) {
+                    firstCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            }
 
-  <div class="sec">📈 رسم بياني – الإنجاز والمطلوب</div>
-  <div class="chart-wrap"><div class="chart-ttl">المحقق اليومي مقابل المطلوب يومياً</div><div class="ch-med"><canvas id="c-daily"></canvas></div></div>
+            function clearResults() {
+                resultsArea.innerHTML = '';
+                resultsArea.appendChild(emptyState);
+                emptyState.style.display = '';
+                searchInput.value = '';
+                suggestionsDropdown.classList.remove('active');
+                searchInput.focus();
+            }
 
-</div>
+            searchInput.addEventListener('input', function() {
+                const query = this.value;
+                if (!query.trim()) {
+                    suggestionsDropdown.classList.remove('active');
+                    return;
+                }
+                const suggestions = getSuggestions(query);
+                if (suggestions.length === 0) {
+                    suggestionsDropdown.innerHTML = '<div class="no-results">😔 لا توجد نتائج مطابقة</div>';
+                } else {
+                    suggestionsDropdown.innerHTML = suggestions.map(s => `
+                        <div class="suggestion-item" data-code="${s.code}">
+                            <span class="code">🔢 ${s.code}</span>
+                            <span class="name">${s.name}</span>
+                            <span class="area-tag">📍 ${getAreaDisplay(s.area)} · ${s.fridgeCount} ثلاجة</span>
+                        </div>
+                    `).join('');
+                }
+                suggestionsDropdown.classList.add('active');
+            });
 
-<div class="pg" id="pg-apr">
+            suggestionsDropdown.addEventListener('click', function(e) {
+                const item = e.target.closest('.suggestion-item');
+                if (!item) return;
+                const code = item.dataset.code;
+                const customer = customersMap.get(code);
+                if (customer) {
+                    searchInput.value = code;
+                    suggestionsDropdown.classList.remove('active');
+                    displayCustomer(customer);
+                    showToast(`✅ تم العثور على: ${customer.name} - ${customer.fridges.length} ثلاجة`);
+                }
+            });
 
-  <div class="sec">🗓️ ملخص أبريل 6 أيام</div>
-  <div class="kpi-row">
-    <div class="kpi b"><div class="kpi-lbl">إجمالي 2026</div><div class="kpi-val">1.49M</div><div class="kpi-chg up">▲ +13.2%</div></div>
-    <div class="kpi g"><div class="kpi-lbl">الفواتير 2026</div><div class="kpi-val">746</div><div class="kpi-chg up">▲ +5.2%</div></div>
-    <div class="kpi a"><div class="kpi-lbl">متوسط الفاتورة 2026</div><div class="kpi-val">1,992</div><div class="kpi-chg up">▲ +7.6%</div></div>
-    <div class="kpi p"><div class="kpi-lbl">أفضل يوم (اليوم 3)</div><div class="kpi-val">488,941</div><div class="kpi-chg up">▲ +141.8%</div></div>
-  </div>
+            searchInput.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') {
+                    const query = this.value.trim();
+                    if (!query) return;
+                    const customer = searchCustomer(query);
+                    suggestionsDropdown.classList.remove('active');
+                    if (customer) {
+                        displayCustomer(customer);
+                        showToast(`✅ تم العثور على: ${customer.name}`);
+                    } else {
+                        showToast('❌ لم يتم العثور على العميل بهذا الكود');
+                        resultsArea.innerHTML = `
+                            <div class="empty-state">
+                                <span class="icon">🔍</span>
+                                <p>لم يتم العثور على عميل بالكود "${query}"</p>
+                                <span class="hint">جرب كود آخر أو استخدم الاقتراحات</span>
+                            </div>
+                        `;
+                    }
+                }
+            });
 
-  <div class="sec">📊 تفاصيل 6 أيام عمل – أبريل</div>
-  <div class="tcard">
-    <div class="tcard-hd">أبريل 2025 vs 2026 – يوم بيوم <span class="badge-sm">6 أيام عمل</span></div>
-    <div class="tw">
-      <table>
-        <thead>
-          <tr>
-            <th>اليوم</th><th>مبيعات 25</th><th>مبيعات 26</th><th>الفرق</th><th>% النمو</th>
-            <th>فواتير 25</th><th>فواتير 26</th><th>Δ فواتير</th><th>% فواتير</th>
-            <th>م.فاتورة 25</th><th>م.فاتورة 26</th><th>Δ المتوسط</th><th>% متوسط</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr><td class="nm">اليوم 1</td><td>181,165</td><td>154,541</td><td class="dn2">−26,624</td><td><div class="pb-wrap"><div class="pb"><div class="pb-fill" style="width:15%;background:#c81e1e"></div></div><span class="pb-lbl dn2">−14.7%</span></div></td><td>78</td><td>104</td><td class="up2">+26</td><td class="up2">+33.3%</td><td>2,323</td><td>1,486</td><td class="dn2">−837</td><td class="dn2">−36.0%</td></tr>
-          <tr><td class="nm">اليوم 2</td><td>178,586</td><td>166,660</td><td class="dn2">−11,926</td><td><div class="pb-wrap"><div class="pb"><div class="pb-fill" style="width:7%;background:#c81e1e"></div></div><span class="pb-lbl dn2">−6.7%</span></div></td><td>111</td><td>121</td><td class="up2">+10</td><td class="up2">+9.0%</td><td>1,609</td><td>1,377</td><td class="dn2">−232</td><td class="dn2">−14.4%</td></tr>
-          <tr><td class="nm">اليوم 3</td><td>202,240</td><td>488,941</td><td class="up2">+286,701</td><td><div class="pb-wrap"><div class="pb"><div class="pb-fill" style="width:100%;background:#057a55"></div></div><span class="pb-lbl up2">+142%</span></div></td><td>112</td><td>119</td><td class="up2">+7</td><td class="up2">+6.3%</td><td>1,806</td><td>4,109</td><td class="up2">+2,303</td><td class="up2">+127.5%</td></tr>
-          <tr><td class="nm">اليوم 4</td><td>235,585</td><td>188,462</td><td class="dn2">−47,123</td><td><div class="pb-wrap"><div class="pb"><div class="pb-fill" style="width:20%;background:#c81e1e"></div></div><span class="pb-lbl dn2">−20.0%</span></div></td><td>137</td><td>138</td><td class="up2">+1</td><td class="up2">+0.7%</td><td>1,720</td><td>1,366</td><td class="dn2">−354</td><td class="dn2">−20.6%</td></tr>
-          <tr><td class="nm">اليوم 5</td><td>233,088</td><td>274,656</td><td class="up2">+41,568</td><td><div class="pb-wrap"><div class="pb"><div class="pb-fill" style="width:18%;background:#057a55"></div></div><span class="pb-lbl up2">+17.8%</span></div></td><td>129</td><td>145</td><td class="up2">+16</td><td class="up2">+12.4%</td><td>1,807</td><td>1,894</td><td class="up2">+87</td><td class="up2">+4.8%</td></tr>
-          <tr><td class="nm">اليوم 6</td><td>282,601</td><td>213,048</td><td class="dn2">−69,553</td><td><div class="pb-wrap"><div class="pb"><div class="pb-fill" style="width:25%;background:#c81e1e"></div></div><span class="pb-lbl dn2">−24.6%</span></div></td><td>142</td><td>119</td><td class="dn2">−23</td><td class="dn2">−16.2%</td><td>1,990</td><td>1,790</td><td class="dn2">−200</td><td class="dn2">−10.1%</td></tr>
-        </tbody>
-        <tfoot><tr class="ft"><td>الإجمالي</td><td>1,313,265</td><td>1,486,308</td><td>+173,043</td><td>+13.2%</td><td>709</td><td>746</td><td>+37</td><td>+5.2%</td><td>1,852</td><td>1,992</td><td>+140</td><td>+7.6%</td></tr></tfoot>
-      </table>
-    </div>
-  </div>
+            clearBtn.addEventListener('click', function() {
+                clearResults();
+                showToast('🗑️ تم مسح البحث');
+            });
 
-  <div class="sec">📈 رسم بياني – أبريل يومياً</div>
-  <div class="chart-wrap"><div class="chart-ttl">مبيعات أبريل يوم بيوم 2025 vs 2026</div><div class="ch-med"><canvas id="c-apr"></canvas></div></div>
+            document.addEventListener('click', function(e) {
+                if (!e.target.closest('.search-wrapper')) {
+                    suggestionsDropdown.classList.remove('active');
+                }
+            });
 
-</div>
-
-</main>
-<div style="text-align:center;padding:16px;font-size:10px;color:#9ca3af;border-top:1px solid #e5e7eb;margin-top:16px">
-  داشبورد مبيعات الكوارتر الأول 2025/2026 — الأرقام بالجنيه المصري
-</div>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
-<script>
-const CO={responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{font:{family:'Cairo',size:10},color:'#374151'}}},scales:{x:{ticks:{font:{family:'Cairo',size:9}}},y:{ticks:{font:{family:'Cairo',size:9}}}}};
-function bar2(id,labels,d1,d2,l1,l2,c1='#1a56db',c2='#057a55'){
-  new Chart(document.getElementById(id),{type:'bar',data:{labels,datasets:[
-    {label:l1,data:d1,backgroundColor:c1+'bb',borderColor:c1,borderWidth:1,borderRadius:3},
-    {label:l2,data:d2,backgroundColor:c2+'bb',borderColor:c2,borderWidth:1,borderRadius:3}
-  ]},options:CO});
-}
-window.addEventListener('DOMContentLoaded',()=>{
-  bar2('c-monthly',['يناير','فبراير','مارس'],[3409232,3351489,4774615],[4514756,3611979,5362152],'2025','2026');
-  bar2('c-reg',['الافرنجي','التل','التمليك','الجملة','الشيخ زايد','العريشية','القنطرة','فايد'],
-    [1840080,1666824,1475502,21140,1774170,1375182,1878994,1503444],
-    [2008295,1827118,1646534,1320930,1557110,1511426,2030876,1596894],'2025','2026');
-  bar2('c-daily',['الافرنجي','التل','التمليك','الشيخ زايد','العريشية','القنطرة','فايد','الجملة'],
-    [33217,37144,17214,32771,35700,32272,24730,0],
-    [44085,42851,37464,47225,38679,45688,44343,12850],'مبيعات اليوم','#e3a008','#1a56db','#d97706');
-  bar2('c-apr',['اليوم 1','اليوم 2','اليوم 3','اليوم 4','اليوم 5','اليوم 6'],
-    [181165,178586,202240,235585,233088,282601],[154541,166660,488941,188462,274656,213048],'أبريل 2025','أبريل 2026');
-});
-function go(name,btn){
-  document.querySelectorAll('.pg').forEach(p=>p.classList.remove('active'));
-  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
-  document.getElementById('pg-'+name).classList.add('active');
-  btn.classList.add('active');
-  window.scrollTo(0,0);
-}
-</script>
+            setTimeout(() => searchInput.focus(), 300);
+            console.log('✅ لوحة التحكم جاهزة |', uniqueCustomers.length, 'عميل |', totalFridges, 'ثلاجة');
+        })();
+    </script>
 </body>
 </html>
