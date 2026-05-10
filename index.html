@@ -232,6 +232,38 @@ body{
   border-top:1px solid #e5e7eb;
 }
 .rc-fridges-grid.open{display:grid}
+/* fridge match highlight */
+.fridge-chip.fridge-match{
+  background:#d1fae5;
+  border-color:#34d399;
+  color:#065f46;
+  font-weight:800;
+  box-shadow:0 0 0 2px rgba(52,211,153,0.3);
+}
+.fridge-match-icon{font-size:10px;display:block;margin-bottom:1px}
+.fridge-found-row{
+  background:#fefce8 !important;
+  border-right:3px solid #f59e0b !important;
+}
+.fridge-found-badge{
+  background:#1a6b3a;color:#fff;
+  font-size:12px;font-weight:800;
+  padding:4px 12px;border-radius:10px;
+  font-family:'Cairo',monospace;
+  cursor:pointer;transition:opacity 0.15s;
+  display:inline-block;
+}
+.fridge-found-badge:active{opacity:0.75}
+.multi-fridge-line{
+  font-size:11px;color:#065f46;
+  margin-top:3px;display:flex;align-items:center;gap:5px;flex-wrap:wrap;
+}
+.multi-fridge-code{
+  background:#d1fae5;color:#065f46;
+  font-size:11px;font-weight:700;
+  padding:2px 8px;border-radius:6px;
+  font-family:'Cairo',monospace;
+}
 .fridge-chip{
   background:#fff;
   border:1.5px solid #d1d5db;
@@ -1760,6 +1792,15 @@ function onSearchInput(e){
   searchTimer = setTimeout(()=>doSearch(e.target.value.trim()),150);
 }
 
+function isFridgeSearch(q){
+  if(!q) return false;
+  return fridgeData.some(f => fuzzy(f.fridgeCode, q));
+}
+
+function getMatchedFridges(clientCode, q){
+  return (fridgeMap[clientCode]||[]).filter(f => fuzzy(f, q));
+}
+
 function doSearch(q){
   const clearBtn = document.getElementById('searchClearBtn');
   const hint = document.getElementById('searchHint');
@@ -1788,10 +1829,21 @@ function doSearch(q){
   }
   emptyState.style.display='none';
 
+  const fridgeMode = isFridgeSearch(q);
+
   if(results.length===1){
-    resultZone.innerHTML = buildFullCard(results[0], q);
+    resultZone.innerHTML = buildFullCard(results[0], q, fridgeMode);
+    if(fridgeMode){
+      setTimeout(()=>{
+        const fid = 'fl_'+results[0].newCode;
+        const grid = document.getElementById(fid);
+        const tgl = document.getElementById('tgl_'+fid);
+        if(grid){ grid.classList.add('open'); }
+        if(tgl){ tgl.textContent = 'إخفاء ▲'; }
+      }, 50);
+    }
   } else {
-    resultZone.innerHTML = buildMultiList(results, q);
+    resultZone.innerHTML = buildMultiList(results, q, fridgeMode);
   }
 }
 
@@ -1807,11 +1859,29 @@ function clearSearch(){
 }
 
 // ==================== RENDER FULL CARD ====================
-function buildFullCard(c, q){
+function buildFullCard(c, q, fridgeMode){
   const fridges = fridgeMap[c.newCode]||[];
   const ac = areaClass(c.area);
   const al = areaLabel(c.area);
   const fid = 'fl_'+c.newCode;
+  const matchedFridges = fridgeMode ? getMatchedFridges(c.newCode, q) : [];
+
+  const fridgeChips = fridges.length ? fridges.map(f => {
+    const isMatch = fridgeMode && fuzzy(f, q);
+    return `<div class="fridge-chip${isMatch?' fridge-match':''}" onclick="copyVal('${f}')" title="اضغط للنسخ">
+      ${isMatch ? `<span class="fridge-match-icon">❄️</span>` : ''}
+      ${hl(f, q)}
+    </div>`;
+  }).join('') : '<p style="color:#9ca3af;font-size:12px;text-align:center;padding:8px">لا توجد ثلاجات</p>';
+
+  const fridgesRowExtra = fridgeMode && matchedFridges.length ? `
+    <div class="rc-row fridge-found-row">
+      <div class="rc-row-label"><span class="row-em">🎯</span> الثلاجة المطابقة</div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap">
+        ${matchedFridges.map(f=>`<span class="fridge-found-badge" onclick="copyVal('${f}')">${hl(f,q)}</span>`).join('')}
+      </div>
+    </div>` : '';
+
   return `
   <div class="result-card">
     <div class="rc-header">
@@ -1841,31 +1911,39 @@ function buildFullCard(c, q){
       <div class="rc-row-label"><span class="row-em">❄️</span> الثلاجات</div>
       <div class="rc-row-value" style="color:#ea580c;font-weight:800">${fridges.length} ثلاجة</div>
     </div>
+    ${fridgesRowExtra}
     <div class="rc-fridges-bar" onclick="toggleFridges('${fid}',this)">
       <div class="rc-fridges-left">
         <span class="f-em">📋</span> قائمة الثلاجات
+        ${fridgeMode && matchedFridges.length ? `<span style="background:#fef3c7;color:#d97706;font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;margin-right:6px">${matchedFridges.length} مطابق</span>` : ''}
       </div>
       <div class="rc-fridges-right">
         <div class="rc-fridges-count">${fridges.length}</div>
         <div class="rc-fridges-toggle-btn" id="tgl_${fid}">اضغط للعرض ▼</div>
       </div>
     </div>
-    <div class="rc-fridges-grid" id="${fid}">
-      ${fridges.length?fridges.map(f=>`<div class="fridge-chip" onclick="copyVal('${f}')">${hl(f,q)}</div>`).join(''):'<p style="color:#9ca3af;font-size:12px;text-align:center;padding:8px">لا توجد ثلاجات</p>'}
+    <div class="rc-fridges-grid${fridgeMode?' open':''}" id="${fid}">
+      ${fridgeChips}
     </div>
   </div>`;
 }
 
 // ==================== RENDER MULTI LIST ====================
-function buildMultiList(results, q){
+function buildMultiList(results, q, fridgeMode){
   const items = results.map((c,i)=>{
     const fridges = fridgeMap[c.newCode]||[];
     const ac = areaClass(c.area);
-    const clr = areaColors(c.area);
-    return `<div class="multi-item" style="animation-delay:${i*0.025}s" onclick="selectClient('${c.newCode}','${escQ(q)}')">
+    const matchedF = fridgeMode ? getMatchedFridges(c.newCode, q) : [];
+    const fridgeLine = fridgeMode && matchedF.length
+      ? `<div class="multi-fridge-line">❄️ ${matchedF.map(f=>`<span class="multi-fridge-code">${hl(f,q)}</span>`).join('')}</div>`
+      : '';
+    return `<div class="multi-item" style="animation-delay:${i*0.025}s" onclick="selectClient('${c.newCode}','${escQ(q)}','${fridgeMode}')">
       <div class="multi-item-name">
         <span class="em">${storeEmoji(c.name)}</span>
-        <span class="txt">${hl(c.name,q)}</span>
+        <div style="flex:1;min-width:0">
+          <div class="txt">${hl(c.name,q)}</div>
+          ${fridgeLine}
+        </div>
         <span class="area-pill area-${ac}" style="font-size:9px;flex-shrink:0">${areaLabel(c.area)}</span>
       </div>
       <div class="multi-item-right">
@@ -1880,10 +1958,20 @@ function buildMultiList(results, q){
   </div>`;
 }
 
-function selectClient(newCode, q){
+function selectClient(newCode, q, fridgeMode){
   const c = clientData.find(x=>x.newCode===newCode);
   if(!c) return;
-  document.getElementById('resultZone').innerHTML = buildFullCard(c, q||'');
+  const fm = fridgeMode==='true'||fridgeMode===true;
+  document.getElementById('resultZone').innerHTML = buildFullCard(c, q||'', fm);
+  if(fm){
+    const fid = 'fl_'+newCode;
+    setTimeout(()=>{
+      const grid = document.getElementById(fid);
+      const tgl = document.getElementById('tgl_'+fid);
+      if(grid && !grid.classList.contains('open')){ grid.classList.add('open'); }
+      if(tgl){ tgl.textContent = 'إخفاء ▲'; }
+    },50);
+  }
 }
 
 // ==================== ALL CLIENTS LIST ====================
